@@ -1,0 +1,88 @@
+{
+  "app": {
+    "name": "KisanSetu",
+    "tagline": "Check your crop, know today's price, and sell straight to buyers.",
+    "installHint": "Add KisanSetu to your home screen from your browser menu."
+  },
+  "language": { "label": "Language", "hi": "हिंदी", "en": "English" },
+  "landing": {
+    "checkCrop": "Check my crop",
+    "checkCropHint": "Photograph a leaf to spot disease",
+    "prices": "Today's mandi price",
+    "pricesHint": "Prices with date and source",
+    "sell": "Sell my crop",
+    "sellHint": "List produce, buyers contact you",
+    "createAccount": "Create account",
+    "login": "Log in"
+  },
+  "auth": {
+    "loginTitle": "Log in",
+    "registerTitle": "Create account",
+    "whoAreYou": "Who are you?",
+    "farmer": "Farmer",
+    "farmerHint": "I grow and sell crops",
+    "buyer": "Buyer",
+    "buyerHint": "I buy produce",
+    "buyerType": "What kind of buyer?",
+    "retail": "Shop or home",
+    "wholesale": "Wholesaler",
+    "name": "Your name",
+    "phone": "Mobile number",
+    "phoneHint": "10 digits, without +91",
+    "password": "Password",
+    "passwordHint": "At least 8 characters",
+    "state": "State",
+    "chooseState": "Choose your state",
+    "district": "District",
+    "submitLogin": "Log in",
+    "submitRegister": "Create account",
+    "noAccount": "New here?",
+    "haveAccount": "Already have an account?",
+    "changeRole": "Change",
+    "logout": "Log out"
+  },
+  "onboarding": {
+    "title": "Add your first crop",
+    "intro": "We use this to send reminders and the right advice.",
+    "crop": "Which crop?",
+    "otherCrop": "Other crop",
+    "otherCropName": "Crop name",
+    "stage": "How far along is it?",
+    "sowingDate": "Sowing date",
+    "area": "Area (acres)",
+    "save": "Save crop",
+    "skip": "Skip for now"
+  },
+  "crops": { "tomato": "Tomato", "potato": "Potato", "maize": "Maize" },
+  "stages": {
+    "initial": "Just sown",
+    "development": "Growing",
+    "mid": "Flowering or fruiting",
+    "late": "Near harvest"
+  },
+  "home": {
+    "greeting": "Namaste, {name}",
+    "myCrops": "My crops",
+    "noCrops": "No crops yet. Add one to get reminders and advice.",
+    "addCrop": "Add crop",
+    "dueReminders": "Due now",
+    "noReminders": "Nothing due right now.",
+    "sownOn": "Sown {date}",
+    "acres": "{area} acres",
+    "markDone": "Done",
+    "comingSoon": "Coming soon",
+    "buyerIntro": "Browsing listings arrives in the next build.",
+    "adminIntro": "The admin console arrives in a later build."
+  },
+  "errors": {
+    "required": "Fill this in",
+    "phone": "Enter a 10-digit mobile number starting with 6, 7, 8 or 9",
+    "password": "Use at least 8 characters",
+    "area": "Enter an area above 0",
+    "phoneTaken": "This number already has an account. Log in instead.",
+    "wrongLogin": "Wrong mobile number or password",
+    "network": "Can't reach the server. Check your internet and try again.",
+    "generic": "That didn't work. Try again."
+  },
+  "common": { "loading": "Loading…", "back": "Back" }
+}

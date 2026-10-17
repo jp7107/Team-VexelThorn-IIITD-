@@ -1,4 +1,5 @@
 from functools import lru_cache
+from pathlib import Path
 from typing import Literal
 
 from pydantic import field_validator, model_validator
@@ -6,7 +7,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+    # backend/.env regardless of the working directory the server is started from
+    model_config = SettingsConfigDict(env_file=Path(__file__).resolve().parents[2] / ".env", extra="ignore")
 
     ENV: Literal["dev", "test", "prod"] = "dev"
     DATABASE_URL: str = "postgresql+psycopg://kisan:kisan@localhost:5432/kisan"
