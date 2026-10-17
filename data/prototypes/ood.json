@@ -1,0 +1,17 @@
+{
+  "signal": "b2_image_head: msp AND energy",
+  "tau_msp": 0.5952,
+  "msp_percentile": 5,
+  "tau_energy": -3.645,
+  "energy_percentile": 95,
+  "val_abstain_rate": 0.0694,
+  "test_abstain_rate": 0.0571,
+  "test_acc_all": 0.9789,
+  "test_acc_on_kept": 0.9904,
+  "field_case": {
+    "msp": 0.3035,
+    "energy": -2.7391
+  },
+  "field_would_abstain_msp": true,
+  "field_would_abstain_energy": true
+}

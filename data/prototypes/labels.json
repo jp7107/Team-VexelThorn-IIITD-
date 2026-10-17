@@ -1,0 +1,13 @@
+{
+  "classes": [
+    "aphids",
+    "army_worm",
+    "bacterial_blight",
+    "cotton_boll_rot",
+    "green_cotton_boll",
+    "healthy",
+    "powdery_mildew",
+    "target_spot"
+  ],
+  "temperature": 10.0
+}

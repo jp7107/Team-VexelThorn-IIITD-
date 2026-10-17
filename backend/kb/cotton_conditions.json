@@ -1,0 +1,109 @@
+{
+  "_note": "Leakage-controlled symptom KB v2 (plan 10.2/10.4). Classes are grouped into FAMILIES that share deliberately ambiguous vocabulary, so confusable classes (e.g. the two lesion/spot diseases, the two boll classes, the two pests) are hard to separate from text alone. Generation leans on family + shared vocabulary and only sometimes adds a single class-specific detail, mirroring vague real-world farmer descriptions. Class names never appear in the text.",
+  "shared_symptoms": [
+    "yellowing of the leaves",
+    "general discoloration of the foliage",
+    "mild wilting",
+    "reduced plant vigor",
+    "some damage visible on the plant",
+    "patchy appearance of the foliage"
+  ],
+  "families": {
+    "lesion_spots": ["bacterial_blight", "target_spot"],
+    "boll": ["cotton_boll_rot", "green_cotton_boll"],
+    "pests": ["aphids", "army_worm"],
+    "coating": ["powdery_mildew"],
+    "normal": ["healthy"]
+  },
+  "family_symptoms": {
+    "lesion_spots": [
+      "brown spots on the leaf",
+      "dark lesions on the foliage",
+      "discolored blotches",
+      "spots with irregular borders",
+      "scattered dark markings"
+    ],
+    "boll": [
+      "changes on the cotton boll",
+      "markings on the boll surface",
+      "the boll looks different from usual",
+      "spots or color change on the boll"
+    ],
+    "pests": [
+      "signs of insect activity on the leaf",
+      "pest damage on the foliage",
+      "chewed or marked leaves",
+      "small organisms seen on the plant"
+    ],
+    "coating": [
+      "a surface film on the leaf",
+      "an unusual coating on the foliage",
+      "a dusty appearance on the leaf"
+    ],
+    "normal": [
+      "generally green appearance",
+      "no severe damage visible",
+      "mostly intact foliage"
+    ]
+  },
+  "classes": {
+    "aphids": {
+      "category": "pest", "family": "pests", "confusable_with": ["army_worm"],
+      "symptoms": [
+        "small soft-bodied insects on the underside of the leaf",
+        "sticky honeydew residue on the foliage",
+        "ants crawling along the stems"
+      ]
+    },
+    "army_worm": {
+      "category": "pest", "family": "pests", "confusable_with": ["aphids"],
+      "symptoms": [
+        "irregular chewed holes across the leaf",
+        "ragged and torn leaf margins",
+        "caterpillars feeding on the foliage"
+      ]
+    },
+    "bacterial_blight": {
+      "category": "disease", "family": "lesion_spots", "confusable_with": ["target_spot"],
+      "symptoms": [
+        "angular water-soaked lesions",
+        "black streaks running along the veins"
+      ]
+    },
+    "target_spot": {
+      "category": "disease", "family": "lesion_spots", "confusable_with": ["bacterial_blight"],
+      "symptoms": [
+        "concentric ring patterns within the spots",
+        "ring-shaped target-like markings"
+      ]
+    },
+    "cotton_boll_rot": {
+      "category": "disease", "family": "boll", "confusable_with": ["green_cotton_boll"],
+      "symptoms": [
+        "dark sunken rotting areas on the boll",
+        "mold growth on the boll"
+      ]
+    },
+    "green_cotton_boll": {
+      "category": "condition", "family": "boll", "confusable_with": ["cotton_boll_rot"],
+      "symptoms": [
+        "a firm immature green boll",
+        "an intact smooth green boll surface"
+      ]
+    },
+    "powdery_mildew": {
+      "category": "disease", "family": "coating", "confusable_with": ["healthy"],
+      "symptoms": [
+        "a white powdery coating on the leaf",
+        "pale dusty patches that rub off"
+      ]
+    },
+    "healthy": {
+      "category": "healthy", "family": "normal", "confusable_with": ["green_cotton_boll"],
+      "symptoms": [
+        "uniform green leaf color",
+        "no visible spots or lesions"
+      ]
+    }
+  }
+}

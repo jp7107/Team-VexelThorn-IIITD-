@@ -1,0 +1,77 @@
+{
+  "_note": "Curated recommendations (plan 30.7). Deliberately NON-prescriptive: no pesticide names, doses, or chemical schedules. The ML diagnosis and this knowledge base are kept separate.",
+  "disclaimer": "AI-assisted result, not a substitute for professional agronomic advice. Confirm with a local agronomist before making treatment decisions.",
+  "classes": {
+    "aphids": {
+      "display": "Aphids",
+      "recommendations": [
+        "Inspect the undersides of leaves and growing tips regularly.",
+        "Encourage natural predators such as ladybirds and lacewings.",
+        "Remove and destroy heavily infested shoots.",
+        "Avoid excessive nitrogen fertilization, which favors infestations.",
+        "Follow locally approved, extension-recommended crop-protection guidance."
+      ]
+    },
+    "army_worm": {
+      "display": "Army Worm",
+      "recommendations": [
+        "Scout fields early morning or late evening when larvae are active.",
+        "Hand-pick and destroy larvae in small or early infestations.",
+        "Preserve natural enemies and consider pheromone trap monitoring.",
+        "Consult local extension services for approved intervention thresholds."
+      ]
+    },
+    "bacterial_blight": {
+      "display": "Bacterial Blight",
+      "recommendations": [
+        "Use certified disease-free, resistant seed where available.",
+        "Avoid working in fields when foliage is wet to limit spread.",
+        "Remove and destroy infected plant debris after harvest.",
+        "Practice crop rotation and field sanitation."
+      ]
+    },
+    "cotton_boll_rot": {
+      "display": "Cotton Boll Rot",
+      "recommendations": [
+        "Improve canopy air circulation through appropriate plant spacing.",
+        "Manage insect damage that creates entry points for rot.",
+        "Avoid excessive irrigation and waterlogging.",
+        "Remove and dispose of severely affected bolls."
+      ]
+    },
+    "green_cotton_boll": {
+      "display": "Green Cotton Boll",
+      "recommendations": [
+        "This is a normal immature boll, not a disease.",
+        "Continue routine monitoring as bolls develop and mature.",
+        "Maintain balanced irrigation and nutrition for healthy boll fill."
+      ]
+    },
+    "healthy": {
+      "display": "Healthy",
+      "recommendations": [
+        "No action needed; the sample appears healthy.",
+        "Continue regular scouting and good field hygiene.",
+        "Maintain balanced irrigation and fertilization."
+      ]
+    },
+    "powdery_mildew": {
+      "display": "Powdery Mildew",
+      "recommendations": [
+        "Improve air circulation and avoid dense, shaded canopies.",
+        "Avoid overhead irrigation late in the day.",
+        "Remove severely affected leaves where practical.",
+        "Follow locally approved crop-protection guidance."
+      ]
+    },
+    "target_spot": {
+      "display": "Target Spot",
+      "recommendations": [
+        "Remove and destroy severely affected leaves.",
+        "Improve air circulation and reduce prolonged leaf wetness.",
+        "Practice field sanitation and crop rotation.",
+        "Follow locally approved crop-protection guidance."
+      ]
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "split": "test",
+  "accuracy": 0.9789473684210527,
+  "macro_precision": 0.978995177446246,
+  "macro_recall": 0.9796467105618881,
+  "macro_f1": 0.9792403973626207,
+  "weighted_f1": 0.9789491549926228,
+  "top3_accuracy": 0.9969924812030075,
+  "per_class_f1": {
+    "aphids": 0.9550561797752809,
+    "army_worm": 0.9841269841269841,
+    "bacterial_blight": 0.9534883720930233,
+    "cotton_boll_rot": 0.9838709677419355,
+    "green_cotton_boll": 0.9934640522875817,
+    "healthy": 1.0,
+    "powdery_mildew": 0.9942196531791907,
+    "target_spot": 0.9696969696969697
+  },
+  "model_version": "cotton-image-v1"
+}
