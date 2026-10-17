@@ -1,4 +1,5 @@
-"""Thin Gemini REST client (plan T-8). The one place that knows the provider; swap this file to change it."""
+"""Thin Groq client (OpenAI-compatible chat completions; plan T-8, decision D-02).
+The one place that knows the provider; swap this file to change it."""
 
 import json
 import logging
@@ -10,7 +11,7 @@ from app.core.config import get_settings
 
 log = logging.getLogger(__name__)
 
-API = "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
+API = "https://api.groq.com/openai/v1/chat/completions"
 RETRY_STATUSES = {429, 500, 502, 503, 504}
 
 
@@ -33,16 +34,18 @@ def generate_json(system: str, user: str) -> dict:
     if not configured():
         raise LLMError("LLM not configured")
     body = {
-        "systemInstruction": {"parts": [{"text": system}]},
-        "contents": [{"role": "user", "parts": [{"text": user}]}],
-        # The schema is described in the prompt and enforced by Pydantic on our side.
-        "generationConfig": {"responseMimeType": "application/json", "temperature": 0.2, "maxOutputTokens": 2048},
+        "model": s.LLM_MODEL,
+        "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
+        # JSON object mode works across Groq models; the shape is in the prompt and enforced by Pydantic.
+        "response_format": {"type": "json_object"},
+        "temperature": 0.2,
+        "max_completion_tokens": 2048,
     }
+    headers = {"Authorization": f"Bearer {s.LLM_API_KEY}"}
     deadline = time.monotonic() + s.LLM_TIMEOUT_S
     for attempt in (1, 2):
         try:
-            r = httpx.post(API.format(model=s.LLM_MODEL), json=body, headers={"x-goog-api-key": s.LLM_API_KEY},
-                           timeout=max(1.0, deadline - time.monotonic()))
+            r = httpx.post(API, json=body, headers=headers, timeout=max(1.0, deadline - time.monotonic()))
         except httpx.TimeoutException as e:
             if attempt == 2 or deadline - time.monotonic() < 3:
                 raise LLMError("LLM timed out") from e
@@ -56,8 +59,7 @@ def generate_json(system: str, user: str) -> dict:
         if r.status_code != 200:
             raise LLMError(f"LLM HTTP {r.status_code}")
         try:
-            parts = r.json()["candidates"][0]["content"]["parts"]
-            return json.loads("".join(p.get("text", "") for p in parts))
+            return json.loads(r.json()["choices"][0]["message"]["content"])
         except (KeyError, IndexError, ValueError, TypeError) as e:
             raise LLMError("LLM reply was not the expected JSON") from e
     raise LLMError("LLM retries exhausted")

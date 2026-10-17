@@ -43,5 +43,5 @@ Needs the Docker Postgres running. Tests create and migrate a separate `kisan_te
 - Auth is an httpOnly `session` cookie, so call the API same-origin through the Next.js `/api` rewrite (plan T-6).
 - Every error is `{"error": {"code", "message", "details", "request_id"}}`.
 - `/analyses` runs the model in `app/ml/model/` (exported by `ml/export_onnx.py`; thresholds and temperature live in `model.json`). To see `rejected_quality`, set `BRIGHT_MIN=0.5` and upload a dark photo. To see `uncertain`, upload a leaf under a different crop.
-- `POST /analyses/{id}/report` builds the farmer report once per language. With no `LLM_API_KEY`/`LLM_MODEL` it uses the templates in `app/assistant/templates/` (plan Path F). Set both to use Gemini. `LLM_FORCE_FAIL=true` demos the fallback.
+- `POST /analyses/{id}/report` builds the farmer report once per language. With no `LLM_API_KEY`/`LLM_MODEL` it uses the templates in `app/assistant/templates/` (plan Path F). Set both to use Groq. `LLM_FORCE_FAIL=true` demos the fallback.
 - Schema changes go through a new Alembic migration (`alembic revision --autogenerate`), never by editing `0001`.

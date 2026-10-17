@@ -151,22 +151,22 @@ def test_client_retries_once_then_parses_json(llm_on, monkeypatch):
     calls = []
 
     def fake_post(url, **kw):
-        calls.append((url, kw["headers"]["x-goog-api-key"], kw["json"]["generationConfig"]["responseMimeType"]))
+        calls.append((url, kw["headers"]["Authorization"], kw["json"]["model"], kw["json"]["response_format"]))
         if len(calls) == 1:
             return httpx.Response(429)
-        reply = {"candidates": [{"content": {"parts": [{"text": '{"summary": "ok"}'}]}}]}
+        reply = {"choices": [{"message": {"role": "assistant", "content": '{"summary": "ok"}'}}]}
         return httpx.Response(200, content=json.dumps(reply))
 
     monkeypatch.setattr(llm.httpx, "post", fake_post)
     monkeypatch.setattr(llm.time, "sleep", lambda s: None)
     assert llm.generate_json("sys", "user") == {"summary": "ok"}
     assert len(calls) == 2
-    assert calls[0] == ("https://generativelanguage.googleapis.com/v1beta/models/test-model:generateContent",
-                        "test-key", "application/json")
+    assert calls[0] == ("https://api.groq.com/openai/v1/chat/completions", "Bearer test-key", "test-model",
+                        {"type": "json_object"})
 
 
 def test_client_raises_on_non_json_reply(llm_on, monkeypatch):
-    reply = {"candidates": [{"content": {"parts": [{"text": "not json"}]}}]}
+    reply = {"choices": [{"message": {"role": "assistant", "content": "not json"}}]}
     monkeypatch.setattr(llm.httpx, "post", lambda *a, **k: httpx.Response(200, content=json.dumps(reply)))
     with pytest.raises(llm.LLMError):
         llm.generate_json("sys", "user")

@@ -298,7 +298,7 @@ Each decision is the lowest-risk default for 24 hours. Change it only through §
 | T-5 | Image storage | Client-resized JPEG stored in a Postgres `bytea` table (≤500 KB each) | No object storage account needed. `# ponytail:` ceiling: DB bloat past ~10k images, then move to S3/Supabase Storage. | Cloud object storage |
 | T-6 | Auth | Phone + password, **argon2** hash, JWT in **httpOnly Secure SameSite=Lax cookie**. Next.js `rewrites` proxy `/api/*` → backend, so it's same-origin. | Same-origin cookie avoids CORS-credential pitfalls and token-in-localStorage XSS exposure. | OTP (needs an SMS provider, Tier 3) |
 | T-7 | Classifier runtime | Train in **PyTorch** (timm/torchvision). Export **ONNX**. Serve with **onnxruntime CPU**. | Small image, fast CPU inference, fits free-tier RAM better than full PyTorch | Torch in the backend image (large, slow cold start) |
-| T-8 | LLM | **Google Gemini API** (README preference) with function calling + JSON schema output. Exact model ID picked at H0 from provider docs (D-02). | Hindi capable, free tier exists (To verify: quotas), supports tools | Alternatives if no key: any provider the team has a key for, behind the same `LLMClient` interface |
+| T-8 | LLM | **Groq** (OpenAI-compatible chat completions, JSON mode), chosen by the team on 2026-10-17 instead of Gemini with function calling + JSON schema output. Exact model ID picked at H0 from provider docs (D-02). | Hindi capable, free tier exists (To verify: quotas), supports tools | Alternatives if no key: any provider the team has a key for, behind the same `LLMClient` interface |
 | T-9 | Mobile delivery | **Responsive web + installable PWA** (manifest + icons) | Satisfies "App or APK" with no separate build. APK via TWA is Tier 2 (D-06). | Native Android (impossible in 24 h alongside everything else) |
 | T-10 | Hosting | Frontend **Vercel**, backend **Render** (Docker web service), DB **Neon** (or Supabase Postgres) | Free tiers, git-push deploys, HTTPS by default (To verify: account access D-04) | Self-managed VM |
 | T-11 | Reminders | Computed on read (`due_at <= now()`), shown in the app | No scheduler or worker process | Celery/cron + push (Tier 3) |
@@ -1379,7 +1379,7 @@ By H24 we have a working, HTTPS-deployed demo with real auth, real inference and
 | ID | Question | Class | Owner | Deadline | Default if unresolved | Impact |
 |---|---|---|---|---|---|---|
 | D-01 | Member names ↔ M1–M4 ↔ branches; team lead; 5 branch names vs 4 members | Important | Team | H1 | Placeholders; M1 = lead | Ownership clarity |
-| D-02 | LLM provider + key + exact model ID + quotas | **Blocking** (LLM-01) | M2 | H1 | Gemini; if no key by H5 → Path F templates ship | LLM-01/02/03 |
+| D-02 | LLM provider + key + exact model ID + quotas | **Resolved: Groq** (key + model ID go in backend/.env) | M2 | H1 | If no key by H5 → Path F templates ship | LLM-01/02/03 |
 | D-03 | GPU access (Colab/Kaggle/member laptop) | **Blocking** (ML-04/05) | M2 | H2 | F-ML-1 CPU path | ML scope |
 | D-04 | Hosting accounts (Vercel, Render, Neon) | **Blocking** (DEP-01) | M1 | H3 | Alternatives Railway/Fly/Supabase | CP2 |
 | D-05 | data.gov.in API key | Important | M4 | H3 | Snapshot / demo labelled | MKT-04 |
