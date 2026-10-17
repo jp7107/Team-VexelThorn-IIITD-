@@ -10,8 +10,10 @@ os.environ["DATABASE_URL"] = f"postgresql+psycopg://kisan:kisan@localhost:5432/{
 os.environ["ENV"] = "test"
 os.environ["JWT_SECRET"] = "test-secret-test-secret-test-secret-0000"
 os.environ["COOKIE_SECURE"] = "false"
-for key in ("BLUR_MIN", "BRIGHT_MIN", "BRIGHT_MAX", "CONF_ACCEPT", "CONF_FLOOR"):
+# Blank the LLM settings too: tests must never call the real provider, even if backend/.env has a key.
+for key in ("BLUR_MIN", "BRIGHT_MIN", "BRIGHT_MAX", "CONF_ACCEPT", "CONF_FLOOR", "LLM_API_KEY", "LLM_MODEL"):
     os.environ[key] = ""
+os.environ["LLM_FORCE_FAIL"] = "false"
 
 import psycopg  # noqa: E402
 import pytest  # noqa: E402

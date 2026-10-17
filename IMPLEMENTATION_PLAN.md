@@ -1097,7 +1097,7 @@ Status values: `Not Started` · `In Progress` · `Blocked` · `Done`. **Everythi
 | BE-05 | `/analyses` upload validation, EXIF strip, store, **mock** inference, auto reminder | P0 | M1 | M2 | BE-02 | 1.0 | H6.5–7.5 | Done | Contract test with all 5 statuses via `MOCK_STATUS` env | — |
 | BE-03 | Seed script (users, classes, demo data) | P0 | M1 | M4 | BE-01 | 0.5 | H5–5.5 | Done | `python -m app.seed` idempotent | — |
 | DEP-01 | Backend + Neon deploy (Dockerfile, env, migrations on release) | P0 | M1 | — | BE-02 | 1.0 | H5.5–6.5 | Not Started | `/readyz` 200 in prod over HTTPS | Alternate host (CP2) |
-| BE-07 | 6 retrieval tools + executor + role filter + audit | P0 | M1 | M2 | BE-01 | 2.0 | H7.5–9.5 | Not Started | BE-T5 (scoping), BE-T6 (injection args) | Cut to 4 tools (drop `search_schemes`, `get_my_crops`) |
+| BE-07 | 6 retrieval tools + executor + role filter + audit | P0 | M1 | M2 | BE-01 | 2.0 | H7.5–9.5 | Done | BE-T5 (scoping), BE-T6 (injection args) | Cut to 4 tools (drop `search_schemes`, `get_my_crops`) |
 | BE-09 | Reminders, crop updates, support tickets API + public content reads (`/schemes`, `/updates`, `/kb`) | P1 | M1 | M3, M4 | BE-02 | 1.0 | H13–14 | Not Started | CRUD tests, owner checks | Crop updates without photo |
 | BE-06 | Wire real `predict` + model load at startup + timeout | P0 | M1 | M2 | ML-03 | 1.0 | H9.5–10.5 | Done | ML-T1/T2 on deployed backend; latency logged | F-ML-3 |
 | BE-08 | Rate limits (login, analyses, chat), size limits, security headers, CORS lock | P0 | M1 | — | BE-02 | 1.0 | H14–15 | Not Started | BE-T7 (429s) | Login + chat limits only |
@@ -1108,7 +1108,7 @@ Status values: `Not Started` · `In Progress` · `Blocked` · `Done`. **Everythi
 | ML-03 | ONNX export + `inference.py` (preprocess, quality, temp scaling, thresholds, status) + tests | P0 | M2 | M1 | ML-02 | 2.5 | H6–8.5 | Done | ML-T1…T6 pass locally; file ≤ 50 MB | Ship joblib B0 in-process if ONNX export fails |
 | ML-04 | Stage 1 screening (§9.3) + traditional candidates | P1 | M2 | — | ML-01 | 2.0 attn | H6–12 | Not Started | Each run has `metrics.json`; shortlist recorded | Fewer candidates; status `Deferred` |
 | LLM-02 | Report generation (Paths A/B/C/G) + class-integrity check + persistence | P0 | M2 | M1, M4 | LLM-01, BE-06, CNT-01 | 2.0 | H8.5–10.5 | Done | LLM-T1, T4, T7 pass | Template-only reports (Path F) |
-| LLM-03 | Chat with tools, routing D/E/H, Hindi, limits | P0 | M2 | M1 | BE-07, LLM-01 | 2.5 | H10.5–13 | Not Started | LLM-T2, T3, T5, T6 pass | Deterministic retrieval-then-generate (no function calling) |
+| LLM-03 | Chat with tools, routing D/E/H, Hindi, limits | P0 | M2 | M1 | BE-07, LLM-01 | 2.5 | H10.5–13 | Done | LLM-T2, T3, T5, T6 pass | Deterministic retrieval-then-generate (no function calling) |
 | ML-05 | Stage 2 fine-tune top 2, calibration, thresholds, single test eval, CPU bench | P1 | M2 | — | ML-04 | 1.25 attn | H12–12.25 launch, H14.5–15.5 finish | Not Started | Eligibility gate evaluated and recorded | F-ML-4 |
 | AG-01 | Irrigation estimator (`/irrigation/estimate`) using M2's cited Kc table + Open-Meteo + manual fallback | P1 | M1 | M2 (method, Kc table, review) | BE-01 | 1.0 | H10.5–11.5 | Not Started | Unit test with fixed weather JSON; `weather_status=unavailable` path | Text-only guidance from KB |
 | ML-06 | Swap final model, model card, benchmark report (all 18 statuses) | P0 | M2 | M1 | ML-05 | 1.0 | H15.5–16.5 | Not Started | `/readyz` shows new version; report committed | Keep current model |

@@ -19,6 +19,17 @@ class LLMError(Exception):
     """Any failure to get usable JSON from the provider. Callers fall back to templates (plan §12 Path F)."""
 
 
+class LLMRefusal(LLMError):
+    """The model declined in plain text instead of JSON (Groq `json_validate_failed`), e.g. on unsafe requests."""
+
+
+def _is_json_refusal(r: httpx.Response) -> bool:
+    try:
+        return r.status_code == 400 and r.json()["error"]["code"] == "json_validate_failed"
+    except (ValueError, KeyError, TypeError):
+        return False
+
+
 def configured() -> bool:
     s = get_settings()
     return bool(s.LLM_API_KEY and s.LLM_MODEL) and not s.LLM_FORCE_FAIL
@@ -56,6 +67,10 @@ def generate_json(system: str, user: str) -> dict:
         if r.status_code in RETRY_STATUSES and attempt == 1 and deadline - time.monotonic() > 3:
             time.sleep(2)
             continue
+        if _is_json_refusal(r):
+            if attempt == 1:  # often a one-off; the second try usually returns valid JSON
+                continue
+            raise LLMRefusal("model declined in plain text")
         if r.status_code != 200:
             raise LLMError(f"LLM HTTP {r.status_code}")
         try:

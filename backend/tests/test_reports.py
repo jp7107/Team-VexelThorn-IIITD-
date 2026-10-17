@@ -165,6 +165,16 @@ def test_client_retries_once_then_parses_json(llm_on, monkeypatch):
                         {"type": "json_object"})
 
 
+def test_client_retries_plain_text_refusal_once_then_raises_refusal(llm_on, monkeypatch):
+    refusal = httpx.Response(400, content=json.dumps({"error": {"code": "json_validate_failed",
+                                                                "failed_generation": "I can't help with that."}}))
+    calls = []
+    monkeypatch.setattr(llm.httpx, "post", lambda *a, **k: calls.append(1) or refusal)
+    with pytest.raises(llm.LLMRefusal):
+        llm.generate_json("sys", "user")
+    assert len(calls) == 2
+
+
 def test_client_raises_on_non_json_reply(llm_on, monkeypatch):
     reply = {"choices": [{"message": {"role": "assistant", "content": "not json"}}]}
     monkeypatch.setattr(llm.httpx, "post", lambda *a, **k: httpx.Response(200, content=json.dumps(reply)))
