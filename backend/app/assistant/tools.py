@@ -72,6 +72,11 @@ def _name(code: str, lang: str) -> str:
     return (label["name_hi"] if lang == "hi" else label["name_en"]) if label else code
 
 
+def confidence_pct(confidence: float | None) -> int | None:
+    """A model score as a percentage, capped at 99: never presented as certainty."""
+    return None if confidence is None else min(99, round(confidence * 100))
+
+
 def _kb_row(k: KbArticle) -> dict:
     return {"ref": f"kb:{k.id}", "title": k.title, "body": k.body[:1500], "source_name": k.source_name,
             "source_url": k.source_url}
@@ -89,7 +94,8 @@ def get_my_recent_analyses(db: Session, user: User, args: RecentArgs, lang: str)
                       .order_by(Analysis.created_at.desc()).limit(args.limit))
     return [{"ref": f"analysis:{a.id}", "crop": a.crop_code_claimed, "status": a.status,
              "disease": _name(a.predicted_class, lang) if a.predicted_class else None,
-             "confidence": a.confidence, "date": a.created_at.date().isoformat(), "model_version": a.model_version}
+             "model_confidence_pct": confidence_pct(a.confidence), "date": a.created_at.date().isoformat(),
+             "model_version": a.model_version}
             for a in rows]
 
 

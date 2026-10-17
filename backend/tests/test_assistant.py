@@ -214,7 +214,10 @@ def test_chat_about_own_analysis_carries_the_model_result(farmer_client, llm_on,
     out = chat(farmer_client, "What should I do?", lang="en", analysis_id=aid).json()
     assert out["route"] == "A" and out["evidence"][0] == {
         "type": "ml_prediction", "ref": f"analysis:{aid}", "label": out["evidence"][0]["label"], "url": None}
-    assert json.loads(prompts[1].split("DATA:\n", 1)[1])["analysis"]["disease"] == "Early blight"
+    assert out["evidence"][-1]["type"] == "llm_general"  # no verified article backs any advice
+    sent = json.loads(prompts[1].split("DATA:\n", 1)[1])["analysis"]
+    assert sent["disease"] == "Early blight"
+    assert sent["model_confidence_pct"] <= 99 and "confidence" not in sent  # a score, never "100% certain"
 
     other = make_client()
     register(other)

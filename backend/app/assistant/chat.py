@@ -76,7 +76,8 @@ def _analysis_data(a: Analysis | None, lang: str) -> dict | None:
     if a is None:
         return None
     return {"ref": f"analysis:{a.id}", "status": a.status, "crop": a.crop_code_claimed,
-            "disease": _name(a.predicted_class, lang) if a.predicted_class else None, "confidence": a.confidence}
+            "disease": _name(a.predicted_class, lang) if a.predicted_class else None,
+            "model_confidence_pct": tools.confidence_pct(a.confidence)}
 
 
 def _route(analysis: Analysis | None, results: list[tools.ToolResult], follow_ups: list[str], llm_ok: bool) -> str:
@@ -112,7 +113,8 @@ def _llm_turn(db: Session, user: User, history: list[dict], lang: str, analysis:
     if analysis is not None:
         evidence.insert(0, {"type": "ml_prediction", "ref": f"analysis:{analysis.id}",
                             "label": analysis.model_version, "url": None})
-    if not evidence:
+    # Without a verified article or record behind it, any advice in the answer is general advice.
+    if not any(e["type"] in ("kb_article", "db_record") for e in evidence):
         evidence.append({"type": "llm_general", "ref": None, "label": "general guidance, not verified", "url": None})
     return Turn(answer=body.answer, language=lang,
                 route=_route(analysis, results, body.follow_up_questions, True), evidence=evidence,
