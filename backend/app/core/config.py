@@ -24,7 +24,9 @@ class Settings(BaseSettings):
     CONF_FLOOR: float | None = None
 
     LLM_API_KEY: str = ""
-    LLM_MODEL: str = ""
+    LLM_MODEL: str = ""  # Gemini model ID, confirmed from the provider docs (plan D-02)
+    LLM_TIMEOUT_S: float = 25
+    LLM_FORCE_FAIL: bool = False  # demo/test switch for the fallback path (plan §12 Path F)
     DATAGOV_API_KEY: str = ""
 
     SEED_DEMO_PASSWORD: str = ""

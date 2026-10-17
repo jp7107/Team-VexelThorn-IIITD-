@@ -1,0 +1,63 @@
+"""Thin Gemini REST client (plan T-8). The one place that knows the provider; swap this file to change it."""
+
+import json
+import logging
+import time
+
+import httpx
+
+from app.core.config import get_settings
+
+log = logging.getLogger(__name__)
+
+API = "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
+RETRY_STATUSES = {429, 500, 502, 503, 504}
+
+
+class LLMError(Exception):
+    """Any failure to get usable JSON from the provider. Callers fall back to templates (plan §12 Path F)."""
+
+
+def configured() -> bool:
+    s = get_settings()
+    return bool(s.LLM_API_KEY and s.LLM_MODEL) and not s.LLM_FORCE_FAIL
+
+
+def model_name() -> str:
+    return get_settings().LLM_MODEL
+
+
+def generate_json(system: str, user: str) -> dict:
+    """One JSON object from the model. One retry on rate limits, server errors and timeouts."""
+    s = get_settings()
+    if not configured():
+        raise LLMError("LLM not configured")
+    body = {
+        "systemInstruction": {"parts": [{"text": system}]},
+        "contents": [{"role": "user", "parts": [{"text": user}]}],
+        # The schema is described in the prompt and enforced by Pydantic on our side.
+        "generationConfig": {"responseMimeType": "application/json", "temperature": 0.2, "maxOutputTokens": 2048},
+    }
+    deadline = time.monotonic() + s.LLM_TIMEOUT_S
+    for attempt in (1, 2):
+        try:
+            r = httpx.post(API.format(model=s.LLM_MODEL), json=body, headers={"x-goog-api-key": s.LLM_API_KEY},
+                           timeout=max(1.0, deadline - time.monotonic()))
+        except httpx.TimeoutException as e:
+            if attempt == 2 or deadline - time.monotonic() < 3:
+                raise LLMError("LLM timed out") from e
+            time.sleep(2)
+            continue
+        except httpx.HTTPError as e:
+            raise LLMError(f"LLM request failed: {type(e).__name__}") from e
+        if r.status_code in RETRY_STATUSES and attempt == 1 and deadline - time.monotonic() > 3:
+            time.sleep(2)
+            continue
+        if r.status_code != 200:
+            raise LLMError(f"LLM HTTP {r.status_code}")
+        try:
+            parts = r.json()["candidates"][0]["content"]["parts"]
+            return json.loads("".join(p.get("text", "") for p in parts))
+        except (KeyError, IndexError, ValueError, TypeError) as e:
+            raise LLMError("LLM reply was not the expected JSON") from e
+    raise LLMError("LLM retries exhausted")

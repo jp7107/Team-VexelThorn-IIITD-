@@ -140,5 +140,21 @@
     "checkAnother": "Check another leaf",
     "backHome": "Back to home",
     "notFound": "We couldn't find this check."
+  },
+  "report": {
+    "title": "Your report",
+    "loading": "Writing your report…",
+    "symptoms": "Signs to look for",
+    "meaning": "What this means",
+    "infoNeeded": "This would help us be more sure",
+    "actions": "What you can do",
+    "safety": "Safety",
+    "sources": "Sources",
+    "verified": "Verified source",
+    "general": "General advice, not verified",
+    "savedInfo": "Written from KisanSetu's saved information.",
+    "aiWritten": "Written with AI help from the result above.",
+    "failed": "Couldn't load the report.",
+    "retry": "Try again"
   }
 }

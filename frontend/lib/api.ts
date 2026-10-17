@@ -89,6 +89,24 @@ export type Analysis = {
   created_at: string;
 };
 
+/** Farmer report (plan §10.3). `result` is copied from the analysis; the rest is LLM or template text. */
+export type Report = {
+  id: string;
+  analysis_id: string;
+  language: "hi" | "en";
+  llm_status: "ok" | "fallback";
+  content: {
+    summary: string;
+    symptoms_to_check: string[];
+    what_this_means: string;
+    info_needed: string[];
+    recommended_actions: { text: string; evidence_ref: string | null }[];
+    safety_notes: string[];
+    consult_expert: boolean;
+    sources: { name: string; url: string }[];
+  };
+};
+
 /** Where each role lands after logging in. */
 export function homeFor(user: User): string {
   if (user.role === "farmer") return "/farmer";

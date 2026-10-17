@@ -1,0 +1,28 @@
+{
+  "crops": {"tomato": "tomato", "potato": "potato", "maize": "maize"},
+  "summary": {
+    "ok_diseased": "The model found signs of {name} on this {crop} leaf ({pct}% model confidence).",
+    "ok_healthy": "The model did not find disease signs on this {crop} leaf ({pct}% model confidence).",
+    "uncertain": "The model is not sure what this photo shows. It could be one of: {possible}.",
+    "unsupported": "We can't identify this crop or disease yet.",
+    "rejected_quality": "The photo was not clear enough to check.",
+    "error": "Something went wrong while checking this photo."
+  },
+  "meaning": {
+    "ok": "This is an AI check of one photo, not a lab test. Other problems can look similar.",
+    "uncertain": "A clearer photo of one leaf, or confirming the crop, can help the model decide.",
+    "other": "No diagnosis was made from this photo."
+  },
+  "info_needed": {
+    "ok_diseased": ["How many plants show these signs?", "When did you first notice them?"],
+    "uncertain": ["A clear photo of one leaf, in daylight, on a plain background", "Is this the crop you selected?"],
+    "retake": ["A new photo of one leaf, in daylight, held steady"]
+  },
+  "actions": {
+    "read_kb": "Read the verified guidance: {title}",
+    "no_kb": "We don't have verified treatment guidance for this disease yet. Show this result to your local Krishi Vigyan Kendra.",
+    "healthy": "Keep checking a few leaves every week.",
+    "retake": "Take another photo and check again."
+  },
+  "safety": "Do not spray any chemical without advice from your local Krishi Vigyan Kendra or agriculture officer."
+}

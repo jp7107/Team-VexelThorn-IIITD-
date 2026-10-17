@@ -5,18 +5,22 @@ import io
 from datetime import UTC, datetime, timedelta
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, File, Form, UploadFile
+from typing import Literal
+
+from fastapi import APIRouter, Depends, File, Form, Response, UploadFile
 from PIL import Image as PILImage
 from PIL import ImageOps, UnidentifiedImageError
 from pydantic import BaseModel
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
+from app.assistant import report as report_builder
 from app.core.db import get_db
 from app.core.errors import AppError
 from app.core.security import require_role
 from app.ml import inference
-from app.models import Analysis, FarmCrop, Image, Reminder, User
+from app.models import Analysis, FarmCrop, Image, Reminder, Report, User
 
 router = APIRouter(tags=["analyses"])
 farmer = require_role("farmer")
@@ -145,3 +149,58 @@ def my_analyses(limit: int = 20, user: User = Depends(farmer), db: Session = Dep
     q = (select(Analysis).where(Analysis.farmer_id == user.id)
          .order_by(Analysis.created_at.desc()).limit(min(max(limit, 1), 100)))
     return [to_out(a) for a in db.scalars(q)]
+
+
+class ReportIn(BaseModel):
+    language: Literal["en", "hi"]
+
+
+class ReportOut(BaseModel):
+    id: UUID
+    analysis_id: UUID
+    language: str
+    content: dict
+    evidence: list
+    llm_status: str
+    llm_model: str | None
+    created_at: datetime
+
+
+def _report_out(r: Report) -> ReportOut:
+    return ReportOut(id=r.id, analysis_id=r.analysis_id, language=r.language, content=r.content,
+                     evidence=r.evidence, llm_status=r.llm_status, llm_model=r.llm_model, created_at=r.created_at)
+
+
+def _existing_report(db: Session, analysis_id: UUID, language: str) -> Report | None:
+    return db.scalar(select(Report).where(Report.analysis_id == analysis_id, Report.language == language))
+
+
+@router.post("/analyses/{analysis_id}/report", status_code=201, response_model=ReportOut)
+def create_report(analysis_id: UUID, body: ReportIn, response: Response, user: User = Depends(farmer),
+                  db: Session = Depends(get_db)):
+    """Idempotent per (analysis, language): an existing report is returned with 200 (plan §8.4)."""
+    analysis = owned_analysis(db, analysis_id, user)
+    existing = _existing_report(db, analysis.id, body.language)
+    if existing:
+        response.status_code = 200
+        return _report_out(existing)
+    report = Report(analysis_id=analysis.id, language=body.language,
+                    **report_builder.build(db, analysis, body.language))
+    db.add(report)
+    try:
+        db.commit()
+    except IntegrityError:  # the same report was generated concurrently
+        db.rollback()
+        response.status_code = 200
+        return _report_out(_existing_report(db, analysis.id, body.language))
+    return _report_out(report)
+
+
+@router.get("/analyses/{analysis_id}/report", response_model=ReportOut)
+def get_report(analysis_id: UUID, language: Literal["en", "hi"], user: User = Depends(farmer),
+               db: Session = Depends(get_db)):
+    analysis = owned_analysis(db, analysis_id, user)
+    report = _existing_report(db, analysis.id, language)
+    if report is None:
+        raise AppError(404, "No report yet for this language")
+    return _report_out(report)

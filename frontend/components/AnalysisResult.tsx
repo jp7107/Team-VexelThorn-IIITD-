@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { ReportView } from "@/components/ReportView";
 import { ButtonLink } from "@/components/ui";
 import type { Analysis } from "@/lib/api";
 import { useI18n } from "@/lib/i18n";
@@ -92,7 +93,10 @@ export function AnalysisResult({ analysis }: { analysis: Analysis }) {
       {verdict}
       {showRecheck && <p className="mb-4 text-lg">{t("result.recheckAdded")}</p>}
       {(analysis.status === "ok" || analysis.status === "uncertain") && (
-        <p className="mb-4 rounded-xl border-2 border-line px-4 py-3 text-base">{t("result.disclaimer")}</p>
+        <>
+          <ReportView analysisId={analysis.id} />
+          <p className="mb-4 rounded-xl border-2 border-line px-4 py-3 text-base">{t("result.disclaimer")}</p>
+        </>
       )}
       {provenance !== "mock" && (
         <p className="mb-6 text-base text-muted">

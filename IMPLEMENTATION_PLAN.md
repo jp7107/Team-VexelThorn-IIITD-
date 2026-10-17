@@ -1104,10 +1104,10 @@ Status values: `Not Started` · `In Progress` · `Blocked` · `Done`. **Everythi
 | BE-10 | Backend tests: auth, role isolation, IDOR, tools scoping, contracts | P0 | M1 | All | BE-* | 2.0 | H15–17 | Not Started | `pytest -q` green in CI | Keep P0 tests only (§20.1) |
 | ML-01 | Datasets: licence, download, filter MVP classes, dedupe, split, manifest | P0 | M2 | M4 (licence read) | S-01 | 2.5 | H1–3.5 | Done | `manifest.csv`, `labels.json`, `DATA_SOURCES.md` committed; no group across splits | F-ML-2 at H4 |
 | ML-02 | Baseline B0 (frozen MNv2 + logreg), B1 queued | P0 | M2 | — | ML-01 | 1.0 attn | H3.5–4, H5.5–6 | Done | B0 val metrics in `metrics.json` | — |
-| LLM-01 | `LLMClient`, JSON schemas, fallback templates en/hi | P0 | M2 | — | S-04 | 1.5 | H4–5.5 | Not Started | Unit test: schema validation; `LLM_FORCE_FAIL=1` returns template | — |
+| LLM-01 | `LLMClient`, JSON schemas, fallback templates en/hi | P0 | M2 | — | S-04 | 1.5 | H4–5.5 | Done | Unit test: schema validation; `LLM_FORCE_FAIL=1` returns template | — |
 | ML-03 | ONNX export + `inference.py` (preprocess, quality, temp scaling, thresholds, status) + tests | P0 | M2 | M1 | ML-02 | 2.5 | H6–8.5 | Done | ML-T1…T6 pass locally; file ≤ 50 MB | Ship joblib B0 in-process if ONNX export fails |
 | ML-04 | Stage 1 screening (§9.3) + traditional candidates | P1 | M2 | — | ML-01 | 2.0 attn | H6–12 | Not Started | Each run has `metrics.json`; shortlist recorded | Fewer candidates; status `Deferred` |
-| LLM-02 | Report generation (Paths A/B/C/G) + class-integrity check + persistence | P0 | M2 | M1, M4 | LLM-01, BE-06, CNT-01 | 2.0 | H8.5–10.5 | Not Started | LLM-T1, T4, T7 pass | Template-only reports (Path F) |
+| LLM-02 | Report generation (Paths A/B/C/G) + class-integrity check + persistence | P0 | M2 | M1, M4 | LLM-01, BE-06, CNT-01 | 2.0 | H8.5–10.5 | Done | LLM-T1, T4, T7 pass | Template-only reports (Path F) |
 | LLM-03 | Chat with tools, routing D/E/H, Hindi, limits | P0 | M2 | M1 | BE-07, LLM-01 | 2.5 | H10.5–13 | Not Started | LLM-T2, T3, T5, T6 pass | Deterministic retrieval-then-generate (no function calling) |
 | ML-05 | Stage 2 fine-tune top 2, calibration, thresholds, single test eval, CPU bench | P1 | M2 | — | ML-04 | 1.25 attn | H12–12.25 launch, H14.5–15.5 finish | Not Started | Eligibility gate evaluated and recorded | F-ML-4 |
 | AG-01 | Irrigation estimator (`/irrigation/estimate`) using M2's cited Kc table + Open-Meteo + manual fallback | P1 | M1 | M2 (method, Kc table, review) | BE-01 | 1.0 | H10.5–11.5 | Not Started | Unit test with fixed weather JSON; `weather_status=unavailable` path | Text-only guidance from KB |
@@ -1117,7 +1117,7 @@ Status values: `Not Started` · `In Progress` · `Blocked` · `Done`. **Everythi
 | DEP-02 | Vercel deploy + `BACKEND_URL` rewrite | P0 | M3 | M1 | FE-01, DEP-01 | 0.5 | H6–6.5 | Not Started | Prod login via proxy works | Same-origin fallback: serve via backend CORS + bearer |
 | FE-03 | Farmer dashboard | P0 | M3 | — | FE-02 | 1.0 | H5.5–6.5 | In Progress | Shows reminders/crops/last analysis/prices card | Without prices card |
 | FE-04 | Diagnose flow: crop pick, capture, client resize, all result states, photo tips | P0 | M3 | M2 | BE-05 | 2.5 | H6.5–9 | Done | FE-T2/T3 | — |
-| FE-05 | Report view + "Ask about this" | P0 | M3 | M2 | LLM-02 (fixtures until H10.5) | 1.5 | H9–10.5 | Not Started | Evidence and `llm_general` labels visible | — |
+| FE-05 | Report view + "Ask about this" | P0 | M3 | M2 | LLM-02 (fixtures until H10.5) | 1.5 | H9–10.5 | Done | Evidence and `llm_general` labels visible | — |
 | FE-06 | Chat UI: evidence chips, follow-ups, Hindi, thinking/timeout states | P0 | M3 | M2 | LLM-03 (fixtures until H13) | 2.5 | H10.5–13 | Not Started | FE-T4 | Plain text answers without chips |
 | FE-07 | Reminders + crop updates UI | P1 | M3 | M1 | BE-09 | 1.0 | H16–17 | Not Started | Due reminder visible on dashboard | Reminders only |
 | FE-08 | Irrigation card | P1 | M3 | M1 | AG-01 | 1.0 | H13–14 | Not Started | Shows estimate label + sources | Text only |

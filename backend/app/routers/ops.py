@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
-from app.core.config import get_settings
+from app.assistant import llm
 from app.core.db import get_db
 from app.ml import inference
 
@@ -25,5 +25,5 @@ def readyz(db: Session = Depends(get_db)):
     return {
         "db": db_status,
         "model": {"loaded": info is not None, **(info.model_dump() if info else {})},
-        "llm_configured": bool(get_settings().LLM_API_KEY),
+        "llm_configured": llm.configured(),
     }
