@@ -1,0 +1,22 @@
+{
+  "_note": "MVP class set (plan D-09): PlantVillage tomato, potato, maize. M2 must re-check against the downloaded dataset folders. name_hi values need native-speaker review (plan §15.3).",
+  "classes": [
+    {"code": "tomato__bacterial_spot", "crop_code": "tomato", "plantvillage_dir": "Tomato___Bacterial_spot", "name_en": "Bacterial spot", "name_hi": "जीवाणु धब्बा", "is_healthy": false},
+    {"code": "tomato__early_blight", "crop_code": "tomato", "plantvillage_dir": "Tomato___Early_blight", "name_en": "Early blight", "name_hi": "अगेती झुलसा", "is_healthy": false},
+    {"code": "tomato__late_blight", "crop_code": "tomato", "plantvillage_dir": "Tomato___Late_blight", "name_en": "Late blight", "name_hi": "पछेती झुलसा", "is_healthy": false},
+    {"code": "tomato__leaf_mold", "crop_code": "tomato", "plantvillage_dir": "Tomato___Leaf_Mold", "name_en": "Leaf mold", "name_hi": "पत्ती फफूंद", "is_healthy": false},
+    {"code": "tomato__septoria_leaf_spot", "crop_code": "tomato", "plantvillage_dir": "Tomato___Septoria_leaf_spot", "name_en": "Septoria leaf spot", "name_hi": "सेप्टोरिया पत्ती धब्बा", "is_healthy": false},
+    {"code": "tomato__spider_mites", "crop_code": "tomato", "plantvillage_dir": "Tomato___Spider_mites Two-spotted_spider_mite", "name_en": "Spider mites (two-spotted)", "name_hi": "मकड़ी घुन", "is_healthy": false},
+    {"code": "tomato__target_spot", "crop_code": "tomato", "plantvillage_dir": "Tomato___Target_Spot", "name_en": "Target spot", "name_hi": "टारगेट धब्बा", "is_healthy": false},
+    {"code": "tomato__yellow_leaf_curl_virus", "crop_code": "tomato", "plantvillage_dir": "Tomato___Tomato_Yellow_Leaf_Curl_Virus", "name_en": "Yellow leaf curl virus", "name_hi": "पीला पत्ती मोड़ विषाणु", "is_healthy": false},
+    {"code": "tomato__mosaic_virus", "crop_code": "tomato", "plantvillage_dir": "Tomato___Tomato_mosaic_virus", "name_en": "Mosaic virus", "name_hi": "मोज़ेक विषाणु", "is_healthy": false},
+    {"code": "tomato__healthy", "crop_code": "tomato", "plantvillage_dir": "Tomato___healthy", "name_en": "Healthy", "name_hi": "स्वस्थ", "is_healthy": true},
+    {"code": "potato__early_blight", "crop_code": "potato", "plantvillage_dir": "Potato___Early_blight", "name_en": "Early blight", "name_hi": "अगेती झुलसा", "is_healthy": false},
+    {"code": "potato__late_blight", "crop_code": "potato", "plantvillage_dir": "Potato___Late_blight", "name_en": "Late blight", "name_hi": "पछेती झुलसा", "is_healthy": false},
+    {"code": "potato__healthy", "crop_code": "potato", "plantvillage_dir": "Potato___healthy", "name_en": "Healthy", "name_hi": "स्वस्थ", "is_healthy": true},
+    {"code": "maize__gray_leaf_spot", "crop_code": "maize", "plantvillage_dir": "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot", "name_en": "Gray leaf spot (Cercospora)", "name_hi": "धूसर पत्ती धब्बा", "is_healthy": false},
+    {"code": "maize__common_rust", "crop_code": "maize", "plantvillage_dir": "Corn_(maize)___Common_rust_", "name_en": "Common rust", "name_hi": "सामान्य रतुआ", "is_healthy": false},
+    {"code": "maize__northern_leaf_blight", "crop_code": "maize", "plantvillage_dir": "Corn_(maize)___Northern_Leaf_Blight", "name_en": "Northern leaf blight", "name_hi": "उत्तरी पत्ती झुलसा", "is_healthy": false},
+    {"code": "maize__healthy", "crop_code": "maize", "plantvillage_dir": "Corn_(maize)___healthy", "name_en": "Healthy", "name_hi": "स्वस्थ", "is_healthy": true}
+  ]
+}

@@ -298,7 +298,7 @@ Each decision is the lowest-risk default for 24 hours. Change it only through §
 | T-5 | Image storage | Client-resized JPEG stored in a Postgres `bytea` table (≤500 KB each) | No object storage account needed. `# ponytail:` ceiling: DB bloat past ~10k images, then move to S3/Supabase Storage. | Cloud object storage |
 | T-6 | Auth | Phone + password, **argon2** hash, JWT in **httpOnly Secure SameSite=Lax cookie**. Next.js `rewrites` proxy `/api/*` → backend, so it's same-origin. | Same-origin cookie avoids CORS-credential pitfalls and token-in-localStorage XSS exposure. | OTP (needs an SMS provider, Tier 3) |
 | T-7 | Classifier runtime | Train in **PyTorch** (timm/torchvision). Export **ONNX**. Serve with **onnxruntime CPU**. | Small image, fast CPU inference, fits free-tier RAM better than full PyTorch | Torch in the backend image (large, slow cold start) |
-| T-8 | LLM | **Google Gemini API** (README preference) with function calling + JSON schema output. Exact model ID picked at H0 from provider docs (D-02). | Hindi capable, free tier exists (To verify: quotas), supports tools | Alternatives if no key: any provider the team has a key for, behind the same `LLMClient` interface |
+| T-8 | LLM | **Groq** (OpenAI-compatible chat completions, JSON mode), chosen by the team on 2026-10-17 instead of Gemini with function calling + JSON schema output. Exact model ID picked at H0 from provider docs (D-02). | Hindi capable, free tier exists (To verify: quotas), supports tools | Alternatives if no key: any provider the team has a key for, behind the same `LLMClient` interface |
 | T-9 | Mobile delivery | **Responsive web + installable PWA** (manifest + icons) | Satisfies "App or APK" with no separate build. APK via TWA is Tier 2 (D-06). | Native Android (impossible in 24 h alongside everything else) |
 | T-10 | Hosting | Frontend **Vercel**, backend **Render** (Docker web service), DB **Neon** (or Supabase Postgres) | Free tiers, git-push deploys, HTTPS by default (To verify: account access D-04) | Self-managed VM |
 | T-11 | Reminders | Computed on read (`due_at <= now()`), shown in the app | No scheduler or worker process | Celery/cron + push (Tier 3) |
@@ -1089,36 +1089,36 @@ Status values: `Not Started` · `In Progress` · `Blocked` · `Done`. **Everythi
 | ID | Task | Pri | DRI | Support | Depends on | Est h | Window | Status | Acceptance / tests | Fallback if late |
 |---|---|---|---|---|---|---|---|---|---|---|
 | S-01 | Kickoff: confirm scope, names, accounts, blocking decisions | P0 | M1 | All | — | 1×4 | H0–1 | Not Started | §24 Blocking rows filled | Defaults in §24 |
-| S-02 | Monorepo scaffold, docker-compose Postgres, `.env.example`, `.gitignore`, CI (ruff+pytest, lint+build) | P0 | M1 | — | S-01 | 1.0 | H1–2 | Not Started | Fresh clone → `docker compose up -d db` → backend boots; CI green | CI deferred to H7 |
-| S-04 | API + schema contracts (`openapi-draft.yaml`, Pydantic + SQLAlchemy models, `predict` signature) | P0 | M1 | All (M4 drafts marketplace/content tables) | S-01 | 1.0 | H2–3 | Not Started | All 4 members approve in PR | Freeze by H4 latest |
-| BE-01 | Migration 001 (all §7 tables, constraints, indexes) | P0 | M1 | M4 | S-04 | 0.5 | H3–3.5 | Not Started | `alembic upgrade head` + `downgrade base` clean; constraint tests (rating unique, stars CHECK) | — |
-| BE-02 | Auth + RBAC + cookie + `require_role` | P0 | M1 | M3 | BE-01 | 1.5 | H3.5–5 | Not Started | BE-T1/T2 pass; admin self-register blocked | Bearer token instead of cookie if proxy issues (≤30 min) |
-| BE-04 | Error envelope, request-id, logging (no PII), `/healthz`, `/readyz` | P0 | M1 | — | S-02 | 0.5 | H3–3.5 (with BE-01) | Not Started | Every error matches envelope (BE-T3) | — |
-| BE-05 | `/analyses` upload validation, EXIF strip, store, **mock** inference, auto reminder | P0 | M1 | M2 | BE-02 | 1.0 | H6.5–7.5 | Not Started | Contract test with all 5 statuses via `MOCK_STATUS` env | — |
-| BE-03 | Seed script (users, classes, demo data) | P0 | M1 | M4 | BE-01 | 0.5 | H5–5.5 | Not Started | `python -m app.seed` idempotent | — |
+| S-02 | Monorepo scaffold, docker-compose Postgres, `.env.example`, `.gitignore`, CI (ruff+pytest, lint+build) | P0 | M1 | — | S-01 | 1.0 | H1–2 | In Progress | Fresh clone → `docker compose up -d db` → backend boots; CI green | CI deferred to H7 |
+| S-04 | API + schema contracts (`openapi-draft.yaml`, Pydantic + SQLAlchemy models, `predict` signature) | P0 | M1 | All (M4 drafts marketplace/content tables) | S-01 | 1.0 | H2–3 | In Progress | All 4 members approve in PR | Freeze by H4 latest |
+| BE-01 | Migration 001 (all §7 tables, constraints, indexes) | P0 | M1 | M4 | S-04 | 0.5 | H3–3.5 | Done | `alembic upgrade head` + `downgrade base` clean; constraint tests (rating unique, stars CHECK) | — |
+| BE-02 | Auth + RBAC + cookie + `require_role` | P0 | M1 | M3 | BE-01 | 1.5 | H3.5–5 | Done | BE-T1/T2 pass; admin self-register blocked | Bearer token instead of cookie if proxy issues (≤30 min) |
+| BE-04 | Error envelope, request-id, logging (no PII), `/healthz`, `/readyz` | P0 | M1 | — | S-02 | 0.5 | H3–3.5 (with BE-01) | Done | Every error matches envelope (BE-T3) | — |
+| BE-05 | `/analyses` upload validation, EXIF strip, store, **mock** inference, auto reminder | P0 | M1 | M2 | BE-02 | 1.0 | H6.5–7.5 | Done | Contract test with all 5 statuses via `MOCK_STATUS` env | — |
+| BE-03 | Seed script (users, classes, demo data) | P0 | M1 | M4 | BE-01 | 0.5 | H5–5.5 | Done | `python -m app.seed` idempotent | — |
 | DEP-01 | Backend + Neon deploy (Dockerfile, env, migrations on release) | P0 | M1 | — | BE-02 | 1.0 | H5.5–6.5 | Not Started | `/readyz` 200 in prod over HTTPS | Alternate host (CP2) |
-| BE-07 | 6 retrieval tools + executor + role filter + audit | P0 | M1 | M2 | BE-01 | 2.0 | H7.5–9.5 | Not Started | BE-T5 (scoping), BE-T6 (injection args) | Cut to 4 tools (drop `search_schemes`, `get_my_crops`) |
+| BE-07 | 6 retrieval tools + executor + role filter + audit | P0 | M1 | M2 | BE-01 | 2.0 | H7.5–9.5 | Done | BE-T5 (scoping), BE-T6 (injection args) | Cut to 4 tools (drop `search_schemes`, `get_my_crops`) |
 | BE-09 | Reminders, crop updates, support tickets API + public content reads (`/schemes`, `/updates`, `/kb`) | P1 | M1 | M3, M4 | BE-02 | 1.0 | H13–14 | Not Started | CRUD tests, owner checks | Crop updates without photo |
-| BE-06 | Wire real `predict` + model load at startup + timeout | P0 | M1 | M2 | ML-03 | 1.0 | H9.5–10.5 | Not Started | ML-T1/T2 on deployed backend; latency logged | F-ML-3 |
+| BE-06 | Wire real `predict` + model load at startup + timeout | P0 | M1 | M2 | ML-03 | 1.0 | H9.5–10.5 | Done | ML-T1/T2 on deployed backend; latency logged | F-ML-3 |
 | BE-08 | Rate limits (login, analyses, chat), size limits, security headers, CORS lock | P0 | M1 | — | BE-02 | 1.0 | H14–15 | Not Started | BE-T7 (429s) | Login + chat limits only |
 | BE-10 | Backend tests: auth, role isolation, IDOR, tools scoping, contracts | P0 | M1 | All | BE-* | 2.0 | H15–17 | Not Started | `pytest -q` green in CI | Keep P0 tests only (§20.1) |
-| ML-01 | Datasets: licence, download, filter MVP classes, dedupe, split, manifest | P0 | M2 | M4 (licence read) | S-01 | 2.5 | H1–3.5 | Not Started | `manifest.csv`, `labels.json`, `DATA_SOURCES.md` committed; no group across splits | F-ML-2 at H4 |
-| ML-02 | Baseline B0 (frozen MNv2 + logreg), B1 queued | P0 | M2 | — | ML-01 | 1.0 attn | H3.5–4, H5.5–6 | Not Started | B0 val metrics in `metrics.json` | — |
-| LLM-01 | `LLMClient`, JSON schemas, fallback templates en/hi | P0 | M2 | — | S-04 | 1.5 | H4–5.5 | Not Started | Unit test: schema validation; `LLM_FORCE_FAIL=1` returns template | — |
-| ML-03 | ONNX export + `inference.py` (preprocess, quality, temp scaling, thresholds, status) + tests | P0 | M2 | M1 | ML-02 | 2.5 | H6–8.5 | Not Started | ML-T1…T6 pass locally; file ≤ 50 MB | Ship joblib B0 in-process if ONNX export fails |
+| ML-01 | Datasets: licence, download, filter MVP classes, dedupe, split, manifest | P0 | M2 | M4 (licence read) | S-01 | 2.5 | H1–3.5 | Done | `manifest.csv`, `labels.json`, `DATA_SOURCES.md` committed; no group across splits | F-ML-2 at H4 |
+| ML-02 | Baseline B0 (frozen MNv2 + logreg), B1 queued | P0 | M2 | — | ML-01 | 1.0 attn | H3.5–4, H5.5–6 | Done | B0 val metrics in `metrics.json` | — |
+| LLM-01 | `LLMClient`, JSON schemas, fallback templates en/hi | P0 | M2 | — | S-04 | 1.5 | H4–5.5 | Done | Unit test: schema validation; `LLM_FORCE_FAIL=1` returns template | — |
+| ML-03 | ONNX export + `inference.py` (preprocess, quality, temp scaling, thresholds, status) + tests | P0 | M2 | M1 | ML-02 | 2.5 | H6–8.5 | Done | ML-T1…T6 pass locally; file ≤ 50 MB | Ship joblib B0 in-process if ONNX export fails |
 | ML-04 | Stage 1 screening (§9.3) + traditional candidates | P1 | M2 | — | ML-01 | 2.0 attn | H6–12 | Not Started | Each run has `metrics.json`; shortlist recorded | Fewer candidates; status `Deferred` |
-| LLM-02 | Report generation (Paths A/B/C/G) + class-integrity check + persistence | P0 | M2 | M1, M4 | LLM-01, BE-06, CNT-01 | 2.0 | H8.5–10.5 | Not Started | LLM-T1, T4, T7 pass | Template-only reports (Path F) |
-| LLM-03 | Chat with tools, routing D/E/H, Hindi, limits | P0 | M2 | M1 | BE-07, LLM-01 | 2.5 | H10.5–13 | Not Started | LLM-T2, T3, T5, T6 pass | Deterministic retrieval-then-generate (no function calling) |
+| LLM-02 | Report generation (Paths A/B/C/G) + class-integrity check + persistence | P0 | M2 | M1, M4 | LLM-01, BE-06, CNT-01 | 2.0 | H8.5–10.5 | Done | LLM-T1, T4, T7 pass | Template-only reports (Path F) |
+| LLM-03 | Chat with tools, routing D/E/H, Hindi, limits | P0 | M2 | M1 | BE-07, LLM-01 | 2.5 | H10.5–13 | Done | LLM-T2, T3, T5, T6 pass | Deterministic retrieval-then-generate (no function calling) |
 | ML-05 | Stage 2 fine-tune top 2, calibration, thresholds, single test eval, CPU bench | P1 | M2 | — | ML-04 | 1.25 attn | H12–12.25 launch, H14.5–15.5 finish | Not Started | Eligibility gate evaluated and recorded | F-ML-4 |
 | AG-01 | Irrigation estimator (`/irrigation/estimate`) using M2's cited Kc table + Open-Meteo + manual fallback | P1 | M1 | M2 (method, Kc table, review) | BE-01 | 1.0 | H10.5–11.5 | Not Started | Unit test with fixed weather JSON; `weather_status=unavailable` path | Text-only guidance from KB |
 | ML-06 | Swap final model, model card, benchmark report (all 18 statuses) | P0 | M2 | M1 | ML-05 | 1.0 | H15.5–16.5 | Not Started | `/readyz` shows new version; report committed | Keep current model |
-| FE-01 | Next.js shell, Tailwind, i18n en/hi, layout, API client, `/api` rewrite, PWA manifest | P0 | M3 | — | S-01 | 2.5 | H1–3.5 | Not Started | `npm run build` ok; language toggle works | Plain JSON dictionaries |
-| FE-02 | Login/register (role, customer type), onboarding, role routing | P0 | M3 | M1 | BE-02 (fixtures until H5) | 2.0 | H3.5–5.5 | Not Started | FE-T1 | — |
+| FE-01 | Next.js shell, Tailwind, i18n en/hi, layout, API client, `/api` rewrite, PWA manifest | P0 | M3 | — | S-01 | 2.5 | H1–3.5 | Done | `npm run build` ok; language toggle works | Plain JSON dictionaries |
+| FE-02 | Login/register (role, customer type), onboarding, role routing | P0 | M3 | M1 | BE-02 (fixtures until H5) | 2.0 | H3.5–5.5 | Done | FE-T1 | — |
 | DEP-02 | Vercel deploy + `BACKEND_URL` rewrite | P0 | M3 | M1 | FE-01, DEP-01 | 0.5 | H6–6.5 | Not Started | Prod login via proxy works | Same-origin fallback: serve via backend CORS + bearer |
-| FE-03 | Farmer dashboard | P0 | M3 | — | FE-02 | 1.0 | H5.5–6.5 | Not Started | Shows reminders/crops/last analysis/prices card | Without prices card |
-| FE-04 | Diagnose flow: crop pick, capture, client resize, all result states, photo tips | P0 | M3 | M2 | BE-05 | 2.5 | H6.5–9 | Not Started | FE-T2/T3 | — |
-| FE-05 | Report view + "Ask about this" | P0 | M3 | M2 | LLM-02 (fixtures until H10.5) | 1.5 | H9–10.5 | Not Started | Evidence and `llm_general` labels visible | — |
-| FE-06 | Chat UI: evidence chips, follow-ups, Hindi, thinking/timeout states | P0 | M3 | M2 | LLM-03 (fixtures until H13) | 2.5 | H10.5–13 | Not Started | FE-T4 | Plain text answers without chips |
+| FE-03 | Farmer dashboard | P0 | M3 | — | FE-02 | 1.0 | H5.5–6.5 | In Progress | Shows reminders/crops/last analysis/prices card | Without prices card |
+| FE-04 | Diagnose flow: crop pick, capture, client resize, all result states, photo tips | P0 | M3 | M2 | BE-05 | 2.5 | H6.5–9 | Done | FE-T2/T3 | — |
+| FE-05 | Report view + "Ask about this" | P0 | M3 | M2 | LLM-02 (fixtures until H10.5) | 1.5 | H9–10.5 | Done | Evidence and `llm_general` labels visible | — |
+| FE-06 | Chat UI: evidence chips, follow-ups, Hindi, thinking/timeout states | P0 | M3 | M2 | LLM-03 (fixtures until H13) | 2.5 | H10.5–13 | Done | FE-T4 | Plain text answers without chips |
 | FE-07 | Reminders + crop updates UI | P1 | M3 | M1 | BE-09 | 1.0 | H16–17 | Not Started | Due reminder visible on dashboard | Reminders only |
 | FE-08 | Irrigation card | P1 | M3 | M1 | AG-01 | 1.0 | H13–14 | Not Started | Shows estimate label + sources | Text only |
 | FE-09 | Schemes + updates read pages | P1 | M3 | M4 | CNT-02, BE-09 (fixtures until H14) | 0.5 | H14–14.5 | Not Started | Official link + verified date visible | Updates list only |
@@ -1379,7 +1379,7 @@ By H24 we have a working, HTTPS-deployed demo with real auth, real inference and
 | ID | Question | Class | Owner | Deadline | Default if unresolved | Impact |
 |---|---|---|---|---|---|---|
 | D-01 | Member names ↔ M1–M4 ↔ branches; team lead; 5 branch names vs 4 members | Important | Team | H1 | Placeholders; M1 = lead | Ownership clarity |
-| D-02 | LLM provider + key + exact model ID + quotas | **Blocking** (LLM-01) | M2 | H1 | Gemini; if no key by H5 → Path F templates ship | LLM-01/02/03 |
+| D-02 | LLM provider + key + exact model ID + quotas | **Resolved: Groq** (key + model ID go in backend/.env) | M2 | H1 | If no key by H5 → Path F templates ship | LLM-01/02/03 |
 | D-03 | GPU access (Colab/Kaggle/member laptop) | **Blocking** (ML-04/05) | M2 | H2 | F-ML-1 CPU path | ML scope |
 | D-04 | Hosting accounts (Vercel, Render, Neon) | **Blocking** (DEP-01) | M1 | H3 | Alternatives Railway/Fly/Supabase | CP2 |
 | D-05 | data.gov.in API key | Important | M4 | H3 | Snapshot / demo labelled | MKT-04 |

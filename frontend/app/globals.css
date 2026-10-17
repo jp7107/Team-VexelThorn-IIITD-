@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+/* Neel (indigo) for structure, haldi (turmeric) as the single bold accent, field green for healthy.
+   High contrast on white because phones get used outdoors. */
+@theme {
+  --color-ink: #1f2a6b;
+  --color-ink-strong: #141c4d;
+  --color-surface: #eef0fa;
+  --color-line: #c9cde3;
+  --color-text: #1f2433;
+  --color-muted: #545a70;
+  --color-haldi: #f2b705;
+  --color-haldi-soft: #fff4cc;
+  --color-field: #2e7d32;
+  --color-field-soft: #e3f1e4;
+  --color-danger: #b3261e;
+  --color-danger-soft: #fce9e7;
+  --font-sans: var(--font-mukta), system-ui, sans-serif;
+}
+
+html {
+  font-size: 112.5%; /* 18px base: easier reading for low-literacy users */
+}
+
+body {
+  background: #ffffff;
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  line-height: 1.55;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-haldi);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
