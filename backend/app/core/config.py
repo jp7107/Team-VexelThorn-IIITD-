@@ -16,10 +16,10 @@ class Settings(BaseSettings):
     JWT_TTL_HOURS: int = 12
     COOKIE_SECURE: bool = False
 
-    MOCK_STATUS: Literal["ok", "uncertain", "unsupported", "rejected_quality", "error"] = "ok"
     BLUR_MIN: float | None = None
     BRIGHT_MIN: float | None = None
     BRIGHT_MAX: float | None = None
+    # Override the validated thresholds shipped in app/ml/model/model.json (plan §9.7).
     CONF_ACCEPT: float | None = None
     CONF_FLOOR: float | None = None
 

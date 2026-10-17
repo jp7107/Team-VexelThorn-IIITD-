@@ -10,7 +10,6 @@ os.environ["DATABASE_URL"] = f"postgresql+psycopg://kisan:kisan@localhost:5432/{
 os.environ["ENV"] = "test"
 os.environ["JWT_SECRET"] = "test-secret-test-secret-test-secret-0000"
 os.environ["COOKIE_SECURE"] = "false"
-os.environ["MOCK_STATUS"] = "ok"
 for key in ("BLUR_MIN", "BRIGHT_MIN", "BRIGHT_MAX", "CONF_ACCEPT", "CONF_FLOOR"):
     os.environ[key] = ""
 

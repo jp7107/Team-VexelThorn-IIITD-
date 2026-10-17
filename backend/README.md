@@ -1,6 +1,6 @@
 # Backend (FastAPI)
 
-Implements plan tasks S-02 (partial), BE-01–BE-05: schema for every table in plan §7, auth with role checks, profile/crops/reminders, and `/analyses` running on a **mock** classifier.
+Implements plan tasks S-02 (partial), BE-01–BE-05: schema for every table in plan §7, auth with role checks, profile/crops/reminders, and `/analyses` running the B0 disease model (ONNX, CPU) from `app/ml/model/`.
 
 ## Run locally
 
@@ -42,5 +42,5 @@ Needs the Docker Postgres running. Tests create and migrate a separate `kisan_te
 
 - Auth is an httpOnly `session` cookie, so call the API same-origin through the Next.js `/api` rewrite (plan T-6).
 - Every error is `{"error": {"code", "message", "details", "request_id"}}`.
-- `/analyses` results have `model.provenance == "mock"` until the real model lands. Show that in the UI. Set `MOCK_STATUS` in `.env` to see each result state (`ok`, `uncertain`, `unsupported`, `rejected_quality`, `error`).
+- `/analyses` runs the model in `app/ml/model/` (exported by `ml/export_onnx.py`; thresholds and temperature live in `model.json`). To see `rejected_quality`, set `BRIGHT_MIN=0.5` and upload a dark photo. To see `uncertain`, upload a leaf under a different crop.
 - Schema changes go through a new Alembic migration (`alembic revision --autogenerate`), never by editing `0001`.

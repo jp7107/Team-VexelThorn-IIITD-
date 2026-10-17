@@ -30,7 +30,8 @@ function Verdict({ tone, title, children }: { tone: "alert" | "good" | "neutral"
 export function AnalysisResult({ analysis }: { analysis: Analysis }) {
   const { t, lang } = useI18n();
   const name = (n: { name: string | null; name_hi: string | null }) => (lang === "hi" ? n.name_hi : n.name) ?? "";
-  const pct = analysis.confidence === null ? null : Math.round(analysis.confidence * 100);
+  // Never show 100%: a model score is not certainty.
+  const pct = analysis.confidence === null ? null : Math.min(99, Math.round(analysis.confidence * 100));
   const p = analysis.prediction;
 
   let verdict: ReactNode;

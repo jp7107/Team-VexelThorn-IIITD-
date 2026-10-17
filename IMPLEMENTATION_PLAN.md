@@ -1099,13 +1099,13 @@ Status values: `Not Started` · `In Progress` · `Blocked` · `Done`. **Everythi
 | DEP-01 | Backend + Neon deploy (Dockerfile, env, migrations on release) | P0 | M1 | — | BE-02 | 1.0 | H5.5–6.5 | Not Started | `/readyz` 200 in prod over HTTPS | Alternate host (CP2) |
 | BE-07 | 6 retrieval tools + executor + role filter + audit | P0 | M1 | M2 | BE-01 | 2.0 | H7.5–9.5 | Not Started | BE-T5 (scoping), BE-T6 (injection args) | Cut to 4 tools (drop `search_schemes`, `get_my_crops`) |
 | BE-09 | Reminders, crop updates, support tickets API + public content reads (`/schemes`, `/updates`, `/kb`) | P1 | M1 | M3, M4 | BE-02 | 1.0 | H13–14 | Not Started | CRUD tests, owner checks | Crop updates without photo |
-| BE-06 | Wire real `predict` + model load at startup + timeout | P0 | M1 | M2 | ML-03 | 1.0 | H9.5–10.5 | Not Started | ML-T1/T2 on deployed backend; latency logged | F-ML-3 |
+| BE-06 | Wire real `predict` + model load at startup + timeout | P0 | M1 | M2 | ML-03 | 1.0 | H9.5–10.5 | Done | ML-T1/T2 on deployed backend; latency logged | F-ML-3 |
 | BE-08 | Rate limits (login, analyses, chat), size limits, security headers, CORS lock | P0 | M1 | — | BE-02 | 1.0 | H14–15 | Not Started | BE-T7 (429s) | Login + chat limits only |
 | BE-10 | Backend tests: auth, role isolation, IDOR, tools scoping, contracts | P0 | M1 | All | BE-* | 2.0 | H15–17 | Not Started | `pytest -q` green in CI | Keep P0 tests only (§20.1) |
 | ML-01 | Datasets: licence, download, filter MVP classes, dedupe, split, manifest | P0 | M2 | M4 (licence read) | S-01 | 2.5 | H1–3.5 | Done | `manifest.csv`, `labels.json`, `DATA_SOURCES.md` committed; no group across splits | F-ML-2 at H4 |
 | ML-02 | Baseline B0 (frozen MNv2 + logreg), B1 queued | P0 | M2 | — | ML-01 | 1.0 attn | H3.5–4, H5.5–6 | Done | B0 val metrics in `metrics.json` | — |
 | LLM-01 | `LLMClient`, JSON schemas, fallback templates en/hi | P0 | M2 | — | S-04 | 1.5 | H4–5.5 | Not Started | Unit test: schema validation; `LLM_FORCE_FAIL=1` returns template | — |
-| ML-03 | ONNX export + `inference.py` (preprocess, quality, temp scaling, thresholds, status) + tests | P0 | M2 | M1 | ML-02 | 2.5 | H6–8.5 | Not Started | ML-T1…T6 pass locally; file ≤ 50 MB | Ship joblib B0 in-process if ONNX export fails |
+| ML-03 | ONNX export + `inference.py` (preprocess, quality, temp scaling, thresholds, status) + tests | P0 | M2 | M1 | ML-02 | 2.5 | H6–8.5 | Done | ML-T1…T6 pass locally; file ≤ 50 MB | Ship joblib B0 in-process if ONNX export fails |
 | ML-04 | Stage 1 screening (§9.3) + traditional candidates | P1 | M2 | — | ML-01 | 2.0 attn | H6–12 | Not Started | Each run has `metrics.json`; shortlist recorded | Fewer candidates; status `Deferred` |
 | LLM-02 | Report generation (Paths A/B/C/G) + class-integrity check + persistence | P0 | M2 | M1, M4 | LLM-01, BE-06, CNT-01 | 2.0 | H8.5–10.5 | Not Started | LLM-T1, T4, T7 pass | Template-only reports (Path F) |
 | LLM-03 | Chat with tools, routing D/E/H, Hindi, limits | P0 | M2 | M1 | BE-07, LLM-01 | 2.5 | H10.5–13 | Not Started | LLM-T2, T3, T5, T6 pass | Deterministic retrieval-then-generate (no function calling) |

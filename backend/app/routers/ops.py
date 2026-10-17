@@ -21,8 +21,9 @@ def readyz(db: Session = Depends(get_db)):
         db_status = "ok"
     except Exception:
         db_status = "error"
+    info = inference.model_info()
     return {
         "db": db_status,
-        "model": {"loaded": inference.is_ready(), **inference.model_info().model_dump()},
+        "model": {"loaded": info is not None, **(info.model_dump() if info else {})},
         "llm_configured": bool(get_settings().LLM_API_KEY),
     }
