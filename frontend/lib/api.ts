@@ -128,6 +128,43 @@ export type ChatReply = {
   llm_status: "ok" | "fallback";
 };
 
+export type Unit = "kg" | "quintal" | "tonne" | "dozen";
+
+export type Listing = {
+  id: string;
+  crop_code: string;
+  title: string;
+  description: string | null;
+  quantity: string;
+  unit: Unit;
+  price_per_unit: string | null;
+  min_order_qty: string | null;
+  state: string;
+  district: string;
+  status: "open" | "closed" | "hidden";
+  created_at: string;
+  farmer: { id: string; first_name: string; rating_avg: number | null; rating_count: number };
+  is_mine: boolean;
+  pending_enquiries: number | null;
+};
+
+export type Enquiry = {
+  id: string;
+  listing_id: string;
+  listing_title: string;
+  crop_code: string;
+  unit: Unit;
+  quantity: string;
+  message: string | null;
+  status: "pending" | "accepted" | "declined" | "withdrawn";
+  created_at: string;
+  buyer_first_name: string;
+  buyer_type: "retail" | "wholesale" | null;
+  farmer_first_name: string;
+  farmer_phone: string | null;
+  can_rate: boolean;
+};
+
 /** Where each role lands after logging in. */
 export function homeFor(user: User): string {
   if (user.role === "farmer") return "/farmer";

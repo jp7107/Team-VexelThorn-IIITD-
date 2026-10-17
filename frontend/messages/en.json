@@ -82,7 +82,9 @@
     "buyerIntro": "Browsing listings arrives in the next build.",
     "adminIntro": "The admin console arrives in a later build.",
     "checkCrop": "Check my crop",
-    "askAssistant": "Ask the assistant"
+    "askAssistant": "Ask the assistant",
+    "sell": "Sell my crop",
+    "enquiries": "Enquiries"
   },
   "errors": {
     "required": "Fill this in",
@@ -182,5 +184,91 @@
     "s_buyer_1": "What is today's mandi price for potato?",
     "s_buyer_2": "Which government schemes support farmers?",
     "s_check": "What should I do now?"
+  },
+  "market": {
+    "title": "Buy produce",
+    "myEnquiries": "My enquiries",
+    "allCrops": "All",
+    "anyState": "All states",
+    "minQty": "Minimum quantity (quintal)",
+    "empty": "No listings match. Try another crop or state.",
+    "bulk": "Bulk",
+    "perUnit": "per {unit}",
+    "priceOnRequest": "Price on request",
+    "by": "Sold by {name}",
+    "rating": "★ {avg} ({count})",
+    "noRating": "No ratings yet",
+    "minOrder": "Minimum order: {qty} {unit}",
+    "enquire": "Send enquiry",
+    "enquiryQty": "How much do you want? ({unit})",
+    "enquiryMsg": "Message to the farmer (optional)",
+    "sent": "Enquiry sent. You'll see the farmer's number here once they accept.",
+    "viewEnquiries": "See my enquiries",
+    "tooMuch": "That's more than is listed",
+    "alreadyPending": "You already have a pending enquiry for this listing.",
+    "notOpen": "This listing is no longer open.",
+    "yours": "This is your listing.",
+    "manage": "Manage my listings",
+    "location": "{district}, {state}",
+    "notFound": "This listing isn't available.",
+    "price": "Price"
+  },
+  "sell": {
+    "title": "My listings",
+    "new": "List produce",
+    "crop": "Crop",
+    "otherCrop": "Other crop",
+    "otherCropName": "Crop name",
+    "listingTitle": "Short title",
+    "titleHint": "For example: Fresh red tomatoes",
+    "quantity": "Quantity",
+    "unit": "Unit",
+    "price": "Price per unit (₹, optional)",
+    "minOrder": "Minimum order (optional)",
+    "description": "Details (optional)",
+    "save": "List it",
+    "cancel": "Cancel",
+    "none": "You haven't listed anything yet.",
+    "pending": "{n} new enquiries",
+    "close": "Close listing",
+    "reopen": "Reopen",
+    "hiddenNote": "Hidden by an admin.",
+    "seeEnquiries": "See enquiries"
+  },
+  "enq": {
+    "title": "Enquiries",
+    "received": "Enquiries for your produce",
+    "sent": "Your enquiries",
+    "none": "No enquiries yet.",
+    "from": "{name} ({type})",
+    "to": "Farmer: {name}",
+    "qty": "Wants {qty} {unit}",
+    "accept": "Accept",
+    "decline": "Decline",
+    "withdraw": "Withdraw",
+    "call": "Call {phone}",
+    "whatsapp": "WhatsApp",
+    "acceptedNote": "Accepted. Contact the farmer to agree price and delivery.",
+    "waText": "Hello, I'm contacting you about your KisanSetu listing: {title}",
+    "browse": "Browse produce"
+  },
+  "units": {
+    "kg": "kg",
+    "quintal": "quintal",
+    "tonne": "tonne",
+    "dozen": "dozen"
+  },
+  "statuses": {
+    "pending": "Waiting",
+    "accepted": "Accepted",
+    "declined": "Declined",
+    "withdrawn": "Withdrawn",
+    "open": "Open",
+    "closed": "Closed",
+    "hidden": "Hidden"
+  },
+  "buyerTypes": {
+    "retail": "shop or home",
+    "wholesale": "wholesaler"
   }
 }

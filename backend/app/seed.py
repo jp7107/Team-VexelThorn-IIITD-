@@ -4,7 +4,9 @@ Run: python -m app.seed   (needs SEED_DEMO_PASSWORD in the environment or .env)
 """
 
 import sys
+from decimal import Decimal
 
+from sqlalchemy import select
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 
@@ -12,7 +14,7 @@ from app.core.config import get_settings
 from app.core.db import SessionLocal
 from app.core.security import hash_password
 from app.ml.inference import labels
-from app.models import DiseaseClass, User
+from app.models import DiseaseClass, Listing, User
 
 DEMO_USERS = [
     {"phone": "9000000001", "name": "Demo Admin", "role": "admin", "customer_type": None},
@@ -33,7 +35,29 @@ def seed(db: Session, password: str) -> None:
         db.execute(insert(User).values(**u, password_hash=password_hash, language="hi",
                                        state="Delhi", district="New Delhi")
                    .on_conflict_do_nothing(index_elements=["phone"]))
+    db.flush()
+    _seed_demo_listings(db)
     db.commit()
+
+
+# Visibly labelled so nobody mistakes them for real produce (plan §7).
+DEMO_LISTINGS = [
+    ("9000000002", "tomato", "[DEMO] Hybrid tomatoes, firm and red", "8", "quintal", "1600", "1"),
+    ("9000000002", "potato", "[DEMO] Potatoes, cold-store grade", "40", "quintal", "1100", "5"),
+    ("9000000003", "maize", "[DEMO] Dry maize grain", "500", "kg", "22", None),
+]
+
+
+def _seed_demo_listings(db: Session) -> None:
+    for phone, crop, title, qty, unit, price, min_qty in DEMO_LISTINGS:
+        farmer = db.scalar(select(User).where(User.phone == phone))
+        if farmer is None or db.scalar(select(Listing.id).where(Listing.farmer_id == farmer.id,
+                                                                Listing.title == title)):
+            continue
+        db.add(Listing(farmer_id=farmer.id, crop_code=crop, title=title, quantity=Decimal(qty), unit=unit,
+                       price_per_unit=Decimal(price), min_order_qty=Decimal(min_qty) if min_qty else None,
+                       description="Demo listing for testing the marketplace.",
+                       state=farmer.state, district=farmer.district))
 
 
 if __name__ == "__main__":
@@ -42,4 +66,4 @@ if __name__ == "__main__":
         sys.exit("Set SEED_DEMO_PASSWORD (min 8 characters) before seeding.")
     with SessionLocal() as session:
         seed(session, password)
-    print(f"Seeded {len(labels())} disease classes and {len(DEMO_USERS)} demo users.")
+    print(f"Seeded {len(labels())} disease classes, {len(DEMO_USERS)} demo users, demo listings.")
