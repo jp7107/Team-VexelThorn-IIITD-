@@ -15,7 +15,7 @@ from app.core.config import get_settings
 from app.core.db import SessionLocal
 from app.core.security import hash_password
 from app.ml.inference import labels
-from app.models import DiseaseClass, Listing, MarketPrice, User
+from app.models import DiseaseClass, Listing, MarketPrice, Scheme, User
 
 DEMO_USERS = [
     {"phone": "9000000001", "name": "Demo Admin", "role": "admin", "customer_type": None},
@@ -39,6 +39,7 @@ def seed(db: Session, password: str) -> None:
     db.flush()
     _seed_demo_listings(db)
     _seed_demo_prices(db)
+    _seed_schemes(db)
     db.commit()
 
 
@@ -83,10 +84,53 @@ def _seed_demo_prices(db: Session) -> None:
         ).on_conflict_do_nothing(constraint="one_price_per_market_day"))
 
 
+# Written only from the official pages, checked on 2026-10-17 (plan §14.3). Re-check before demo day.
+# Soil Health Card (soilhealth.dac.gov.in) and PMKSY (pmksy.gov.in) returned 403 then; an admin should add
+# them from their official pages rather than from memory.
+SCHEMES = [
+    {
+        "name": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+        "summary": "Income support for landholding farmer families, paid directly in three equal instalments a year.",
+        "eligibility_text": "Landholding farmer families (husband, wife and minor children), identified by the State or "
+                            "UT government. eKYC is mandatory. Not eligible: institutional landholders, holders of "
+                            "constitutional posts, people who paid income tax in the last assessment year, serving or "
+                            "retired government employees (except Multi Tasking Staff/Group D), pensioners with "
+                            "Rs 10,000 or more a month, and registered professionals such as doctors, engineers, "
+                            "lawyers, chartered accountants and architects.",
+        "benefit_text": "Rs 6,000 per year in three equal instalments.",
+        "official_url": "https://pmkisan.gov.in/",
+    },
+    {
+        "name": "Pradhan Mantri Fasal Bima Yojana (PMFBY)",
+        "summary": "Government-sponsored crop insurance scheme. The official portal lets farmers apply for crop "
+                   "insurance, calculate the premium and check their application status.",
+        "eligibility_text": "Check who can enrol, premium rates and deadlines on the official portal.",
+        "benefit_text": None,
+        "official_url": "https://pmfby.gov.in/",
+    },
+    {
+        "name": "Kisan Credit Card (KCC)",
+        "summary": "Adequate and timely bank credit for farming operations through a Kisan Credit Card.",
+        "eligibility_text": "Owner cultivators (individual or joint borrowers); tenant farmers, oral lessees and "
+                            "sharecroppers; Self Help Groups or Joint Liability Groups of farmers.",
+        "benefit_text": "The Government of India gives 2% interest subvention and a 3% prompt repayment incentive, "
+                        "making credit available at 4% a year. This applies on an overall limit of Rs 3 lakh a year "
+                        "(maximum Rs 2 lakh for farmers only in animal husbandry and/or fisheries).",
+        "official_url": "https://www.myscheme.gov.in/schemes/kcc",
+    },
+]
+
+
+def _seed_schemes(db: Session) -> None:
+    for scheme in SCHEMES:
+        if not db.scalar(select(Scheme.id).where(Scheme.name == scheme["name"])):
+            db.add(Scheme(**scheme, states=[], last_verified_at=date(2026, 10, 17), published=True))
+
+
 if __name__ == "__main__":
     password = get_settings().SEED_DEMO_PASSWORD
     if len(password) < 8:
         sys.exit("Set SEED_DEMO_PASSWORD (min 8 characters) before seeding.")
     with SessionLocal() as session:
         seed(session, password)
-    print(f"Seeded {len(labels())} disease classes, {len(DEMO_USERS)} demo users, demo listings and prices.")
+    print(f"Seeded {len(labels())} disease classes, {len(DEMO_USERS)} demo users, demo listings and prices, verified schemes.")

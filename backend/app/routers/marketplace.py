@@ -93,7 +93,7 @@ def _ratings(db: Session, farmer_ids: set[UUID]) -> dict[UUID, tuple[float | Non
     return {fid: (round(float(avg), 1), n) for fid, avg, n in rows}
 
 
-def _out(db: Session, listings: list[Listing], viewer: User) -> list[ListingOut]:
+def listing_rows(db: Session, listings: list[Listing], viewer: User) -> list[ListingOut]:
     owners = {u.id: u for u in db.scalars(select(User).where(User.id.in_({l.farmer_id for l in listings})))}
     ratings = _ratings(db, set(owners))
     pending: dict[UUID, int] = {}
@@ -130,7 +130,7 @@ def browse(crop_code: str | None = Query(None, max_length=30), state: str | None
         q = q.where(func.lower(Listing.district) == district.lower())
     if min_quintal is not None:  # wholesaler filter, in quintals whatever unit the listing uses
         q = q.where(Listing.quantity * KG_PER_UNIT >= min_quintal * 100)
-    return _out(db, list(db.scalars(q.order_by(Listing.created_at.desc()).limit(limit).offset(offset))), user)
+    return listing_rows(db, list(db.scalars(q.order_by(Listing.created_at.desc()).limit(limit).offset(offset))), user)
 
 
 @router.post("/listings", status_code=201, response_model=ListingOut)
@@ -141,13 +141,13 @@ def create_listing(body: ListingIn, user: User = Depends(farmer), db: Session = 
     listing = Listing(**data, farmer_id=user.id)
     db.add(listing)
     db.commit()
-    return _out(db, [listing], user)[0]
+    return listing_rows(db, [listing], user)[0]
 
 
 @router.get("/me/listings", response_model=list[ListingOut])
 def my_listings(user: User = Depends(farmer), db: Session = Depends(get_db)):
     q = select(Listing).where(Listing.farmer_id == user.id).order_by(Listing.created_at.desc())
-    return _out(db, list(db.scalars(q)), user)
+    return listing_rows(db, list(db.scalars(q)), user)
 
 
 def _visible_listing(db: Session, listing_id: UUID, user: User) -> Listing:
@@ -160,7 +160,7 @@ def _visible_listing(db: Session, listing_id: UUID, user: User) -> Listing:
 
 @router.get("/listings/{listing_id}", response_model=ListingOut)
 def get_listing(listing_id: UUID, user: User = Depends(current_user), db: Session = Depends(get_db)):
-    return _out(db, [_visible_listing(db, listing_id, user)], user)[0]
+    return listing_rows(db, [_visible_listing(db, listing_id, user)], user)[0]
 
 
 @router.patch("/listings/{listing_id}", response_model=ListingOut)
@@ -186,7 +186,7 @@ def update_listing(listing_id: UUID, body: ListingPatch, user: User = Depends(cu
     if listing.min_order_qty is not None and listing.min_order_qty > listing.quantity:
         raise AppError(422, "min_order_qty cannot exceed quantity")
     db.commit()
-    return _out(db, [listing], user)[0]
+    return listing_rows(db, [listing], user)[0]
 
 
 # --- enquiries ---

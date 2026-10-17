@@ -196,6 +196,44 @@ export type Prices = {
   rows: PriceRow[];
 };
 
+export type Scheme = {
+  id: string;
+  name: string;
+  summary: string;
+  eligibility_text: string;
+  benefit_text: string | null;
+  official_url: string;
+  states: string[];
+  last_verified_at: string;
+  published: boolean;
+};
+
+export type FarmUpdate = { id: string; title: string; body: string; source_url: string | null; published_at: string };
+
+export type KbArticle = {
+  id: string;
+  title: string;
+  body: string;
+  topic: "disease" | "productivity" | "irrigation" | "general";
+  language: "en" | "hi";
+  disease_class_code: string | null;
+  crop_code: string | null;
+  source_name: string;
+  source_url: string;
+  verified_by: string;
+  verified_at: string;
+};
+
+export type AdminUser = {
+  id: string;
+  name: string;
+  role: UserRole;
+  customer_type: "retail" | "wholesale" | null;
+  state: string;
+  district: string;
+  created_at: string;
+};
+
 /** Where each role lands after logging in. */
 export function homeFor(user: User): string {
   if (user.role === "farmer") return "/farmer";
