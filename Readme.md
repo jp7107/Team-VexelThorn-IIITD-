@@ -2,7 +2,6 @@
 
 A comprehensive platform addressing key challenges across multiple domains, from professional networking to healthcare. 
 
-![Project Themes](PHOTO-2026-10-17-12-36-47.jpg)[cite: 1]
 
 ## 🎯 Core Themes and Problem Statements
 
