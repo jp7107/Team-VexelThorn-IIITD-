@@ -1089,13 +1089,13 @@ Status values: `Not Started` · `In Progress` · `Blocked` · `Done`. **Everythi
 | ID | Task | Pri | DRI | Support | Depends on | Est h | Window | Status | Acceptance / tests | Fallback if late |
 |---|---|---|---|---|---|---|---|---|---|---|
 | S-01 | Kickoff: confirm scope, names, accounts, blocking decisions | P0 | M1 | All | — | 1×4 | H0–1 | Not Started | §24 Blocking rows filled | Defaults in §24 |
-| S-02 | Monorepo scaffold, docker-compose Postgres, `.env.example`, `.gitignore`, CI (ruff+pytest, lint+build) | P0 | M1 | — | S-01 | 1.0 | H1–2 | Not Started | Fresh clone → `docker compose up -d db` → backend boots; CI green | CI deferred to H7 |
-| S-04 | API + schema contracts (`openapi-draft.yaml`, Pydantic + SQLAlchemy models, `predict` signature) | P0 | M1 | All (M4 drafts marketplace/content tables) | S-01 | 1.0 | H2–3 | Not Started | All 4 members approve in PR | Freeze by H4 latest |
-| BE-01 | Migration 001 (all §7 tables, constraints, indexes) | P0 | M1 | M4 | S-04 | 0.5 | H3–3.5 | Not Started | `alembic upgrade head` + `downgrade base` clean; constraint tests (rating unique, stars CHECK) | — |
-| BE-02 | Auth + RBAC + cookie + `require_role` | P0 | M1 | M3 | BE-01 | 1.5 | H3.5–5 | Not Started | BE-T1/T2 pass; admin self-register blocked | Bearer token instead of cookie if proxy issues (≤30 min) |
-| BE-04 | Error envelope, request-id, logging (no PII), `/healthz`, `/readyz` | P0 | M1 | — | S-02 | 0.5 | H3–3.5 (with BE-01) | Not Started | Every error matches envelope (BE-T3) | — |
-| BE-05 | `/analyses` upload validation, EXIF strip, store, **mock** inference, auto reminder | P0 | M1 | M2 | BE-02 | 1.0 | H6.5–7.5 | Not Started | Contract test with all 5 statuses via `MOCK_STATUS` env | — |
-| BE-03 | Seed script (users, classes, demo data) | P0 | M1 | M4 | BE-01 | 0.5 | H5–5.5 | Not Started | `python -m app.seed` idempotent | — |
+| S-02 | Monorepo scaffold, docker-compose Postgres, `.env.example`, `.gitignore`, CI (ruff+pytest, lint+build) | P0 | M1 | — | S-01 | 1.0 | H1–2 | In Progress | Fresh clone → `docker compose up -d db` → backend boots; CI green | CI deferred to H7 |
+| S-04 | API + schema contracts (`openapi-draft.yaml`, Pydantic + SQLAlchemy models, `predict` signature) | P0 | M1 | All (M4 drafts marketplace/content tables) | S-01 | 1.0 | H2–3 | In Progress | All 4 members approve in PR | Freeze by H4 latest |
+| BE-01 | Migration 001 (all §7 tables, constraints, indexes) | P0 | M1 | M4 | S-04 | 0.5 | H3–3.5 | Done | `alembic upgrade head` + `downgrade base` clean; constraint tests (rating unique, stars CHECK) | — |
+| BE-02 | Auth + RBAC + cookie + `require_role` | P0 | M1 | M3 | BE-01 | 1.5 | H3.5–5 | Done | BE-T1/T2 pass; admin self-register blocked | Bearer token instead of cookie if proxy issues (≤30 min) |
+| BE-04 | Error envelope, request-id, logging (no PII), `/healthz`, `/readyz` | P0 | M1 | — | S-02 | 0.5 | H3–3.5 (with BE-01) | Done | Every error matches envelope (BE-T3) | — |
+| BE-05 | `/analyses` upload validation, EXIF strip, store, **mock** inference, auto reminder | P0 | M1 | M2 | BE-02 | 1.0 | H6.5–7.5 | Done | Contract test with all 5 statuses via `MOCK_STATUS` env | — |
+| BE-03 | Seed script (users, classes, demo data) | P0 | M1 | M4 | BE-01 | 0.5 | H5–5.5 | Done | `python -m app.seed` idempotent | — |
 | DEP-01 | Backend + Neon deploy (Dockerfile, env, migrations on release) | P0 | M1 | — | BE-02 | 1.0 | H5.5–6.5 | Not Started | `/readyz` 200 in prod over HTTPS | Alternate host (CP2) |
 | BE-07 | 6 retrieval tools + executor + role filter + audit | P0 | M1 | M2 | BE-01 | 2.0 | H7.5–9.5 | Not Started | BE-T5 (scoping), BE-T6 (injection args) | Cut to 4 tools (drop `search_schemes`, `get_my_crops`) |
 | BE-09 | Reminders, crop updates, support tickets API + public content reads (`/schemes`, `/updates`, `/kb`) | P1 | M1 | M3, M4 | BE-02 | 1.0 | H13–14 | Not Started | CRUD tests, owner checks | Crop updates without photo |
