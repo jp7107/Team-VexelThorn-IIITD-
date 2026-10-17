@@ -1128,7 +1128,7 @@ Status values: `Not Started` · `In Progress` · `Blocked` · `Done`. **Everythi
 | MKT-02 | Listings API + create/browse/filter/detail UI | P0 | M4 | M3 | BE-02 | 3.0 | H5.5–8.5 | Done | MKT-T1/T2 | No edit, only close |
 | MKT-03 | Enquiries: create, accept/decline/withdraw, contact reveal | P0 | M4 | M1 | MKT-02 | 2.0 | H8.5–10, H11.5–12 | Done | MKT-T3/T4 (phone hidden before accept) | No withdraw |
 | MKT-04 | Price fetch + cache + page | P0 | M4 | — | MKT-01 | 2.0 | H12–14 | Not Started | MKT-T5 (source/date/demo badge) | Snapshot only |
-| MKT-05 | Ratings API + UI + averages | P1 | M4 | — | MKT-03 | 1.0 | H14–15 | Not Started | MKT-T6 (once per enquiry, 409) | API + avg display only |
+| MKT-05 | Ratings API + UI + averages | P1 | M4 | — | MKT-03 | 1.0 | H14–15 | Done | MKT-T6 (once per enquiry, 409) | API + avg display only |
 | ADM-01 | Admin console (schemes, updates, KB, listings hide, users, tickets) | P0 | M4 | M1 | BE-02 | 1.5 | H15–16.5 | Not Started | ADM-T1 (non-admin 403) | Schemes + updates + hide only |
 | FE-10 | Help page: videos, support form, helplines (verified) | P1 | M4 | M3 | BE-09 | 0.5 | H16.5–17 | Not Started | Form creates ticket | Links only |
 | QA-02 | Playwright farmer journey + manual phone pass | P0 | M3 | — | CP7 | 1.5 | H17–18.5 | Not Started | §20.4 flows 1–4 | Manual scripted check |

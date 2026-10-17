@@ -2,9 +2,9 @@
 
 import { useParams } from "next/navigation";
 import { Suspense, useEffect, useState, type FormEvent } from "react";
-import { CropIcon, isBulk, StatusPill, useFormat } from "@/components/market";
+import { CropIcon, isBulk, Stars, StatusPill, useFormat } from "@/components/market";
 import { Button, ButtonLink, Field, FormError, Loading, Screen, inputClass } from "@/components/ui";
-import { api, ApiError, type Listing } from "@/lib/api";
+import { api, ApiError, type FarmerRatings, type Listing } from "@/lib/api";
 import { describedBy, errorKey } from "@/lib/forms";
 import { useI18n } from "@/lib/i18n";
 import { useSession } from "@/lib/session";
@@ -63,6 +63,30 @@ function EnquiryForm({ listing }: { listing: Listing }) {
   );
 }
 
+function Reviews({ farmerId }: { farmerId: string }) {
+  const { t } = useI18n();
+  const [data, setData] = useState<FarmerRatings | null>(null);
+  useEffect(() => {
+    api<FarmerRatings>(`/farmers/${farmerId}/ratings`).then(setData).catch(() => setData(null));
+  }, [farmerId]);
+  if (!data) return null;
+  return (
+    <section className="mb-5" aria-labelledby="reviews-title">
+      <h2 id="reviews-title" className="mb-2 text-xl font-extrabold text-ink">{t("rate.reviews")}</h2>
+      {data.recent.length === 0 ? <p className="text-lg text-muted">{t("rate.noReviews")}</p> : (
+        <ul className="flex flex-col gap-2">
+          {data.recent.map((r) => (
+            <li key={r.created_at} className="rounded-xl bg-surface px-3 py-2">
+              <p className="text-lg"><Stars n={r.stars} /> <span className="font-semibold">{r.buyer_first_name}</span></p>
+              {r.comment && <p className="text-lg">{r.comment}</p>}
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+  );
+}
+
 function ListingView() {
   const { t } = useI18n();
   const f = useFormat();
@@ -109,6 +133,7 @@ function ListingView() {
         </div>
       </dl>
       {listing.description && <p className="mb-5 whitespace-pre-line text-lg">{listing.description}</p>}
+      <Reviews farmerId={listing.farmer.id} />
 
       {listing.is_mine ? (
         <>

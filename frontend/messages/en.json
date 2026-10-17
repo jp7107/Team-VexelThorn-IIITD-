@@ -270,5 +270,15 @@
   "buyerTypes": {
     "retail": "shop or home",
     "wholesale": "wholesaler"
+  },
+  "rate": {
+    "title": "Rate the farmer",
+    "star": "{n} out of 5 stars",
+    "comment": "Comment (optional)",
+    "submit": "Submit rating",
+    "done": "You rated {n} ★",
+    "pick": "Choose 1 to 5 stars",
+    "reviews": "Reviews",
+    "noReviews": "No reviews yet."
   }
 }

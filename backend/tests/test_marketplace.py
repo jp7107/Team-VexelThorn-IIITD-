@@ -117,3 +117,57 @@ def test_only_owner_edits_and_only_admin_hides():
     assert c.get("/listings").json() == []
     assert f.patch(f"/listings/{lid}", json={"status": "open"}).status_code == 403  # owner can't unhide
     assert admin.patch(f"/listings/{lid}", json={"status": "open"}).json()["status"] == "open"
+
+
+# --- ratings (MKT-05) ---
+
+def accepted_enquiry():
+    f, c, farmer, buyer, listing = setup()
+    eid = c.post(f"/listings/{listing['id']}/enquiries", json={"quantity": "1"}).json()["id"]
+    f.patch(f"/enquiries/{eid}", json={"status": "accepted"})
+    return f, c, farmer, listing, eid
+
+
+def test_buyer_rates_once_and_average_shows_on_listings():
+    f, c, farmer, listing, eid = accepted_enquiry()
+    r = c.post(f"/enquiries/{eid}/rating", json={"stars": 4, "comment": "  Good quality  "})
+    assert r.status_code == 201 and r.json()["comment"] == "Good quality"
+    assert c.post(f"/enquiries/{eid}/rating", json={"stars": 1}).status_code == 409  # once per enquiry
+
+    sent = c.get("/me/enquiries").json()[0]
+    assert sent["can_rate"] is False and sent["my_rating"] == 4
+    assert c.get(f"/listings/{listing['id']}").json()["farmer"]["rating_avg"] == 4.0
+
+    # A second accepted deal from another buyer moves the average.
+    other = make_client()
+    register(other, role="customer", name="Bina Store")
+    eid2 = other.post(f"/listings/{listing['id']}/enquiries", json={"quantity": "1"}).json()["id"]
+    f.patch(f"/enquiries/{eid2}", json={"status": "accepted"})
+    other.post(f"/enquiries/{eid2}/rating", json={"stars": 5})
+    seller = c.get("/listings").json()[0]["farmer"]
+    assert seller["rating_avg"] == 4.5 and seller["rating_count"] == 2
+
+    reviews = c.get(f"/farmers/{farmer['id']}/ratings").json()
+    assert reviews["avg"] == 4.5 and reviews["count"] == 2
+    assert [(x["buyer_first_name"], x["stars"]) for x in reviews["recent"]] == [("Bina", 5), ("Asha", 4)]
+    assert "phone" not in json.dumps(reviews)
+
+
+def test_only_the_buyer_of_an_accepted_enquiry_can_rate():
+    f, c, _, listing, eid = accepted_enquiry()
+    assert f.post(f"/enquiries/{eid}/rating", json={"stars": 5}).status_code == 403  # farmers can't rate
+    stranger = make_client()
+    register(stranger, role="customer")
+    assert stranger.post(f"/enquiries/{eid}/rating", json={"stars": 5}).status_code == 404
+    for stars in (0, 6):
+        assert c.post(f"/enquiries/{eid}/rating", json={"stars": stars}).status_code == 422
+
+    pending = c.post(f"/listings/{listing['id']}/enquiries", json={"quantity": "1"}).json()["id"]
+    assert c.post(f"/enquiries/{pending}/rating", json={"stars": 5}).status_code == 409
+    assert c.get("/me/enquiries").json()[0]["can_rate"] is False  # newest is the pending one
+
+
+def test_ratings_endpoint_only_for_farmers():
+    _, c, _, _, _ = setup()
+    buyer_id = c.get("/auth/me").json()["id"]
+    assert c.get(f"/farmers/{buyer_id}/ratings").status_code == 404

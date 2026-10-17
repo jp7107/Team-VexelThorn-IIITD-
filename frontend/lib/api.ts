@@ -163,6 +163,14 @@ export type Enquiry = {
   farmer_first_name: string;
   farmer_phone: string | null;
   can_rate: boolean;
+  my_rating: number | null;
+};
+
+export type FarmerRatings = {
+  farmer_id: string;
+  avg: number | null;
+  count: number;
+  recent: { stars: number; comment: string | null; buyer_first_name: string; created_at: string }[];
 };
 
 /** Where each role lands after logging in. */

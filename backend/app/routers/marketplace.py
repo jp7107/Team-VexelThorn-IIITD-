@@ -212,6 +212,7 @@ class EnquiryOut(BaseModel):
     farmer_first_name: str
     farmer_phone: str | None  # only for the buyer, only once accepted
     can_rate: bool = False
+    my_rating: int | None = None  # the buyer's own stars, once given
 
 
 def _enquiry_out(e: Enquiry, listing: Listing, buyer: User, owner: User, viewer: User) -> EnquiryOut:
@@ -249,11 +250,14 @@ def my_enquiries(user: User = Depends(require_role("farmer", "customer")), db: S
     rows = db.execute(q.order_by(Enquiry.created_at.desc()).limit(100)).all()
     people = {u.id: u for u in db.scalars(select(User).where(User.id.in_(
         {e.buyer_id for e, _ in rows} | {l.farmer_id for _, l in rows})))}
-    rated = set(db.scalars(select(Rating.enquiry_id).where(Rating.enquiry_id.in_([e.id for e, _ in rows]))))
+    rated = dict(db.execute(select(Rating.enquiry_id, Rating.stars)
+                            .where(Rating.enquiry_id.in_([e.id for e, _ in rows]))).all())
     out = []
     for e, listing in rows:
         item = _enquiry_out(e, listing, people[e.buyer_id], people[listing.farmer_id], user)
-        item.can_rate = user.role == "customer" and e.status == "accepted" and e.id not in rated
+        if user.role == "customer":
+            item.can_rate = e.status == "accepted" and e.id not in rated
+            item.my_rating = rated.get(e.id)
         out.append(item)
     return out
 
@@ -282,3 +286,59 @@ def update_enquiry(enquiry_id: UUID, body: EnquiryPatch, user: User = Depends(re
     enquiry.responded_at = datetime.now(UTC)
     db.commit()
     return _enquiry_out(enquiry, listing, db.get(User, enquiry.buyer_id), db.get(User, listing.farmer_id), user)
+
+
+# --- ratings (MKT-05) ---
+
+class RatingIn(BaseModel):
+    stars: int = Field(ge=1, le=5)
+    comment: str | None = Field(None, max_length=300)
+
+
+class RatingOut(BaseModel):
+    stars: int
+    comment: str | None
+    buyer_first_name: str
+    created_at: datetime
+
+
+class FarmerRatings(BaseModel):
+    farmer_id: UUID
+    avg: float | None
+    count: int
+    recent: list[RatingOut]
+
+
+@router.post("/enquiries/{enquiry_id}/rating", status_code=201, response_model=RatingOut)
+def rate_farmer(enquiry_id: UUID, body: RatingIn, user: User = Depends(customer), db: Session = Depends(get_db)):
+    """Only the buyer of an accepted enquiry may rate, once (plan A-5: real counterparties only)."""
+    enquiry = db.get(Enquiry, enquiry_id)
+    if enquiry is None or enquiry.buyer_id != user.id:
+        raise AppError(404, "Enquiry not found")
+    if enquiry.status != "accepted":
+        raise AppError(409, "You can rate a farmer after they accept your enquiry")
+    listing = db.get(Listing, enquiry.listing_id)
+    comment = body.comment.strip() if body.comment and body.comment.strip() else None
+    rating = Rating(enquiry_id=enquiry.id, farmer_id=listing.farmer_id, buyer_id=user.id, stars=body.stars,
+                    comment=comment)
+    db.add(rating)
+    try:
+        db.commit()
+    except IntegrityError:  # ratings.enquiry_id is unique
+        db.rollback()
+        raise AppError(409, "You have already rated this enquiry")
+    return RatingOut(stars=rating.stars, comment=rating.comment, buyer_first_name=user.name.split()[0],
+                     created_at=rating.created_at)
+
+
+@router.get("/farmers/{farmer_id}/ratings", response_model=FarmerRatings)
+def farmer_ratings(farmer_id: UUID, user: User = Depends(current_user), db: Session = Depends(get_db)):
+    farmer_user = db.get(User, farmer_id)
+    if farmer_user is None or farmer_user.role != "farmer":
+        raise AppError(404, "Farmer not found")
+    avg, count = _ratings(db, {farmer_id}).get(farmer_id, (None, 0))
+    rows = db.execute(select(Rating, User.name).join(User, Rating.buyer_id == User.id)
+                      .where(Rating.farmer_id == farmer_id).order_by(Rating.created_at.desc()).limit(5)).all()
+    return FarmerRatings(farmer_id=farmer_id, avg=avg, count=count, recent=[
+        RatingOut(stars=r.stars, comment=r.comment, buyer_first_name=name.split()[0], created_at=r.created_at)
+        for r, name in rows])

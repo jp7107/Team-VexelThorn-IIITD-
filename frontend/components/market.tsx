@@ -59,3 +59,12 @@ export function ListingCard({ l }: { l: Listing }) {
     </Link>
   );
 }
+
+export function Stars({ n }: { n: number }) {
+  const { t } = useI18n();
+  return (
+    <span role="img" aria-label={t("rate.star", { n })} className="text-haldi">
+      {"★".repeat(n)}<span className="text-line">{"★".repeat(5 - n)}</span>
+    </span>
+  );
+}

@@ -1,15 +1,58 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
-import { StatusPill, useFormat } from "@/components/market";
-import { ButtonLink, FormError, Loading, Screen } from "@/components/ui";
+import { useCallback, useEffect, useState, type FormEvent } from "react";
+import { Stars, StatusPill, useFormat } from "@/components/market";
+import { Button, ButtonLink, FormError, Loading, Screen, inputClass } from "@/components/ui";
 import { api, type Enquiry } from "@/lib/api";
 import { errorKey } from "@/lib/forms";
 import { useI18n } from "@/lib/i18n";
 import { useSession } from "@/lib/session";
 
 const actionClass = "min-h-11 flex-1 rounded-xl px-4 text-lg font-extrabold";
+
+function RatingForm({ enquiry, onDone }: { enquiry: Enquiry; onDone: () => void }) {
+  const { t } = useI18n();
+  const [stars, setStars] = useState(0);
+  const [comment, setComment] = useState("");
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  async function submit(e: FormEvent) {
+    e.preventDefault();
+    if (!stars) return setError(t("rate.pick"));
+    setBusy(true);
+    try {
+      await api(`/enquiries/${enquiry.id}/rating`, { method: "POST", body: { stars, comment: comment || null } });
+      onDone();
+    } catch (err) {
+      setError(t(errorKey(err)));
+      setBusy(false);
+    }
+  }
+
+  return (
+    <form onSubmit={submit} className="mt-3 rounded-xl border-2 border-line p-3">
+      <fieldset>
+        <legend className="mb-2 text-lg font-extrabold text-ink">{t("rate.title")}</legend>
+        <div className="mb-3 flex gap-1">
+          {[1, 2, 3, 4, 5].map((n) => (
+            <button key={n} type="button" aria-pressed={stars === n} aria-label={t("rate.star", { n })}
+              onClick={() => setStars(n)}
+              className={`size-12 rounded-lg text-3xl leading-none ${n <= stars ? "text-haldi" : "text-line"}`}>
+              ★
+            </button>
+          ))}
+        </div>
+      </fieldset>
+      <label htmlFor={`c-${enquiry.id}`} className="mb-1 block text-lg font-semibold">{t("rate.comment")}</label>
+      <input id={`c-${enquiry.id}`} maxLength={300} value={comment} onChange={(e) => setComment(e.target.value)}
+        className={`${inputClass} mb-3`} />
+      {error && <p className="mb-2 font-semibold text-danger" role="alert">{error}</p>}
+      <Button type="submit" disabled={busy}>{t("rate.submit")}</Button>
+    </form>
+  );
+}
 
 export default function EnquiriesPage() {
   const { t } = useI18n();
@@ -91,6 +134,12 @@ export default function EnquiriesPage() {
                     </a>
                   </div>
                 </div>
+              )}
+              {e.can_rate && <RatingForm enquiry={e} onDone={load} />}
+              {e.my_rating && (
+                <p className="mt-3 text-lg font-semibold">
+                  <Stars n={e.my_rating} /> {t("rate.done", { n: e.my_rating })}
+                </p>
               )}
             </li>
           ))}
