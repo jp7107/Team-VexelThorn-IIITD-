@@ -1098,7 +1098,7 @@ Status values: `Not Started` · `In Progress` · `Blocked` · `Done`. **Everythi
 | BE-03 | Seed script (users, classes, demo data) | P0 | M1 | M4 | BE-01 | 0.5 | H5–5.5 | Done | `python -m app.seed` idempotent | — |
 | DEP-01 | Backend + Neon deploy (Dockerfile, env, migrations on release) | P0 | M1 | — | BE-02 | 1.0 | H5.5–6.5 | Not Started | `/readyz` 200 in prod over HTTPS | Alternate host (CP2) |
 | BE-07 | 6 retrieval tools + executor + role filter + audit | P0 | M1 | M2 | BE-01 | 2.0 | H7.5–9.5 | Done | BE-T5 (scoping), BE-T6 (injection args) | Cut to 4 tools (drop `search_schemes`, `get_my_crops`) |
-| BE-09 | Reminders, crop updates, support tickets API + public content reads (`/schemes`, `/updates`, `/kb`) | P1 | M1 | M3, M4 | BE-02 | 1.0 | H13–14 | Not Started | CRUD tests, owner checks | Crop updates without photo |
+| BE-09 | Reminders, crop updates, support tickets API + public content reads (`/schemes`, `/updates`, `/kb`) | P1 | M1 | M3, M4 | BE-02 | 1.0 | H13–14 | In Progress | CRUD tests, owner checks | Crop updates without photo |
 | BE-06 | Wire real `predict` + model load at startup + timeout | P0 | M1 | M2 | ML-03 | 1.0 | H9.5–10.5 | Done | ML-T1/T2 on deployed backend; latency logged | F-ML-3 |
 | BE-08 | Rate limits (login, analyses, chat), size limits, security headers, CORS lock | P0 | M1 | — | BE-02 | 1.0 | H14–15 | Not Started | BE-T7 (429s) | Login + chat limits only |
 | BE-10 | Backend tests: auth, role isolation, IDOR, tools scoping, contracts | P0 | M1 | All | BE-* | 2.0 | H15–17 | Not Started | `pytest -q` green in CI | Keep P0 tests only (§20.1) |
@@ -1130,7 +1130,7 @@ Status values: `Not Started` · `In Progress` · `Blocked` · `Done`. **Everythi
 | MKT-04 | Price fetch + cache + page | P0 | M4 | — | MKT-01 | 2.0 | H12–14 | Done | MKT-T5 (source/date/demo badge) | Snapshot only |
 | MKT-05 | Ratings API + UI + averages | P1 | M4 | — | MKT-03 | 1.0 | H14–15 | Done | MKT-T6 (once per enquiry, 409) | API + avg display only |
 | ADM-01 | Admin console (schemes, updates, KB, listings hide, users, tickets) | P0 | M4 | M1 | BE-02 | 1.5 | H15–16.5 | Done | ADM-T1 (non-admin 403) | Schemes + updates + hide only |
-| FE-10 | Help page: videos, support form, helplines (verified) | P1 | M4 | M3 | BE-09 | 0.5 | H16.5–17 | Not Started | Form creates ticket | Links only |
+| FE-10 | Help page: videos, support form, helplines (verified) | P1 | M4 | M3 | BE-09 | 0.5 | H16.5–17 | Done | Form creates ticket | Links only |
 | QA-02 | Playwright farmer journey + manual phone pass | P0 | M3 | — | CP7 | 1.5 | H17–18.5 | Not Started | §20.4 flows 1–4 | Manual scripted check |
 | QA-03 | Marketplace/admin E2E checklist | P0 | M4 | — | CP7 | 1.0 | H17–18 | Not Started | §20.4 flows 5–10 | — |
 | QA-04 | ML tests (blurry, unsupported, OOD samples, latency) | P0 | M2 | — | ML-06 | 1.0 | H16.5–17.5 | Not Started | ML-T* pass | — |

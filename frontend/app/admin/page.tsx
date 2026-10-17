@@ -10,8 +10,8 @@ import { errorKey } from "@/lib/forms";
 import { useI18n } from "@/lib/i18n";
 import { useSession } from "@/lib/session";
 
-type Tab = "schemes" | "updates" | "kb" | "listings" | "users";
-const TABS: Tab[] = ["schemes", "updates", "kb", "listings", "users"];
+type Tab = "schemes" | "updates" | "kb" | "listings" | "users" | "support";
+const TABS: Tab[] = ["support", "schemes", "updates", "kb", "listings", "users"];
 const small = "min-h-11 rounded-xl border-2 border-ink px-3 font-extrabold text-ink";
 
 /** Loads a list, reloads on demand, and turns failures into a translated message. */
@@ -327,11 +327,60 @@ function UsersPanel() {
   );
 }
 
+type AdminTicket = { id: string; subject: string; message: string; status: "open" | "closed"; created_at: string;
+  user_name: string; user_role: AdminUser["role"]; user_phone: string };
+
+function SupportPanel() {
+  const { t } = useI18n();
+  const [status, setStatus] = useState<"open" | "closed">("open");
+  const { items, error, setError, load } = useList<AdminTicket>(`/admin/support/tickets?status=${status}`);
+
+  async function toggle(tk: AdminTicket) {
+    try {
+      await api(`/admin/support/tickets/${tk.id}`, { method: "PATCH", body: { status: tk.status === "open" ? "closed" : "open" } });
+      load();
+    } catch (e) {
+      setError(t(errorKey(e)));
+    }
+  }
+
+  return (
+    <>
+      <FormError message={error} />
+      <div className="mb-4 flex gap-2" role="group">
+        {(["open", "closed"] as const).map((s) => (
+          <button key={s} type="button" aria-pressed={status === s} onClick={() => setStatus(s)}
+            className={`min-h-11 rounded-full border-2 px-4 text-lg font-semibold ${status === s ? "border-ink bg-ink text-white" : "border-line"}`}>
+            {t(`help.${s}`)}
+          </button>
+        ))}
+      </div>
+      {items === null ? <Loading /> : items.length === 0 ? <p className="text-lg text-muted">{t("admin.none")}</p> : (
+        <ul className="flex flex-col gap-3">
+          {items.map((tk) => (
+            <Row key={tk.id}>
+              <p className="text-lg font-extrabold text-ink">{tk.subject}</p>
+              <p className="text-base text-muted">{tk.user_name} · {t(`admin.roles.${tk.user_role}`)} · {tk.created_at.slice(0, 10)}</p>
+              <p className="mt-2 whitespace-pre-line text-lg">{tk.message}</p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <a href={`tel:+91${tk.user_phone}`} className={`${small} flex items-center`}>{t("admin.callBack", { phone: tk.user_phone })}</a>
+                <button type="button" className={small} onClick={() => toggle(tk)}>
+                  {tk.status === "open" ? t("admin.close") : t("admin.reopen")}
+                </button>
+              </div>
+            </Row>
+          ))}
+        </ul>
+      )}
+    </>
+  );
+}
+
 export default function AdminPage() {
   const { t } = useI18n();
   const router = useRouter();
   const { user } = useSession(["admin"]);
-  const [tab, setTab] = useState<Tab>("schemes");
+  const [tab, setTab] = useState<Tab>("support");
   if (!user) return <Screen><Loading /></Screen>;
 
   async function logout() {
@@ -349,6 +398,7 @@ export default function AdminPage() {
           </button>
         ))}
       </nav>
+      {tab === "support" && <SupportPanel />}
       {tab === "schemes" && <SchemesPanel />}
       {tab === "updates" && <UpdatesPanel />}
       {tab === "kb" && <KbPanel />}

@@ -60,6 +60,7 @@ export default function FarmerHome() {
           <ButtonLink href="/schemes" variant="secondary">{t("home.schemes")}</ButtonLink>
           <ButtonLink href="/updates" variant="secondary">{t("home.updates")}</ButtonLink>
         </div>
+        <ButtonLink href="/help" variant="secondary">{t("home.help")}</ButtonLink>
       </div>
 
       <section className="mb-8">

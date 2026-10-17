@@ -88,7 +88,8 @@
     "prices": "Mandi prices",
     "schemes": "Government schemes",
     "updates": "Farming updates",
-    "water": "Water needed"
+    "water": "Water needed",
+    "help": "Help"
   },
   "errors": {
     "required": "Fill this in",
@@ -375,7 +376,11 @@
       "farmer": "Farmer",
       "customer": "Buyer",
       "admin": "Admin"
-    }
+    },
+    "support": "Support",
+    "close": "Close",
+    "reopen": "Reopen",
+    "callBack": "Call {phone}"
   },
   "water": {
     "title": "Water needed this week",
@@ -398,5 +403,39 @@
     "weatherDown": "The weather forecast is unavailable right now. Try again later.",
     "sources": "Method and sources",
     "link": "Water needed"
+  },
+  "help": {
+    "title": "Help",
+    "guides": "How to use KisanSetu",
+    "g_check": "Check a sick leaf",
+    "g_check_1": "Tap “Check my crop” and choose the crop.",
+    "g_check_2": "Photograph one leaf on a plain background, in daylight.",
+    "g_check_3": "Tap “Check this leaf” and read the result and report.",
+    "g_check_4": "Tap “Ask about this” to ask the assistant a question.",
+    "g_sell": "Sell your produce",
+    "g_sell_1": "Tap “Sell my crop”, then “List produce”.",
+    "g_sell_2": "Enter the crop, quantity and price, then tap “List it”.",
+    "g_sell_3": "Buyers' enquiries appear under “Enquiries”.",
+    "g_sell_4": "Tap “Accept” to share your number with that buyer only.",
+    "g_price": "See mandi prices",
+    "g_price_1": "Tap “Mandi prices” and choose a crop.",
+    "g_price_2": "Pick your state to see nearby mandis.",
+    "g_price_3": "Check the price date and source. A “DEMO” label means it is not a real price.",
+    "kcc": "Kisan Call Centre",
+    "kccNumber": "1800-180-1551",
+    "kccShort": "or 1551",
+    "kccDetails": "Toll-free. 6 AM to 10 PM, all seven days. Answers in 22 local languages.",
+    "kccCall": "Call 1800-180-1551",
+    "kccSource": "Source: Department of Agriculture KCC portal (checked 17 Oct 2026)",
+    "contact": "Message KisanSetu support",
+    "subject": "Subject",
+    "message": "Your message",
+    "send": "Send message",
+    "sent": "Message sent. We'll get back to you.",
+    "loginToSend": "Log in to send us a message.",
+    "myTickets": "Your messages",
+    "open": "Open",
+    "closed": "Closed",
+    "link": "Help"
   }
 }

@@ -49,4 +49,5 @@ Needs the Docker Postgres running. Tests create and migrate a separate `kisan_te
 - `GET /market/prices?commodity=Tomato&state=…`: data.gov.in prices when `DATAGOV_API_KEY` is set, cached rows on failure, labelled demo rows otherwise (see `docs/DATA_SOURCES.md`).
 - Content: `GET /schemes`, `/schemes/{id}`, `/updates`, `/kb?q=` for everyone; `/admin/schemes|updates|kb` (admin) for writes, `/admin/users` and `/admin/listings` for moderation. Scheme and KB links must be https. The seed adds three schemes written from their official pages (checked 2026-10-17).
 - `GET /irrigation/estimate?farm_crop_id=…&lat=&lon=`: FAO-56 crop water need (Kc from Table 12) × Open-Meteo ET₀, minus 80% of forecast rain, over 7 days. Location comes from the query or the profile, rounded to 2 decimals. Always labelled an estimate.
+- Support: `POST /support/tickets`, `GET /me/support/tickets`; admins use `GET/PATCH /admin/support/tickets` (shows the caller's phone for call-backs).
 - Schema changes go through a new Alembic migration (`alembic revision --autogenerate`), never by editing `0001`.
