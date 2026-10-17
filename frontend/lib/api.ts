@@ -45,13 +45,17 @@ export class ApiError extends Error {
   }
 }
 
-export async function api<T>(path: string, init: { method?: string; body?: unknown } = {}): Promise<T> {
+/** `body` is sent as JSON; `form` as multipart (the browser sets the boundary header). */
+export async function api<T>(
+  path: string,
+  init: { method?: string; body?: unknown; form?: FormData } = {},
+): Promise<T> {
   let res: Response;
   try {
     res = await fetch(`/api/v1${path}`, {
-      method: init.method ?? "GET",
+      method: init.method ?? (init.form ? "POST" : "GET"),
       headers: init.body === undefined ? undefined : { "content-type": "application/json" },
-      body: init.body === undefined ? undefined : JSON.stringify(init.body),
+      body: init.form ?? (init.body === undefined ? undefined : JSON.stringify(init.body)),
       credentials: "same-origin",
     });
   } catch {
@@ -65,6 +69,25 @@ export async function api<T>(path: string, init: { method?: string; body?: unkno
   }
   return data as T;
 }
+
+export type AnalysisStatus = "ok" | "uncertain" | "unsupported" | "rejected_quality" | "error";
+
+/** Mirrors the backend inference contract (plan §8.3). */
+export type Analysis = {
+  id: string;
+  status: AnalysisStatus;
+  crop_code_claimed: string;
+  farm_crop_id: string | null;
+  prediction: { class_code: string; crop_code: string; name: string; name_hi: string; is_healthy: boolean } | null;
+  confidence: number | null;
+  top_k: { class_code: string; p: number; name: string | null; name_hi: string | null }[];
+  quality: { blur_var: number | null; brightness: number | null; passed: boolean; reasons: string[] };
+  policy: { accept_threshold: number | null; uncertain_floor: number | null };
+  model: { version: string; provenance: "trained_in_house" | "third_party_pretrained" | "mock" };
+  message_key: string;
+  latency_ms: number;
+  created_at: string;
+};
 
 /** Where each role lands after logging in. */
 export function homeFor(user: User): string {

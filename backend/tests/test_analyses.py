@@ -18,6 +18,7 @@ def test_ok_result_matches_contract_and_is_labelled_mock(farmer_client):
     a = r.json()
     assert a["status"] == "ok"
     assert a["prediction"]["crop_code"] == "tomato" and a["prediction"]["is_healthy"] is False
+    assert a["prediction"]["name_hi"]  # Hindi name travels with the result
     assert a["model"] == {"version": "mock-0", "provenance": "mock"}
     assert a["message_key"] == "diagnosis.ok"
     assert a["quality"]["passed"] is True and a["quality"]["brightness"] is not None
@@ -52,6 +53,7 @@ def test_uncertain_shows_possibilities_and_creates_recheck(farmer_client, settin
     a = upload(farmer_client, jpeg_bytes(), crop_code="potato").json()
     assert a["status"] == "uncertain"
     assert len(a["top_k"]) == 2
+    assert all(t["name"] and t["name_hi"] for t in a["top_k"])
     assert len(farmer_client.get("/me/reminders").json()) == 1
 
 

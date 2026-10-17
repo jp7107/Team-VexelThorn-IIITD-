@@ -1116,7 +1116,7 @@ Status values: `Not Started` · `In Progress` · `Blocked` · `Done`. **Everythi
 | FE-02 | Login/register (role, customer type), onboarding, role routing | P0 | M3 | M1 | BE-02 (fixtures until H5) | 2.0 | H3.5–5.5 | Done | FE-T1 | — |
 | DEP-02 | Vercel deploy + `BACKEND_URL` rewrite | P0 | M3 | M1 | FE-01, DEP-01 | 0.5 | H6–6.5 | Not Started | Prod login via proxy works | Same-origin fallback: serve via backend CORS + bearer |
 | FE-03 | Farmer dashboard | P0 | M3 | — | FE-02 | 1.0 | H5.5–6.5 | In Progress | Shows reminders/crops/last analysis/prices card | Without prices card |
-| FE-04 | Diagnose flow: crop pick, capture, client resize, all result states, photo tips | P0 | M3 | M2 | BE-05 | 2.5 | H6.5–9 | Not Started | FE-T2/T3 | — |
+| FE-04 | Diagnose flow: crop pick, capture, client resize, all result states, photo tips | P0 | M3 | M2 | BE-05 | 2.5 | H6.5–9 | Done | FE-T2/T3 | — |
 | FE-05 | Report view + "Ask about this" | P0 | M3 | M2 | LLM-02 (fixtures until H10.5) | 1.5 | H9–10.5 | Not Started | Evidence and `llm_general` labels visible | — |
 | FE-06 | Chat UI: evidence chips, follow-ups, Hindi, thinking/timeout states | P0 | M3 | M2 | LLM-03 (fixtures until H13) | 2.5 | H10.5–13 | Not Started | FE-T4 | Plain text answers without chips |
 | FE-07 | Reminders + crop updates UI | P1 | M3 | M1 | BE-09 | 1.0 | H16–17 | Not Started | Due reminder visible on dashboard | Reminders only |

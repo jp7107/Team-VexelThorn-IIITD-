@@ -49,6 +49,7 @@ export default function FarmerHome() {
   return (
     <Screen title={t("home.greeting", { name: user.name })}>
       <FormError message={error} />
+      <ButtonLink href="/farmer/diagnose" className="mb-8">{t("home.checkCrop")}</ButtonLink>
 
       <section className="mb-8">
         <h2 className="mb-3 text-xl font-extrabold text-ink">{t("home.dueReminders")}</h2>

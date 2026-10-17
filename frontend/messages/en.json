@@ -4,7 +4,11 @@
     "tagline": "Check your crop, know today's price, and sell straight to buyers.",
     "installHint": "Add KisanSetu to your home screen from your browser menu."
   },
-  "language": { "label": "Language", "hi": "हिंदी", "en": "English" },
+  "language": {
+    "label": "Language",
+    "hi": "हिंदी",
+    "en": "English"
+  },
   "landing": {
     "checkCrop": "Check my crop",
     "checkCropHint": "Photograph a leaf to spot disease",
@@ -53,7 +57,11 @@
     "save": "Save crop",
     "skip": "Skip for now"
   },
-  "crops": { "tomato": "Tomato", "potato": "Potato", "maize": "Maize" },
+  "crops": {
+    "tomato": "Tomato",
+    "potato": "Potato",
+    "maize": "Maize"
+  },
   "stages": {
     "initial": "Just sown",
     "development": "Growing",
@@ -72,7 +80,8 @@
     "markDone": "Done",
     "comingSoon": "Coming soon",
     "buyerIntro": "Browsing listings arrives in the next build.",
-    "adminIntro": "The admin console arrives in a later build."
+    "adminIntro": "The admin console arrives in a later build.",
+    "checkCrop": "Check my crop"
   },
   "errors": {
     "required": "Fill this in",
@@ -84,5 +93,52 @@
     "network": "Can't reach the server. Check your internet and try again.",
     "generic": "That didn't work. Try again."
   },
-  "common": { "loading": "Loading…", "back": "Back" }
+  "common": {
+    "loading": "Loading…",
+    "back": "Back"
+  },
+  "diagnose": {
+    "title": "Check my crop",
+    "whichCrop": "Which crop is the leaf from?",
+    "supportedNote": "Right now we can check tomato, potato and maize.",
+    "tipsTitle": "For a good photo",
+    "tip1": "One leaf, filling most of the photo",
+    "tip2": "Plain background, like a cloth or your palm",
+    "tip3": "Daylight, without strong shadows",
+    "takePhoto": "Take photo",
+    "choosePhoto": "Choose from gallery",
+    "photoAlt": "Leaf photo you picked",
+    "check": "Check this leaf",
+    "preparing": "Getting the photo ready…",
+    "checking": "Checking your photo…",
+    "pickCropFirst": "Pick the crop first",
+    "pickPhotoFirst": "Take or choose a photo first",
+    "photoFormat": "Use a JPEG or PNG photo under 5 MB",
+    "modelUnavailable": "Crop checking is unavailable right now. Try again in a few minutes. Prices and selling still work."
+  },
+  "result": {
+    "okDiseasedTitle": "This looks like {name}",
+    "okHealthyTitle": "This leaf looks healthy",
+    "confidence": "Model confidence: {pct}%",
+    "uncertainTitle": "We're not sure",
+    "uncertainBody": "The photo could show one of these. Take a clearer photo of a single leaf, or check that you picked the right crop.",
+    "possible": "Possible",
+    "unsupportedTitle": "We can't identify this yet",
+    "unsupportedBody": "We can check tomato, potato and maize leaves for now. For other crops, ask your local Krishi Vigyan Kendra.",
+    "qualityTitle": "This photo is hard to read",
+    "quality_blurry": "It's blurry. Hold the phone steady and tap the leaf to focus.",
+    "quality_too_dark": "It's too dark. Move into daylight.",
+    "quality_too_bright": "It's too bright. Shade the leaf or step out of direct sun.",
+    "quality_other": "Take the photo again in good light, with one leaf filling the frame.",
+    "errorTitle": "Couldn't check this photo",
+    "errorBody": "Something went wrong while checking. Try again with the same or a new photo.",
+    "disclaimer": "This is an AI-assisted check, not a lab test. Before spraying anything, confirm with your local Krishi Vigyan Kendra or agriculture officer.",
+    "mockBanner": "Test model: this result is a placeholder, not a real diagnosis.",
+    "modelInHouse": "Checked by our model {version}",
+    "modelThirdParty": "Checked by an outside pretrained model ({version})",
+    "recheckAdded": "We added a reminder to check this crop again in 7 days.",
+    "checkAnother": "Check another leaf",
+    "backHome": "Back to home",
+    "notFound": "We couldn't find this check."
+  }
 }

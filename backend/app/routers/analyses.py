@@ -62,18 +62,23 @@ class AnalysisOut(BaseModel):
 
 
 def to_out(a: Analysis) -> AnalysisOut:
-    label = next((c for c in inference.labels() if c["code"] == a.predicted_class), None)
+    by_code = {c["code"]: c for c in inference.labels()}
+    label = by_code.get(a.predicted_class)
+    top_k = [inference.TopK(class_code=t["class_code"], p=t["p"],
+                            name=by_code.get(t["class_code"], {}).get("name_en"),
+                            name_hi=by_code.get(t["class_code"], {}).get("name_hi")) for t in a.top_k]
     prediction = None
     if a.predicted_class:
         prediction = inference.Prediction(
             class_code=a.predicted_class,
             crop_code=label["crop_code"] if label else a.crop_code_claimed,
             name=label["name_en"] if label else a.predicted_class,
+            name_hi=label["name_hi"] if label else a.predicted_class,
             is_healthy=label["is_healthy"] if label else False,
         )
     return AnalysisOut(
         id=a.id, status=a.status, crop_code_claimed=a.crop_code_claimed, farm_crop_id=a.farm_crop_id,
-        prediction=prediction, confidence=a.confidence, top_k=a.top_k, quality=a.quality, policy=a.policy,
+        prediction=prediction, confidence=a.confidence, top_k=top_k, quality=a.quality, policy=a.policy,
         model=inference.ModelInfo(version=a.model_version, provenance=a.model_provenance),
         message_key=f"diagnosis.{a.status}", latency_ms=a.latency_ms, created_at=a.created_at,
     )
@@ -107,7 +112,7 @@ def create_analysis(
         farmer_id=user.id, image_id=stored.id, farm_crop_id=farm_crop_id, crop_code_claimed=crop_code,
         status=result.status,
         predicted_class=result.prediction.class_code if result.prediction else None,
-        confidence=result.confidence, top_k=[t.model_dump() for t in result.top_k],
+        confidence=result.confidence, top_k=[t.model_dump(include={"class_code", "p"}) for t in result.top_k],
         quality=result.quality.model_dump(), policy=result.policy.model_dump(),
         model_version=result.model.version, model_provenance=result.model.provenance,
         latency_ms=result.latency_ms,

@@ -34,7 +34,7 @@ export default function Landing() {
       </section>
       <main className="mx-auto -mt-16 w-full max-w-md flex-1 px-4 pb-12">
         <nav className="flex flex-col gap-3">
-          <ActionTile href="/login" icon={<LeafScanIcon className="size-9" />} label={t("landing.checkCrop")}
+          <ActionTile href="/farmer/diagnose" icon={<LeafScanIcon className="size-9" />} label={t("landing.checkCrop")}
             hint={t("landing.checkCropHint")} />
           <ActionTile href="/login" icon={<PriceIcon className="size-9" />} label={t("landing.prices")}
             hint={t("landing.pricesHint")} />

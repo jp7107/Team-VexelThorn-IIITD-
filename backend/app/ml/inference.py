@@ -25,12 +25,16 @@ class Prediction(BaseModel):
     class_code: str
     crop_code: str
     name: str
+    name_hi: str
     is_healthy: bool
 
 
 class TopK(BaseModel):
     class_code: str
     p: float
+    # Display names are filled in from labels when the result is served (not stored).
+    name: str | None = None
+    name_hi: str | None = None
 
 
 class Quality(BaseModel):
@@ -100,7 +104,7 @@ def _quality(img: Image.Image) -> Quality:
 
 def _prediction(label: dict) -> Prediction:
     return Prediction(class_code=label["code"], crop_code=label["crop_code"], name=label["name_en"],
-                      is_healthy=label["is_healthy"])
+                      name_hi=label["name_hi"], is_healthy=label["is_healthy"])
 
 
 def _mock_classify(crop_code: str) -> tuple[Status, Prediction | None, float | None, list[TopK]]:
