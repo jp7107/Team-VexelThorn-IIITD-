@@ -51,6 +51,7 @@ export default function FarmerHome() {
       <FormError message={error} />
       <div className="mb-8 flex flex-col gap-3">
         <ButtonLink href="/farmer/diagnose">{t("home.checkCrop")}</ButtonLink>
+        <ButtonLink href="/market/prices" variant="secondary">{t("home.prices")}</ButtonLink>
         <ButtonLink href="/farmer/listings" variant="secondary">{t("home.sell")}</ButtonLink>
         <ButtonLink href="/enquiries" variant="secondary">{t("home.enquiries")}</ButtonLink>
         <ButtonLink href="/assistant" variant="secondary">{t("home.askAssistant")}</ButtonLink>

@@ -1122,12 +1122,12 @@ Status values: `Not Started` · `In Progress` · `Blocked` · `Done`. **Everythi
 | FE-07 | Reminders + crop updates UI | P1 | M3 | M1 | BE-09 | 1.0 | H16–17 | Not Started | Due reminder visible on dashboard | Reminders only |
 | FE-08 | Irrigation card | P1 | M3 | M1 | AG-01 | 1.0 | H13–14 | Not Started | Shows estimate label + sources | Text only |
 | FE-09 | Schemes + updates read pages | P1 | M3 | M4 | CNT-02, BE-09 (fixtures until H14) | 0.5 | H14–14.5 | Not Started | Official link + verified date visible | Updates list only |
-| MKT-01 | Price source verification, API key, snapshot, demo labelling plan | P0 | M4 | — | S-01 | 1.0 | H1–2 | Not Started | `docs/DATA_SOURCES.md` prices section | Demo rows labelled |
+| MKT-01 | Price source verification, API key, snapshot, demo labelling plan | P0 | M4 | — | S-01 | 1.0 | H1–2 | In Progress | `docs/DATA_SOURCES.md` prices section | Demo rows labelled |
 | CNT-02 | 5 schemes from official pages (seed JSON) | P0 | M4 | — | S-04 | 1.0 | H2–3 | Not Started | Each row has `official_url`, `last_verified_at` | 3 schemes |
 | CNT-01 | KB articles: 1 per MVP disease class + 1 productivity per crop, each sourced | P0 | M4 | M2 | ML-01 (`labels.json`) | 2.5 | H3–5.5 | Not Started | Every row has `source_url`; second member spot-checks 5 | Healthy classes share one article |
 | MKT-02 | Listings API + create/browse/filter/detail UI | P0 | M4 | M3 | BE-02 | 3.0 | H5.5–8.5 | Done | MKT-T1/T2 | No edit, only close |
 | MKT-03 | Enquiries: create, accept/decline/withdraw, contact reveal | P0 | M4 | M1 | MKT-02 | 2.0 | H8.5–10, H11.5–12 | Done | MKT-T3/T4 (phone hidden before accept) | No withdraw |
-| MKT-04 | Price fetch + cache + page | P0 | M4 | — | MKT-01 | 2.0 | H12–14 | Not Started | MKT-T5 (source/date/demo badge) | Snapshot only |
+| MKT-04 | Price fetch + cache + page | P0 | M4 | — | MKT-01 | 2.0 | H12–14 | Done | MKT-T5 (source/date/demo badge) | Snapshot only |
 | MKT-05 | Ratings API + UI + averages | P1 | M4 | — | MKT-03 | 1.0 | H14–15 | Done | MKT-T6 (once per enquiry, 409) | API + avg display only |
 | ADM-01 | Admin console (schemes, updates, KB, listings hide, users, tickets) | P0 | M4 | M1 | BE-02 | 1.5 | H15–16.5 | Not Started | ADM-T1 (non-admin 403) | Schemes + updates + hide only |
 | FE-10 | Help page: videos, support form, helplines (verified) | P1 | M4 | M3 | BE-09 | 0.5 | H16.5–17 | Not Started | Form creates ticket | Links only |

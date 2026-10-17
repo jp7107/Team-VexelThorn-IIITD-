@@ -36,9 +36,9 @@ export default function Landing() {
         <nav className="flex flex-col gap-3">
           <ActionTile href="/farmer/diagnose" icon={<LeafScanIcon className="size-9" />} label={t("landing.checkCrop")}
             hint={t("landing.checkCropHint")} />
-          <ActionTile href="/login" icon={<PriceIcon className="size-9" />} label={t("landing.prices")}
+          <ActionTile href="/market/prices" icon={<PriceIcon className="size-9" />} label={t("landing.prices")}
             hint={t("landing.pricesHint")} />
-          <ActionTile href="/login" icon={<BasketIcon className="size-9" />} label={t("landing.sell")}
+          <ActionTile href="/farmer/listings" icon={<BasketIcon className="size-9" />} label={t("landing.sell")}
             hint={t("landing.sellHint")} />
         </nav>
         <div className="mt-8 flex flex-col gap-3">

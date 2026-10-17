@@ -84,7 +84,8 @@
     "checkCrop": "Check my crop",
     "askAssistant": "Ask the assistant",
     "sell": "Sell my crop",
-    "enquiries": "Enquiries"
+    "enquiries": "Enquiries",
+    "prices": "Mandi prices"
   },
   "errors": {
     "required": "Fill this in",
@@ -280,5 +281,23 @@
     "pick": "Choose 1 to 5 stars",
     "reviews": "Reviews",
     "noReviews": "No reviews yet."
+  },
+  "prices": {
+    "title": "Mandi prices",
+    "state": "State",
+    "anyState": "All states",
+    "live": "Live from data.gov.in (AGMARKNET), fetched {when}.",
+    "cached": "Saved prices from data.gov.in (AGMARKNET), fetched {when}. Live source unavailable right now.",
+    "demo": "DEMO DATA: not real prices. Real prices appear once the data.gov.in key is set up.",
+    "none": "No prices on record for {commodity} yet.",
+    "modal": "Most trades",
+    "range": "Range ₹{min}–₹{max}",
+    "perQuintal": "per quintal",
+    "date": "Price date {date}",
+    "stale": "May be outdated",
+    "demoBadge": "DEMO",
+    "source": "Source: {source}",
+    "otherCommodity": "Other crop",
+    "go": "Show"
   }
 }

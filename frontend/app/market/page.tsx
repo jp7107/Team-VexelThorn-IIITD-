@@ -45,9 +45,10 @@ export default function MarketPage() {
 
   return (
     <Screen title={t("market.title")} back={user.role === "farmer" ? "/farmer" : undefined}>
-      {user.role === "customer" && (
-        <ButtonLink href="/enquiries" variant="secondary" className="mb-5">{t("market.myEnquiries")}</ButtonLink>
-      )}
+      <div className="mb-5 grid grid-cols-2 gap-3">
+        <ButtonLink href="/market/prices" variant="secondary">{t("home.prices")}</ButtonLink>
+        {user.role === "customer" && <ButtonLink href="/enquiries" variant="secondary">{t("market.myEnquiries")}</ButtonLink>}
+      </div>
       <div className="mb-3 flex flex-wrap gap-2" role="group" aria-label={t("sell.crop")}>
         {CROPS.map((c) => (
           <button key={c || "all"} type="button" aria-pressed={crop === c} onClick={() => setCrop(c)}

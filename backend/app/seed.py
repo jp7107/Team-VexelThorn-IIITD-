@@ -4,6 +4,7 @@ Run: python -m app.seed   (needs SEED_DEMO_PASSWORD in the environment or .env)
 """
 
 import sys
+from datetime import date
 from decimal import Decimal
 
 from sqlalchemy import select
@@ -14,7 +15,7 @@ from app.core.config import get_settings
 from app.core.db import SessionLocal
 from app.core.security import hash_password
 from app.ml.inference import labels
-from app.models import DiseaseClass, Listing, User
+from app.models import DiseaseClass, Listing, MarketPrice, User
 
 DEMO_USERS = [
     {"phone": "9000000001", "name": "Demo Admin", "role": "admin", "customer_type": None},
@@ -37,6 +38,7 @@ def seed(db: Session, password: str) -> None:
                    .on_conflict_do_nothing(index_elements=["phone"]))
     db.flush()
     _seed_demo_listings(db)
+    _seed_demo_prices(db)
     db.commit()
 
 
@@ -60,10 +62,31 @@ def _seed_demo_listings(db: Session) -> None:
                        state=farmer.state, district=farmer.district))
 
 
+# Demo mandi prices for when no DATAGOV_API_KEY is set. Flagged is_demo, so every screen labels them
+# "demo data, not real prices" (plan §14.2). The numbers are placeholders, not market data.
+DEMO_PRICES = [
+    ("Tomato", "Delhi", "North Delhi", "Azadpur", 1200, 1800, 1500),
+    ("Tomato", "Uttar Pradesh", "Agra", "Agra", 1000, 1600, 1300),
+    ("Potato", "Delhi", "North Delhi", "Azadpur", 900, 1300, 1100),
+    ("Potato", "Uttar Pradesh", "Agra", "Agra", 800, 1200, 1000),
+    ("Maize", "Madhya Pradesh", "Indore", "Indore", 1900, 2300, 2100),
+    ("Maize", "Bihar", "Purnea", "Gulabbagh", 1800, 2200, 2000),
+]
+
+
+def _seed_demo_prices(db: Session) -> None:
+    today = date.today()
+    for commodity, state, district, market, lo, hi, modal in DEMO_PRICES:
+        db.execute(insert(MarketPrice).values(
+            commodity=commodity, variety="", state=state, district=district, market=market, arrival_date=today,
+            min_price=lo, max_price=hi, modal_price=modal, source="KisanSetu demo data", is_demo=True,
+        ).on_conflict_do_nothing(constraint="one_price_per_market_day"))
+
+
 if __name__ == "__main__":
     password = get_settings().SEED_DEMO_PASSWORD
     if len(password) < 8:
         sys.exit("Set SEED_DEMO_PASSWORD (min 8 characters) before seeding.")
     with SessionLocal() as session:
         seed(session, password)
-    print(f"Seeded {len(labels())} disease classes, {len(DEMO_USERS)} demo users, demo listings.")
+    print(f"Seeded {len(labels())} disease classes, {len(DEMO_USERS)} demo users, demo listings and prices.")

@@ -84,7 +84,8 @@
     "checkCrop": "फसल की जाँच करें",
     "askAssistant": "सहायक से पूछें",
     "sell": "फसल बेचें",
-    "enquiries": "पूछताछ"
+    "enquiries": "पूछताछ",
+    "prices": "मंडी भाव"
   },
   "errors": {
     "required": "यह भरें",
@@ -280,5 +281,23 @@
     "pick": "1 से 5 स्टार चुनें",
     "reviews": "समीक्षाएँ",
     "noReviews": "अभी कोई समीक्षा नहीं।"
+  },
+  "prices": {
+    "title": "मंडी भाव",
+    "state": "राज्य",
+    "anyState": "सभी राज्य",
+    "live": "data.gov.in (AGMARKNET) से ताज़ा, {when} को लिया गया।",
+    "cached": "data.gov.in (AGMARKNET) के सहेजे हुए भाव, {when} को लिए गए। अभी ताज़ा स्रोत उपलब्ध नहीं है।",
+    "demo": "नमूना डेटा: ये असली भाव नहीं हैं। data.gov.in की चाबी जुड़ने पर असली भाव दिखेंगे।",
+    "none": "{commodity} के लिए अभी कोई भाव रिकॉर्ड में नहीं है।",
+    "modal": "ज़्यादातर सौदे",
+    "range": "दायरा ₹{min}–₹{max}",
+    "perQuintal": "प्रति क्विंटल",
+    "date": "भाव की तारीख {date}",
+    "stale": "पुराना हो सकता है",
+    "demoBadge": "नमूना",
+    "source": "स्रोत: {source}",
+    "otherCommodity": "दूसरी फसल",
+    "go": "दिखाएँ"
   }
 }

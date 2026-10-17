@@ -173,6 +173,29 @@ export type FarmerRatings = {
   recent: { stars: number; comment: string | null; buyer_first_name: string; created_at: string }[];
 };
 
+export type PriceRow = {
+  id: string;
+  commodity: string;
+  variety: string;
+  market: string;
+  district: string;
+  state: string;
+  arrival_date: string;
+  min_price: string;
+  max_price: string;
+  modal_price: string;
+  unit: string;
+  source: string;
+  fetched_at: string;
+  is_demo: boolean;
+  stale: boolean;
+};
+
+export type Prices = {
+  meta: { commodity: string; source_status: "live" | "cached" | "demo" | "none"; last_fetch_at: string | null; live_configured: boolean };
+  rows: PriceRow[];
+};
+
 /** Where each role lands after logging in. */
 export function homeFor(user: User): string {
   if (user.role === "farmer") return "/farmer";
