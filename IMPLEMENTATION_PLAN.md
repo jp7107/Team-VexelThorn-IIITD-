@@ -1110,7 +1110,7 @@ Status values: `Not Started` · `In Progress` · `Blocked` · `Done`. **Everythi
 | LLM-02 | Report generation (Paths A/B/C/G) + class-integrity check + persistence | P0 | M2 | M1, M4 | LLM-01, BE-06, CNT-01 | 2.0 | H8.5–10.5 | Done | LLM-T1, T4, T7 pass | Template-only reports (Path F) |
 | LLM-03 | Chat with tools, routing D/E/H, Hindi, limits | P0 | M2 | M1 | BE-07, LLM-01 | 2.5 | H10.5–13 | Done | LLM-T2, T3, T5, T6 pass | Deterministic retrieval-then-generate (no function calling) |
 | ML-05 | Stage 2 fine-tune top 2, calibration, thresholds, single test eval, CPU bench | P1 | M2 | — | ML-04 | 1.25 attn | H12–12.25 launch, H14.5–15.5 finish | Not Started | Eligibility gate evaluated and recorded | F-ML-4 |
-| AG-01 | Irrigation estimator (`/irrigation/estimate`) using M2's cited Kc table + Open-Meteo + manual fallback | P1 | M1 | M2 (method, Kc table, review) | BE-01 | 1.0 | H10.5–11.5 | Not Started | Unit test with fixed weather JSON; `weather_status=unavailable` path | Text-only guidance from KB |
+| AG-01 | Irrigation estimator (`/irrigation/estimate`) using M2's cited Kc table + Open-Meteo + manual fallback | P1 | M1 | M2 (method, Kc table, review) | BE-01 | 1.0 | H10.5–11.5 | Done | Unit test with fixed weather JSON; `weather_status=unavailable` path | Text-only guidance from KB |
 | ML-06 | Swap final model, model card, benchmark report (all 18 statuses) | P0 | M2 | M1 | ML-05 | 1.0 | H15.5–16.5 | Not Started | `/readyz` shows new version; report committed | Keep current model |
 | FE-01 | Next.js shell, Tailwind, i18n en/hi, layout, API client, `/api` rewrite, PWA manifest | P0 | M3 | — | S-01 | 2.5 | H1–3.5 | Done | `npm run build` ok; language toggle works | Plain JSON dictionaries |
 | FE-02 | Login/register (role, customer type), onboarding, role routing | P0 | M3 | M1 | BE-02 (fixtures until H5) | 2.0 | H3.5–5.5 | Done | FE-T1 | — |
@@ -1120,7 +1120,7 @@ Status values: `Not Started` · `In Progress` · `Blocked` · `Done`. **Everythi
 | FE-05 | Report view + "Ask about this" | P0 | M3 | M2 | LLM-02 (fixtures until H10.5) | 1.5 | H9–10.5 | Done | Evidence and `llm_general` labels visible | — |
 | FE-06 | Chat UI: evidence chips, follow-ups, Hindi, thinking/timeout states | P0 | M3 | M2 | LLM-03 (fixtures until H13) | 2.5 | H10.5–13 | Done | FE-T4 | Plain text answers without chips |
 | FE-07 | Reminders + crop updates UI | P1 | M3 | M1 | BE-09 | 1.0 | H16–17 | Not Started | Due reminder visible on dashboard | Reminders only |
-| FE-08 | Irrigation card | P1 | M3 | M1 | AG-01 | 1.0 | H13–14 | Not Started | Shows estimate label + sources | Text only |
+| FE-08 | Irrigation card | P1 | M3 | M1 | AG-01 | 1.0 | H13–14 | Done | Shows estimate label + sources | Text only |
 | FE-09 | Schemes + updates read pages | P1 | M3 | M4 | CNT-02, BE-09 (fixtures until H14) | 0.5 | H14–14.5 | Done | Official link + verified date visible | Updates list only |
 | MKT-01 | Price source verification, API key, snapshot, demo labelling plan | P0 | M4 | — | S-01 | 1.0 | H1–2 | In Progress | `docs/DATA_SOURCES.md` prices section | Demo rows labelled |
 | CNT-02 | 5 schemes from official pages (seed JSON) | P0 | M4 | — | S-04 | 1.0 | H2–3 | In Progress | Each row has `official_url`, `last_verified_at` | 3 schemes |

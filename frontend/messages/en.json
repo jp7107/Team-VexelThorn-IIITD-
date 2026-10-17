@@ -87,7 +87,8 @@
     "enquiries": "Enquiries",
     "prices": "Mandi prices",
     "schemes": "Government schemes",
-    "updates": "Farming updates"
+    "updates": "Farming updates",
+    "water": "Water needed"
   },
   "errors": {
     "required": "Fill this in",
@@ -375,5 +376,27 @@
       "customer": "Buyer",
       "admin": "Admin"
     }
+  },
+  "water": {
+    "title": "Water needed this week",
+    "pickCrop": "Which crop?",
+    "noCrops": "Add a crop first to get a water estimate.",
+    "unsupported": "Water estimates are available for tomato, potato and maize.",
+    "needLocation": "We need your location for the weather forecast.",
+    "useLocation": "Use my location",
+    "locating": "Finding your location…",
+    "denied": "Location wasn't shared. Allow location for this site in your browser settings, then try again.",
+    "headline": "About {mm} mm of water needed",
+    "litres": "That's about {litres} litres for your {acres} acres over 7 days.",
+    "noneNeeded": "Expected rain should cover your crop's need this week.",
+    "rain": "Rain forecast: {mm} mm",
+    "need": "Crop need: {mm} mm",
+    "daily": "Day by day",
+    "dayRow": "{need} mm needed, {rain} mm rain",
+    "estimateNote": "Estimate from the weather forecast and FAO crop factors. No field sensors are used. Check your soil before watering.",
+    "stageKc": "Stage: {stage} · crop factor {kc}",
+    "weatherDown": "The weather forecast is unavailable right now. Try again later.",
+    "sources": "Method and sources",
+    "link": "Water needed"
   }
 }

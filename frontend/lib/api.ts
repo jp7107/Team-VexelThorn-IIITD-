@@ -234,6 +234,20 @@ export type AdminUser = {
   created_at: string;
 };
 
+export type WaterEstimate = {
+  crop_code: string;
+  stage: Crop["stage"];
+  kc: number;
+  area_acres: number;
+  location: { lat: number; lon: number };
+  weather_status: "ok" | "unavailable";
+  days: { date: string; et0_mm: number; rain_mm: number; crop_need_mm: number; net_mm: number }[];
+  totals: { crop_need_mm: number; rain_mm: number; net_mm: number; litres_for_field: number } | null;
+  method: string;
+  sources: { name: string; url: string }[];
+  label: "estimate";
+};
+
 /** Where each role lands after logging in. */
 export function homeFor(user: User): string {
   if (user.role === "farmer") return "/farmer";
