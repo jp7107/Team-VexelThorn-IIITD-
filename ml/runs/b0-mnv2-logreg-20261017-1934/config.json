@@ -1,0 +1,9 @@
+{
+  "backbone": "mobilenet_v2/IMAGENET1K_V2",
+  "input": "WEIGHTS.transforms() (resize 232, center crop 224, ImageNet norm)",
+  "features": "global-average-pooled 1280-d, frozen",
+  "head": "StandardScaler + LogisticRegression(C=1.0, lbfgs, class_weight=balanced: class ratio ~35x, plan \u00a79.1-6)",
+  "manifest_sha256_16": "a2d02517927111e5",
+  "batch": 64,
+  "threads": 14
+}

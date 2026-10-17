@@ -1,0 +1,20 @@
+{
+  "run_id": "b0-mnv2-logreg-20261017-1934",
+  "candidate": "B0 (#1 MobileNetV2, frozen) + logistic regression",
+  "evaluated_on": "val",
+  "test_split_used": false,
+  "n_train": 16881,
+  "n_val": 3642,
+  "n_classes": 17,
+  "accuracy": 0.941790225151016,
+  "macro_precision": 0.9325769302991799,
+  "macro_recall": 0.9134291189891318,
+  "macro_f1": 0.921290038598192,
+  "ece_15_bins": 0.03327610971736489,
+  "min_class_recall": 0.7083333333333334,
+  "min_recall_class": "potato__healthy",
+  "embed_seconds_train_val": 322.7,
+  "embed_images_per_second": 63.6,
+  "fit_seconds": 1.0,
+  "head_bytes": 107588
+}

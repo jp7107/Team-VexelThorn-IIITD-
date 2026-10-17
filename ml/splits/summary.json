@@ -1,0 +1,126 @@
+{
+  "source": "https://github.com/spMohanty/PlantVillage-Dataset (raw/color)",
+  "source_commit": "ref: refs/heads/master",
+  "seed": 42,
+  "ratios": {
+    "train": 0.7,
+    "val": 0.15,
+    "test": 0.15
+  },
+  "hash_threshold": 4,
+  "files_found": 24164,
+  "unreadable": [],
+  "image_sizes": {
+    "256x256": 24164
+  },
+  "image_modes": {
+    "RGB": 24164
+  },
+  "with_leaf_id": 13563,
+  "without_leaf_id": 10601,
+  "exact_duplicate_files": 14,
+  "cross_class_conflicts_excluded": 0,
+  "near_duplicate_pairs": 53,
+  "images_used": 24164,
+  "groups": 13941,
+  "largest_group": 8,
+  "group_size_histogram": {
+    "1": 10502,
+    "2": 48,
+    "3": 6,
+    "4": 3383,
+    "8": 2
+  },
+  "per_class": {
+    "tomato__bacterial_spot": {
+      "train": 1488,
+      "val": 319,
+      "test": 320
+    },
+    "tomato__early_blight": {
+      "train": 696,
+      "val": 152,
+      "test": 152
+    },
+    "tomato__late_blight": {
+      "train": 1335,
+      "val": 286,
+      "test": 288
+    },
+    "tomato__leaf_mold": {
+      "train": 664,
+      "val": 144,
+      "test": 144
+    },
+    "tomato__septoria_leaf_spot": {
+      "train": 1235,
+      "val": 268,
+      "test": 268
+    },
+    "tomato__spider_mites": {
+      "train": 1172,
+      "val": 252,
+      "test": 252
+    },
+    "tomato__target_spot": {
+      "train": 982,
+      "val": 211,
+      "test": 211
+    },
+    "tomato__yellow_leaf_curl_virus": {
+      "train": 3748,
+      "val": 806,
+      "test": 803
+    },
+    "tomato__mosaic_virus": {
+      "train": 261,
+      "val": 56,
+      "test": 56
+    },
+    "tomato__healthy": {
+      "train": 1109,
+      "val": 241,
+      "test": 241
+    },
+    "potato__early_blight": {
+      "train": 696,
+      "val": 152,
+      "test": 152
+    },
+    "potato__late_blight": {
+      "train": 696,
+      "val": 152,
+      "test": 152
+    },
+    "potato__healthy": {
+      "train": 104,
+      "val": 24,
+      "test": 24
+    },
+    "maize__gray_leaf_spot": {
+      "train": 359,
+      "val": 77,
+      "test": 77
+    },
+    "maize__common_rust": {
+      "train": 834,
+      "val": 179,
+      "test": 179
+    },
+    "maize__northern_leaf_blight": {
+      "train": 689,
+      "val": 148,
+      "test": 148
+    },
+    "maize__healthy": {
+      "train": 813,
+      "val": 175,
+      "test": 174
+    }
+  },
+  "per_split": {
+    "train": 16881,
+    "val": 3642,
+    "test": 3641
+  }
+}

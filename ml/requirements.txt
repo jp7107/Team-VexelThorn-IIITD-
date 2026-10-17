@@ -1,0 +1,12 @@
+# Versions the B0 baseline was run with (CPU). For a GPU runtime (Colab/Kaggle) keep its preinstalled
+# torch/torchvision and install the rest.
+# CPU wheels: pip install -r ml/requirements.txt --extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.13.0
+torchvision==0.28.0
+scikit-learn==1.9.0
+numpy==2.4.6
+pillow==12.3.0
+joblib==1.5.3
+
+# checks
+pytest==9.1.1
