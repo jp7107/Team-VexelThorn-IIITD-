@@ -128,6 +128,112 @@ export type ChatReply = {
   llm_status: "ok" | "fallback";
 };
 
+export type Unit = "kg" | "quintal" | "tonne" | "dozen";
+
+export type Listing = {
+  id: string;
+  crop_code: string;
+  title: string;
+  description: string | null;
+  quantity: string;
+  unit: Unit;
+  price_per_unit: string | null;
+  min_order_qty: string | null;
+  state: string;
+  district: string;
+  status: "open" | "closed" | "hidden";
+  created_at: string;
+  farmer: { id: string; first_name: string; rating_avg: number | null; rating_count: number };
+  is_mine: boolean;
+  pending_enquiries: number | null;
+};
+
+export type Enquiry = {
+  id: string;
+  listing_id: string;
+  listing_title: string;
+  crop_code: string;
+  unit: Unit;
+  quantity: string;
+  message: string | null;
+  status: "pending" | "accepted" | "declined" | "withdrawn";
+  created_at: string;
+  buyer_first_name: string;
+  buyer_type: "retail" | "wholesale" | null;
+  farmer_first_name: string;
+  farmer_phone: string | null;
+  can_rate: boolean;
+  my_rating: number | null;
+};
+
+export type FarmerRatings = {
+  farmer_id: string;
+  avg: number | null;
+  count: number;
+  recent: { stars: number; comment: string | null; buyer_first_name: string; created_at: string }[];
+};
+
+export type PriceRow = {
+  id: string;
+  commodity: string;
+  variety: string;
+  market: string;
+  district: string;
+  state: string;
+  arrival_date: string;
+  min_price: string;
+  max_price: string;
+  modal_price: string;
+  unit: string;
+  source: string;
+  fetched_at: string;
+  is_demo: boolean;
+  stale: boolean;
+};
+
+export type Prices = {
+  meta: { commodity: string; source_status: "live" | "cached" | "demo" | "none"; last_fetch_at: string | null; live_configured: boolean };
+  rows: PriceRow[];
+};
+
+export type Scheme = {
+  id: string;
+  name: string;
+  summary: string;
+  eligibility_text: string;
+  benefit_text: string | null;
+  official_url: string;
+  states: string[];
+  last_verified_at: string;
+  published: boolean;
+};
+
+export type FarmUpdate = { id: string; title: string; body: string; source_url: string | null; published_at: string };
+
+export type KbArticle = {
+  id: string;
+  title: string;
+  body: string;
+  topic: "disease" | "productivity" | "irrigation" | "general";
+  language: "en" | "hi";
+  disease_class_code: string | null;
+  crop_code: string | null;
+  source_name: string;
+  source_url: string;
+  verified_by: string;
+  verified_at: string;
+};
+
+export type AdminUser = {
+  id: string;
+  name: string;
+  role: UserRole;
+  customer_type: "retail" | "wholesale" | null;
+  state: string;
+  district: string;
+  created_at: string;
+};
+
 /** Where each role lands after logging in. */
 export function homeFor(user: User): string {
   if (user.role === "farmer") return "/farmer";
