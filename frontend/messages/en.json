@@ -81,7 +81,8 @@
     "comingSoon": "Coming soon",
     "buyerIntro": "Browsing listings arrives in the next build.",
     "adminIntro": "The admin console arrives in a later build.",
-    "checkCrop": "Check my crop"
+    "checkCrop": "Check my crop",
+    "askAssistant": "Ask the assistant"
   },
   "errors": {
     "required": "Fill this in",
@@ -139,7 +140,8 @@
     "recheckAdded": "We added a reminder to check this crop again in 7 days.",
     "checkAnother": "Check another leaf",
     "backHome": "Back to home",
-    "notFound": "We couldn't find this check."
+    "notFound": "We couldn't find this check.",
+    "askAbout": "Ask about this"
   },
   "report": {
     "title": "Your report",
@@ -156,5 +158,29 @@
     "aiWritten": "Written with AI help from the result above.",
     "failed": "Couldn't load the report.",
     "retry": "Try again"
+  },
+  "chat": {
+    "title": "Ask the assistant",
+    "inputLabel": "Your question",
+    "placeholder": "Type your question…",
+    "send": "Send",
+    "thinking": "Thinking…",
+    "intro": "Ask about your crops, leaf checks, mandi prices or government schemes.",
+    "aboutCheck": "About your leaf check",
+    "viewCheck": "View the check",
+    "answering": "Answering: {question}",
+    "cancelReply": "Cancel",
+    "fallbackNote": "AI is off right now, so this answer comes from saved records only.",
+    "timeout": "This is taking too long. Try again.",
+    "ev_kb": "Verified article",
+    "ev_record": "From records",
+    "ev_result": "Leaf check result",
+    "ev_general": "General advice, not verified",
+    "s_farmer_1": "Which crops have I saved, and what did my last leaf check show?",
+    "s_farmer_2": "What is today's mandi price for tomato?",
+    "s_farmer_3": "Which government schemes can help farmers?",
+    "s_buyer_1": "What is today's mandi price for potato?",
+    "s_buyer_2": "Which government schemes support farmers?",
+    "s_check": "What should I do now?"
   }
 }

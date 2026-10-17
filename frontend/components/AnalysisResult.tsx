@@ -106,6 +106,9 @@ export function AnalysisResult({ analysis }: { analysis: Analysis }) {
         </p>
       )}
       <div className="flex flex-col gap-3">
+        {(analysis.status === "ok" || analysis.status === "uncertain") && (
+          <ButtonLink href={`/assistant?analysis=${analysis.id}`} variant="secondary">{t("result.askAbout")}</ButtonLink>
+        )}
         <ButtonLink href="/farmer/diagnose">{t("result.checkAnother")}</ButtonLink>
         <ButtonLink href="/farmer" variant="secondary">{t("result.backHome")}</ButtonLink>
       </div>

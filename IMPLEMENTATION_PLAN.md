@@ -1118,7 +1118,7 @@ Status values: `Not Started` · `In Progress` · `Blocked` · `Done`. **Everythi
 | FE-03 | Farmer dashboard | P0 | M3 | — | FE-02 | 1.0 | H5.5–6.5 | In Progress | Shows reminders/crops/last analysis/prices card | Without prices card |
 | FE-04 | Diagnose flow: crop pick, capture, client resize, all result states, photo tips | P0 | M3 | M2 | BE-05 | 2.5 | H6.5–9 | Done | FE-T2/T3 | — |
 | FE-05 | Report view + "Ask about this" | P0 | M3 | M2 | LLM-02 (fixtures until H10.5) | 1.5 | H9–10.5 | Done | Evidence and `llm_general` labels visible | — |
-| FE-06 | Chat UI: evidence chips, follow-ups, Hindi, thinking/timeout states | P0 | M3 | M2 | LLM-03 (fixtures until H13) | 2.5 | H10.5–13 | Not Started | FE-T4 | Plain text answers without chips |
+| FE-06 | Chat UI: evidence chips, follow-ups, Hindi, thinking/timeout states | P0 | M3 | M2 | LLM-03 (fixtures until H13) | 2.5 | H10.5–13 | Done | FE-T4 | Plain text answers without chips |
 | FE-07 | Reminders + crop updates UI | P1 | M3 | M1 | BE-09 | 1.0 | H16–17 | Not Started | Due reminder visible on dashboard | Reminders only |
 | FE-08 | Irrigation card | P1 | M3 | M1 | AG-01 | 1.0 | H13–14 | Not Started | Shows estimate label + sources | Text only |
 | FE-09 | Schemes + updates read pages | P1 | M3 | M4 | CNT-02, BE-09 (fixtures until H14) | 0.5 | H14–14.5 | Not Started | Official link + verified date visible | Updates list only |

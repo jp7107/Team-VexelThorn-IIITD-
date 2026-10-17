@@ -5,6 +5,7 @@ export const PHONE_RE = /^[6-9]\d{9}$/;
 /** Turns an API failure into a dictionary key, so errors show in the user's language. */
 export function errorKey(e: unknown, overrides: Partial<Record<string, string>> = {}): string {
   if (!(e instanceof ApiError)) return "errors.generic";
+  if (e.code === "TIMEOUT") return "chat.timeout";
   if (e.status === 0) return "errors.network";
   return overrides[e.code] ?? "errors.generic";
 }

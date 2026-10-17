@@ -48,7 +48,7 @@ export class ApiError extends Error {
 /** `body` is sent as JSON; `form` as multipart (the browser sets the boundary header). */
 export async function api<T>(
   path: string,
-  init: { method?: string; body?: unknown; form?: FormData } = {},
+  init: { method?: string; body?: unknown; form?: FormData; timeoutMs?: number } = {},
 ): Promise<T> {
   let res: Response;
   try {
@@ -57,8 +57,10 @@ export async function api<T>(
       headers: init.body === undefined ? undefined : { "content-type": "application/json" },
       body: init.form ?? (init.body === undefined ? undefined : JSON.stringify(init.body)),
       credentials: "same-origin",
+      signal: init.timeoutMs ? AbortSignal.timeout(init.timeoutMs) : undefined,
     });
-  } catch {
+  } catch (e) {
+    if (e instanceof DOMException && e.name === "TimeoutError") throw new ApiError(0, "TIMEOUT", "Timed out");
     throw new ApiError(0, "NETWORK", "Network error");
   }
   if (res.status === 204) return undefined as T;
@@ -105,6 +107,25 @@ export type Report = {
     consult_expert: boolean;
     sources: { name: string; url: string }[];
   };
+};
+
+export type ChatEvidence = {
+  type: "ml_prediction" | "db_record" | "kb_article" | "llm_general";
+  ref: string | null;
+  label: string;
+  url: string | null;
+};
+
+/** Assistant reply (plan §8.4). */
+export type ChatReply = {
+  answer: string;
+  language: "hi" | "en";
+  route: string;
+  evidence: ChatEvidence[];
+  uncertainty: "low" | "medium" | "high" | "unknown";
+  follow_up_questions: string[];
+  safety_notes: string[];
+  llm_status: "ok" | "fallback";
 };
 
 /** Where each role lands after logging in. */
