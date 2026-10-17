@@ -1,0 +1,183 @@
+# Kisan Mitra — assumptions, decisions, open questions
+#
+# Machine-readable companion to IMPLEMENTATION_PLAN.md.
+# Approved by the repository owner at the start of Phase P0 (2026-10-17).
+# A decision marked `approved` is not re-opened; a question marked `open` must
+# be resolved in the phase named in `resolve_in` before the affected artifact
+# is frozen.
+
+meta:
+  plan_version: "1.0"
+  document_updated: "2026-10-17"
+  owner: "jp7107 (sole developer)"
+  scope_reference: "IMPLEMENTATION_PLAN.md sections 1-24"
+  note: >
+    The plan was written for a four-person, 24-hour team. Execution is solo.
+    Phase order, acceptance criteria, and contracts are preserved; the hour
+    windows and DRI columns are treated as roles assumed sequentially.
+
+decisions:
+  - id: D-01
+    topic: backend_stack
+    decision: "FastAPI on Python 3.11 with SQLAlchemy 2.0, Pydantic v2, Alembic."
+    source: plan §1.4
+    status: approved
+    date: "2026-10-17"
+
+  - id: D-02
+    topic: database
+    decision: "PostgreSQL with Alembic migrations. Local development uses the Homebrew postgresql@17 service on localhost:5432."
+    source: plan §1.4, approved instruction
+    status: approved
+    date: "2026-10-17"
+
+  - id: D-03
+    topic: llm_provider
+    decision: >
+      Google Gemini is the initial ManagedAPIProvider implementation, selected
+      by LLM_PROVIDER. The LLMProvider interface (plan §9.1) is the contract;
+      no Gemini-specific type may leak outside the provider module.
+    source: owner approval; plan §9.1
+    status: approved
+    date: "2026-10-17"
+
+  - id: D-04
+    topic: frontend_stack
+    decision: >
+      Next.js 15 (App Router) with JavaScript/JSX (no TypeScript), Tailwind CSS,
+      responsive PWA foundations, and EN/HI i18n. This supersedes the plan's
+      TypeScript proposal (§1.4).
+    source: owner approval
+    status: approved
+    date: "2026-10-17"
+
+  - id: D-05
+    topic: object_storage
+    decision: >
+      A StorageDriver abstraction with two implementations: local-disk for
+      development only, S3-compatible for deployment. Production must never
+      depend on ephemeral local disk. Driver selected by STORAGE_DRIVER.
+    source: owner approval; plan §1.4
+    status: approved
+    date: "2026-10-17"
+
+  - id: D-06
+    topic: ml_runtime
+    decision: >
+      ONNX Runtime on CPU, in-process. The development machine is macOS arm64
+      with no CUDA; compute availability and artifact requirements are measured
+      when the ML phase starts, not assumed.
+    source: owner approval; plan §1.4, §8.4
+    status: approved
+    date: "2026-10-17"
+
+  - id: D-07
+    topic: tooling
+    decision: >
+      npm (10.8.2, bundled with Node 24) is the frontend package manager. The
+      backend uses uv (0.11.3) from Phase P1 unless blocked. No other package
+      manager has a lockfile in the repository.
+    source: repository audit 2026-10-17
+    status: approved
+    date: "2026-10-17"
+
+  - id: D-08
+    topic: layout
+    decision: >
+      Layout: web/ (Next.js), backend/ (FastAPI), ml/ (data, training, export,
+      reports), contracts/ (frozen OpenAPI and InferenceResult), docs/.
+    source: plan §7.1, repository audit
+    status: approved
+    date: "2026-10-17"
+
+  - id: D-09
+    topic: execution_model
+    decision: >
+      Solo execution. Plan phase order (§16.1) is the order; checkpoint
+      acceptance criteria (§18, §22.4) are the gates. Hour windows are not
+      deadlines and must not be cited as unmet commitments.
+    source: owner instruction
+    status: approved
+    date: "2026-10-17"
+
+  - id: D-10
+    topic: ui_language
+    decision: >
+      UI language is client-side (language context + JSON dictionaries, plan
+      §1.4 permits a "tiny custom i18n dictionary"). The chosen language
+      persists in localStorage and drives an llm lang parameter only where the
+      API contract requires one. No third-party i18n runtime.
+    source: plan §1.4, §15.2
+    status: approved
+    date: "2026-10-17"
+
+questions:
+  - id: Q-01
+    topic: listings_discovery
+    gap: G-01
+    question: "The plan has no GET /listings collection endpoint for discovery, though FR-DISCOVER is Tier 1."
+    resolve_in: "P1 (contract freeze)"
+    constraint: "Filters crop, district, q, status=active; limit/cursor pagination; no cross-farmer private data."
+
+  - id: Q-02
+    topic: consultations_endpoint
+    gap: G-02
+    question: "GET /consultations is listed with no entity, table, or requirement origin."
+    resolve_in: "P1 (contract freeze)"
+    constraint: "Drop it or justify it in one line from the diagrams. Do not invent a consultation model."
+
+  - id: Q-03
+    topic: auth_token_storage
+    gap: null
+    question: "The plan does not state where the browser stores the JWT."
+    resolve_in: "P1, before C-07 (auth UI)"
+    constraint: "Must survive the §19.1 checklist. HttpOnly cookie at one origin is preferred given the §20.1 rewrite."
+
+  - id: Q-04
+    topic: login_identifier
+    gap: null
+    question: "§14.2 specifies phone+password; §2.1 mentions an OTP option."
+    resolve_in: "P1 (contract freeze)"
+    constraint: "Implement phone+password only; OTP is Tier 3 (D-06 in plan). Documented, not changed."
+
+  - id: Q-05
+    topic: missing_tables
+    gap: G-03
+    question: "ratings, support_requests, conversations and assistant_messages have routes but no DDL."
+    resolve_in: "P1 (C-01, before freeze)"
+    constraint: "Tier 2 tables may be created with the first migration or deferred; conversations are required by the §14.4 contract."
+
+  - id: Q-06
+    topic: storage_env_names
+    gap: null
+    question: "§20.2 names OBJECT_STORAGE_KEY; boto3-style configuration uses ACCESS_KEY_ID / SECRET_ACCESS_KEY."
+    resolve_in: "Storage phase (B-03)"
+    constraint: "One spelling frozen in the storage phase; .env.example currently lists both with the plan's spelling first."
+
+  - id: Q-07
+    topic: diagnosis_status_persistence
+    gap: G-04
+    question: "Four persisted statuses vs six rows in §8.8; which are transport-only is unstated."
+    resolve_in: "P1 (contract freeze + C-01)"
+    constraint: "Only statuses with a diagnosis row are persisted; transport failures use the §14.2 error envelope."
+
+  - id: Q-08
+    topic: llm_model_id
+    gap: null
+    question: "LLM_MODEL is left empty in .env.example; the plan forbids guessing provider model identifiers."
+    resolve_in: "LLM smoke call (plan P0-03, deferred from this phase)"
+    constraint: "Set from the provider's current documented model list at provisioning time; never a remembered string."
+
+  - id: Q-09
+    topic: local_storage_dir
+    gap: null
+    question: "The plan requires object storage, but the machine has no S3 credentials."
+    resolve_in: "Resolved by D-05 for development"
+    constraint: "Local driver writes under .uploads/ (gitignored); the S3 driver must pass the same contract tests before deployment."
+
+  - id: Q-10
+    topic: external_content_accuracy
+    gap: null
+    question: "Scheme, price and fact-sheet content must be source-cited; no content exists yet."
+    resolve_in: "Content phase (ADM-01)"
+    constraint: "Every row carries source + as_of; sample prices carry is_sample. No fabricated scheme facts."

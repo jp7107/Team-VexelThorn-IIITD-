@@ -1,0 +1,8 @@
+{
+  "enabledPlugins": {
+    "templafy@anthropic-plugin-directory": true,
+    "ploxs-presentations@anthropic-plugin-directory": true,
+    "pptx-deck-plugin@anthropic-plugin-directory": true,
+    "superdesign@anthropic-plugin-directory": true
+  }
+}

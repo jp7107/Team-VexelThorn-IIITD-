@@ -1,0 +1,118 @@
+{
+  "en": {
+    "app": {
+      "name": "Kisan Mitra",
+      "tagline": "Diagnose your crop, get advice, sell directly."
+    },
+    "nav": {
+      "home": "Home",
+      "diagnose": "Check a leaf",
+      "market": "Market",
+      "prices": "Prices",
+      "content": "Schemes",
+      "help": "Help"
+    },
+    "language": {
+      "label": "Language",
+      "switch_to": "देवनागरी में देखें",
+      "names": {
+        "en": "English",
+        "hi": "हिन्दी"
+      }
+    },
+    "home": {
+      "heading": "Help for your crop, in your language",
+      "subheading": "Photo in, plain answer out. Then sell directly to buyers.",
+      "firstRun": "New here? Start with three steps.",
+      "steps": {
+        "one": {
+          "title": "Take one clear leaf photo",
+          "body": "Daylight, one leaf filling the frame."
+        },
+        "two": {
+          "title": "See the model's best match",
+          "body": "The result shows confidence. Low confidence asks for another photo."
+        },
+        "three": {
+          "title": "List your produce",
+          "body": "Add crop, quantity and district. Buyers contact you."
+        }
+      },
+      "primaryCta": "Check a leaf",
+      "secondaryCta": "Go to market"
+    },
+    "foundation": {
+      "title": "Phase P0 foundation",
+      "body": "This shell is the foundation only. Diagnosis, assistant, marketplace and content screens arrive in later phases. Nothing below is claiming to work yet.",
+      "items": {
+        "frontend": "Next.js 15 App Router (JSX), Tailwind design tokens",
+        "i18n": "English and Hindi dictionaries wired; choice persists",
+        "backend": "Backend API not implemented",
+        "model": "Disease model not trained or loaded",
+        "data": "No sample data seeded"
+      },
+      "sampleNote": "Once data exists, anything seeded or demonstration-only carries a visible sample chip."
+    },
+    "footer": {
+      "disclaimer": "Automated estimate only. Confirm with a local expert before any treatment."
+    }
+  },
+  "hi": {
+    "app": {
+      "name": "किसान मित्र",
+      "tagline": "फसल की जाँच करें, सलाह पाएँ, सीधे बेचें।"
+    },
+    "nav": {
+      "home": "होम",
+      "diagnose": "पत्ती जाँचें",
+      "market": "मंडी",
+      "prices": "भाव",
+      "content": "योजनाएँ",
+      "help": "मदद"
+    },
+    "language": {
+      "label": "भाषा",
+      "switch_to": "View in English",
+      "names": {
+        "en": "English",
+        "hi": "हिन्दी"
+      }
+    },
+    "home": {
+      "heading": "आपकी फसल की मदद, आपकी भाषा में",
+      "subheading": "फोटो डालें, सरल जवाब पाएँ। फिर सीधे खरीदार से जुड़ें।",
+      "firstRun": "नए हैं? तीन कदमों से शुरू करें।",
+      "steps": {
+        "one": {
+          "title": "एक साफ़ पत्ती की फोटो लें",
+          "body": "दिन की रोशनी में, पत्ती पूरे फ्रेम में हो।"
+        },
+        "two": {
+          "title": "मॉडल का सबसे नज़दीकी अनुमान देखें",
+          "body": "परिणाम भरोसा दिखाता है। कम भरोसा हो तो दूसरी फोटो माँगी जाएगी।"
+        },
+        "three": {
+          "title": "अपनी फसल सूची में डालें",
+          "body": "फसल, मात्रा और ज़िला जोड़ें। खरीदार आपसे संपर्क करेंगे।"
+        }
+      },
+      "primaryCta": "पत्ती जाँचें",
+      "secondaryCta": "मंडी देखें"
+    },
+    "foundation": {
+      "title": "चरण P0 की नींव",
+      "body": "यह केवल शुरुआती ढाँचा है। रोग जाँच, सहायक, मंडी और योजना स्क्रीन आगे के चरणों में आएँगी। नीचे कुछ भी काम करने का दावा नहीं करता।",
+      "items": {
+        "frontend": "Next.js 15 ऐप राउटर (JSX), Tailwind डिज़ाइन टोकन",
+        "i18n": "अंग्रेज़ी और हिन्दी शब्दकोश जुड़े हैं; चुनाव सुरक्षित रहता है",
+        "backend": "बैकएंड API अभी नहीं बना",
+        "model": "रोग मॉडल अभी प्रशिक्षित या लोड नहीं हुआ",
+        "data": "कोई नमूना डेटा नहीं भरा गया"
+      },
+      "sampleNote": "डेटा आने पर, हर नमूना या प्रदर्शन-डेटा पर साफ़ नमूना चिह्न दिखेगा।"
+    },
+    "footer": {
+      "disclaimer": "यह केवल स्वचालित अनुमान है। किसी भी इलाज से पहले स्थानीय विशेषज्ञ से पुष्टि करें।"
+    }
+  }
+}
