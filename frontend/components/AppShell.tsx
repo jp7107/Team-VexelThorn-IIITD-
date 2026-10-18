@@ -5,11 +5,12 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Suspense, useEffect, useState, type ReactNode } from "react";
 import {
-  BasketIcon, ChatIcon, DropIcon, HelpIcon, HomeIcon, InboxIcon, LeafScanIcon, LogoMark, LogoutIcon,
-  NewsIcon, PinIcon, PriceIcon, SchemeIcon, ShieldIcon, StoreIcon,
+  BasketIcon, ChatIcon, DropIcon, HelpIcon, HomeIcon, InboxIcon, LeafScanIcon, LogoMark, LogoutIcon, MenuIcon,
+  NewsIcon, PinIcon, PriceIcon, ReceiptIcon, SchemeIcon, ShieldIcon, StoreIcon, UserIcon,
 } from "@/components/icons";
 import { LanguageSwitch } from "@/components/ui";
 import { api, getMe, type User, type UserRole } from "@/lib/api";
+import { useConfig } from "@/lib/catalogue";
 import { useI18n } from "@/lib/i18n";
 
 type Item = { href: string; key: string; Icon: typeof HomeIcon };
@@ -22,18 +23,22 @@ const NAV: Record<UserRole, Item[]> = {
     { href: "/market/prices", key: "prices", Icon: PriceIcon },
     { href: "/farmer/listings", key: "sell", Icon: StoreIcon },
     { href: "/enquiries", key: "enquiries", Icon: InboxIcon },
+    { href: "/orders", key: "orders", Icon: ReceiptIcon },
     { href: "/farmer/water", key: "water", Icon: DropIcon },
     { href: "/schemes", key: "schemes", Icon: SchemeIcon },
     { href: "/updates", key: "updates", Icon: NewsIcon },
+    { href: "/profile", key: "profile", Icon: UserIcon },
     { href: "/help", key: "help", Icon: HelpIcon },
   ],
   customer: [
     { href: "/market", key: "marketplace", Icon: BasketIcon },
     { href: "/enquiries", key: "enquiries", Icon: InboxIcon },
+    { href: "/orders", key: "orders", Icon: ReceiptIcon },
     { href: "/market/prices", key: "prices", Icon: PriceIcon },
     { href: "/assistant", key: "assistant", Icon: ChatIcon },
     { href: "/schemes", key: "schemes", Icon: SchemeIcon },
     { href: "/updates", key: "updates", Icon: NewsIcon },
+    { href: "/profile", key: "profile", Icon: UserIcon },
     { href: "/help", key: "help", Icon: HelpIcon },
   ],
   admin: [
@@ -42,15 +47,16 @@ const NAV: Record<UserRole, Item[]> = {
     { href: "/market/prices", key: "prices", Icon: PriceIcon },
     { href: "/schemes", key: "schemes", Icon: SchemeIcon },
     { href: "/updates", key: "updates", Icon: NewsIcon },
+    { href: "/profile", key: "profile", Icon: UserIcon },
     { href: "/help", key: "help", Icon: HelpIcon },
   ],
 };
 
-// Five thumb-reach tabs per role on phones; everything else is one tap away on the home grid or "More".
+// Four thumb-reach tabs per role on phones, plus "More" for every other page, the profile and logout.
 const TABS: Record<UserRole, string[]> = {
-  farmer: ["/farmer", "/farmer/diagnose", "/assistant", "/market/prices", "/farmer/listings"],
-  customer: ["/market", "/enquiries", "/market/prices", "/assistant", "/help"],
-  admin: ["/admin", "/market", "/market/prices", "/schemes", "/help"],
+  farmer: ["/farmer", "/farmer/diagnose", "/orders", "/assistant"],
+  customer: ["/market", "/enquiries", "/orders", "/market/prices"],
+  admin: ["/admin", "/market", "/market/prices", "/schemes"],
 };
 
 function isActive(pathname: string, href: string, items: Item[]) {
@@ -86,7 +92,9 @@ export function AppShell({ children, wide, title, back }: {
 }) {
   const { t } = useI18n();
   const router = useRouter();
+  const config = useConfig();
   const [user, setUser] = useState<User | null>(null);
+  const [more, setMore] = useState(false);
 
   useEffect(() => {
     getMe().then(setUser, () => setUser(null));
@@ -147,7 +155,7 @@ export function AppShell({ children, wide, title, back }: {
             </div>
           ) : (
             <Link href="/login" className="flex min-h-11 items-center justify-center rounded-xl bg-lime font-bold text-ink-strong">
-              {t("auth.login")}
+              {t("landing.login")}
             </Link>
           )}
         </div>
@@ -200,6 +208,12 @@ export function AppShell({ children, wide, title, back }: {
           </div>
         )}
 
+        {config?.announcement && (
+          <p role="status" className="mx-4 mt-3 rounded-xl border border-haldi/40 bg-haldi-soft px-4 py-2 text-sm font-semibold lg:mx-8">
+            {config.announcement}
+          </p>
+        )}
+
         <main className={`mx-auto w-full flex-1 px-4 pb-28 pt-4 lg:px-8 lg:pb-12 lg:pt-5 ${wide ? "max-w-6xl" : "max-w-3xl"}`}>
           {wide ? children : <div className="lg:glass lg:rounded-3xl lg:border lg:border-white/15 lg:p-8">{children}</div>}
         </main>
@@ -223,8 +237,47 @@ export function AppShell({ children, wide, title, back }: {
                   </li>
                 );
               })}
+              <li>
+                <button type="button" onClick={() => setMore(true)} aria-expanded={more}
+                  className="flex min-h-14 w-full flex-col items-center justify-center gap-0.5 text-[0.7rem] font-semibold leading-tight text-muted">
+                  <span className="grid h-7 w-11 place-items-center rounded-full"><MenuIcon className="size-5" /></span>
+                  <span>{t("nav.short.more")}</span>
+                </button>
+              </li>
             </ul>} />
           </nav>
+        )}
+
+        {user && more && (
+          // Bottom sheet with every page, the profile and logout (phones only).
+          <div className="fixed inset-0 z-30 lg:hidden" role="dialog" aria-modal="true" aria-label={t("nav.short.more")}>
+            <button type="button" aria-label={t("common.close")} onClick={() => setMore(false)} className="absolute inset-0 bg-black/40" />
+            <div className="absolute inset-x-0 bottom-0 max-h-[80dvh] overflow-y-auto rounded-t-3xl border-t border-white/15 bg-[#0e3328]/95 p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] backdrop-blur-2xl">
+              <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-white/30" />
+              <div className="mb-3 flex items-center gap-3 rounded-2xl bg-white/10 p-3">
+                <span className="grid size-10 shrink-0 place-items-center rounded-full bg-white/90 font-bold text-ink-strong">{initials}</span>
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate font-semibold">{user.name}</span>
+                  <span className="block text-sm text-muted">{t(`nav.role.${user.role}`)}</span>
+                </span>
+              </div>
+              <ul className="grid grid-cols-3 gap-2">
+                {items.map(({ href, key, Icon }) => (
+                  <li key={href}>
+                    <Link href={href} onClick={() => setMore(false)}
+                      className="flex min-h-20 flex-col items-center justify-center gap-1.5 rounded-2xl bg-white/10 p-2 text-center text-xs font-semibold leading-tight">
+                      <span className="grid size-9 place-items-center rounded-xl bg-white/90 text-ink-strong"><Icon className="size-5" /></span>
+                      {t(`nav.${key}`)}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <button type="button" onClick={logout}
+                className="mt-3 flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-white/20 font-semibold text-danger">
+                <LogoutIcon className="size-5" /> {t("auth.logout")}
+              </button>
+            </div>
+          </div>
         )}
       </div>
     </div>

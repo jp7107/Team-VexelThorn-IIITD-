@@ -1,18 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ListingCard } from "@/components/market";
+import { ListingCard, useFormat } from "@/components/market";
 import { ButtonLink, FormError, Loading, Screen, inputClass } from "@/components/ui";
 import { api, type Listing } from "@/lib/api";
 import { errorKey } from "@/lib/forms";
+import { useCrops } from "@/lib/catalogue";
 import { useI18n } from "@/lib/i18n";
 import { STATES } from "@/lib/places";
 import { useSession } from "@/lib/session";
 
-const CROPS = ["", "tomato", "potato", "maize"];
 
 export default function MarketPage() {
   const { t, lang } = useI18n();
+  const f = useFormat();
+  const catalogue = useCrops();
   const { user } = useSession(["customer", "farmer", "admin"]);
   const [crop, setCrop] = useState("");
   const [state, setState] = useState("");
@@ -50,10 +52,10 @@ export default function MarketPage() {
         {user.role === "customer" && <ButtonLink href="/enquiries" variant="secondary">{t("market.myEnquiries")}</ButtonLink>}
       </div>
       <div className="mb-3 flex flex-wrap gap-2" role="group" aria-label={t("sell.crop")}>
-        {CROPS.map((c) => (
+        {["", ...(catalogue ?? []).filter((x) => x.marketplace).map((x) => x.code)].map((c) => (
           <button key={c || "all"} type="button" aria-pressed={crop === c} onClick={() => setCrop(c)}
             className={`min-h-11 rounded-full border px-4 text-base font-semibold ${crop === c ? "border-white bg-white text-ink-strong" : "border-line bg-white/10"}`}>
-            {c ? t(`crops.${c}`) : t("market.allCrops")}
+            {c ? f.crop(c) : t("market.allCrops")}
           </button>
         ))}
       </div>

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { CROP_ICONS, SproutIcon } from "@/components/icons";
 import type { Listing, Unit } from "@/lib/api";
+import { cropLabel, useCrops } from "@/lib/catalogue";
 import { useI18n } from "@/lib/i18n";
 import { STATES } from "@/lib/places";
 
@@ -16,12 +17,17 @@ export function isBulk(l: Pick<Listing, "quantity" | "unit">): boolean {
 
 export function useFormat() {
   const { t, lang } = useI18n();
+  const crops = useCrops();
   const num = new Intl.NumberFormat(lang === "hi" ? "hi-IN" : "en-IN", { maximumFractionDigits: 2 });
   return {
     qty: (q: string | number, unit: Unit) => `${num.format(Number(q))} ${t(`units.${unit}`)}`,
     price: (p: string | null, unit: Unit) =>
       p === null ? t("market.priceOnRequest") : `₹${num.format(Number(p))} ${t("market.perUnit", { unit: t(`units.${unit}`) })}`,
-    crop: (code: string) => (code in CROP_ICONS ? t(`crops.${code}`) : code),
+    // Catalogue name first (admins can add crops), then the built-in translations.
+    crop: (code: string) => (crops?.some((c) => c.code === code) ? cropLabel(crops, code, lang)
+      : code in CROP_ICONS ? t(`crops.${code}`) : code),
+    money: (x: string | number) => `₹${new Intl.NumberFormat(lang === "hi" ? "hi-IN" : "en-IN",
+      { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(Number(x))}`,
     state: (s: string) => (lang === "hi" ? STATES.find((x) => x.value === s)?.hi ?? s : s),
   };
 }
@@ -33,9 +39,10 @@ export function CropIcon({ code, className }: { code: string; className?: string
 
 export function StatusPill({ status }: { status: string }) {
   const { t } = useI18n();
-  const look = status === "accepted" || status === "open" ? "bg-field-soft text-field"
-    : status === "pending" ? "bg-haldi-soft text-ink" : "bg-surface text-muted";
-  return <span className={`rounded-full px-3 py-1 text-base font-semibold ${look}`}>{t(`statuses.${status}`)}</span>;
+  const look = ["accepted", "open", "paid", "dispatched", "delivered"].includes(status) ? "bg-field-soft text-field"
+    : ["pending", "awaiting_payment", "payment_submitted"].includes(status) ? "bg-haldi-soft text-ink"
+      : "bg-surface text-muted";
+  return <span className={`shrink-0 rounded-full px-3 py-1 text-sm font-semibold ${look}`}>{t(`statuses.${status}`)}</span>;
 }
 
 export function ListingCard({ l }: { l: Listing }) {

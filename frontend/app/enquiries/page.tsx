@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { Stars, StatusPill, useFormat } from "@/components/market";
 import { Button, ButtonLink, FormError, Loading, Screen, inputClass } from "@/components/ui";
-import { api, type Enquiry } from "@/lib/api";
+import { api, ApiError, type Enquiry } from "@/lib/api";
 import { errorKey } from "@/lib/forms";
 import { useI18n } from "@/lib/i18n";
 import { useSession } from "@/lib/session";
@@ -60,6 +60,8 @@ export default function EnquiriesPage() {
   const { user } = useSession(["farmer", "customer"]);
   const [items, setItems] = useState<Enquiry[] | null>(null);
   const [error, setError] = useState("");
+  // Enquiry waiting for an agreed price (its listing has none) and the price typed so far.
+  const [pricing, setPricing] = useState<{ id: string; price: string } | null>(null);
 
   const load = useCallback(() => {
     api<Enquiry[]>("/me/enquiries").then(setItems).catch((e) => setError(t(errorKey(e))));
@@ -69,12 +71,15 @@ export default function EnquiriesPage() {
     if (user) load();
   }, [user, load]);
 
-  async function change(e: Enquiry, status: "accepted" | "declined" | "withdrawn") {
+  async function change(e: Enquiry, status: "accepted" | "declined" | "withdrawn", price?: string) {
+    setError("");
     try {
-      await api(`/enquiries/${e.id}`, { method: "PATCH", body: { status } });
+      await api(`/enquiries/${e.id}`, { method: "PATCH", body: { status, ...(price ? { price_per_unit: price } : {}) } });
+      setPricing(null);
       load();
     } catch (err) {
-      setError(t(errorKey(err)));
+      if (err instanceof ApiError && err.code === "PRICE_REQUIRED") setPricing({ id: e.id, price: "" });
+      else setError(t(errorKey(err)));
     }
   }
 
@@ -105,9 +110,21 @@ export default function EnquiriesPage() {
               <p className="text-base">{t("enq.qty", { qty: f.qty(e.quantity, e.unit), unit: "" }).trim()}</p>
               {e.message && <p className="mt-2 whitespace-pre-line rounded-xl bg-surface px-3 py-2 text-base">{e.message}</p>}
 
-              {isFarmer && e.status === "pending" && (
+              {isFarmer && pricing?.id === e.id && (
+                <form className="mt-3 rounded-xl bg-surface p-3" onSubmit={(ev) => { ev.preventDefault(); change(e, "accepted", pricing.price); }}>
+                  <label htmlFor={`p-${e.id}`} className="mb-1 block text-sm font-semibold">
+                    {t("enq.agreePrice", { unit: t(`units.${e.unit}`) })}
+                  </label>
+                  <div className="flex gap-2">
+                    <input id={`p-${e.id}`} inputMode="decimal" required value={pricing.price} autoFocus
+                      onChange={(ev) => setPricing({ id: e.id, price: ev.target.value })} className={`${inputClass} flex-1`} />
+                    <button type="submit" className={`${actionClass} max-w-36 bg-lime text-ink-strong`}>{t("enq.accept")}</button>
+                  </div>
+                </form>
+              )}
+              {isFarmer && e.status === "pending" && pricing?.id !== e.id && (
                 <div className="mt-3 flex gap-2">
-                  <button type="button" onClick={() => change(e, "accepted")} className={`${actionClass} bg-haldi text-ink-strong`}>
+                  <button type="button" onClick={() => change(e, "accepted")} className={`${actionClass} bg-lime text-ink-strong`}>
                     {t("enq.accept")}
                   </button>
                   <button type="button" onClick={() => change(e, "declined")} className={`${actionClass} border border-white/30 text-ink`}>
@@ -134,6 +151,14 @@ export default function EnquiriesPage() {
                     </a>
                   </div>
                 </div>
+              )}
+              {e.order_id && (
+                <Link href={`/orders/${e.order_id}`}
+                  className={`mt-3 flex min-h-11 items-center justify-between gap-2 rounded-xl px-4 font-bold ${
+                    !isFarmer && e.order_status === "awaiting_payment" ? "bg-lime text-ink-strong" : "border border-white/30 bg-white/10"}`}>
+                  <span>{!isFarmer && e.order_status === "awaiting_payment" ? t("enq.payNow") : t("enq.viewOrder")}</span>
+                  {e.order_status && <StatusPill status={e.order_status} />}
+                </Link>
               )}
               {e.can_rate && <RatingForm enquiry={e} onDone={load} />}
               {e.my_rating && (

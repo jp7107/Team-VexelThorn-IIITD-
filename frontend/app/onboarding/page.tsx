@@ -7,11 +7,10 @@ import { CROP_ICONS, SproutIcon } from "@/components/icons";
 import { Button, ChoiceTile, Field, FormError, Loading, Screen, inputClass } from "@/components/ui";
 import { api, type Crop } from "@/lib/api";
 import { describedBy, errorKey } from "@/lib/forms";
+import { cropLabel, useCrops } from "@/lib/catalogue";
 import { useI18n } from "@/lib/i18n";
 import { useSession } from "@/lib/session";
 
-// The crops the disease model covers first (plan D-09); anything else goes in "Other".
-const KNOWN_CROPS = ["tomato", "potato", "maize"] as const;
 const STAGES = ["initial", "development", "mid", "late"] as const;
 
 function today() {
@@ -19,7 +18,8 @@ function today() {
 }
 
 export default function OnboardingPage() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
+  const catalogue = useCrops();
   const router = useRouter();
   const { user } = useSession(["farmer"]);
   const [crop, setCrop] = useState<string>("");
@@ -67,11 +67,11 @@ export default function OnboardingPage() {
         <fieldset className="mb-6" aria-describedby={errors.crop ? "crop-error" : undefined}>
           <legend className="mb-2 text-base font-semibold">{t("onboarding.crop")}</legend>
           <div className="grid grid-cols-2 gap-3">
-            {KNOWN_CROPS.map((c) => {
-              const Icon = CROP_ICONS[c];
+            {(catalogue ?? []).map((c) => {
+              const Icon = CROP_ICONS[c.code] ?? SproutIcon;
               return (
-                <ChoiceTile key={c} selected={crop === c} onSelect={() => setCrop(c)}
-                  icon={<Icon className="size-9" />} label={t(`crops.${c}`)} />
+                <ChoiceTile key={c.code} selected={crop === c.code} onSelect={() => setCrop(c.code)}
+                  icon={<Icon className="size-8" />} label={cropLabel(catalogue, c.code, lang)} />
               );
             })}
             <ChoiceTile selected={crop === "other"} onSelect={() => setCrop("other")}

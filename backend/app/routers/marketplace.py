@@ -1,7 +1,8 @@
 """Marketplace: listings and enquiries (plan §8.6, §14.1; tasks MKT-02, MKT-03).
 
-No payments: buy/sell = listing -> enquiry -> farmer accepts -> buyer sees the farmer's phone (plan A-4, A-8).
-A farmer's phone is never in listing responses, only in that buyer's accepted enquiry.
+listing -> enquiry -> farmer accepts, which creates an order and takes the stock off the listing
+(app.routers.orders handles payment, receipt and delivery). A farmer's phone is never in listing
+responses, only in that buyer's accepted enquiry and order.
 """
 
 from datetime import UTC, datetime
@@ -19,8 +20,9 @@ from app.core import ratelimit
 from app.core.db import get_db
 from app.core.errors import AppError
 from app.core.security import current_user, require_role
-from app.models import UNITS, Enquiry, Listing, Rating, User
+from app.models import UNITS, CropType, Enquiry, Listing, Order, Rating, User
 from app.routers.auth import Place
+from app.routers.orders import create_order
 
 router = APIRouter(tags=["marketplace"])
 # Kilograms per unit, for comparing quantities across units. Dozens have no weight.
@@ -59,6 +61,12 @@ class ListingPatch(BaseModel):
     price_per_unit: Decimal | None = Field(None, ge=0, max_digits=12, decimal_places=2)
     min_order_qty: Decimal | None = Field(None, gt=0, max_digits=12, decimal_places=2)
     status: Literal["open", "closed", "hidden"] | None = None
+
+
+def _check_crop(db: Session, code: str) -> None:
+    crop = db.get(CropType, code)
+    if crop is None or not crop.active or not crop.marketplace:
+        raise AppError(422, "This crop can't be listed. Pick one from the list.", code="CROP_NOT_LISTED")
 
 
 class Seller(BaseModel):
@@ -136,6 +144,7 @@ def browse(crop_code: str | None = Query(None, max_length=30), state: str | None
 
 @router.post("/listings", status_code=201, response_model=ListingOut)
 def create_listing(body: ListingIn, user: User = Depends(farmer), db: Session = Depends(get_db)):
+    _check_crop(db, body.crop_code)
     data = body.model_dump()
     data["state"] = data["state"] or user.state
     data["district"] = data["district"] or user.district
@@ -184,6 +193,8 @@ def update_listing(listing_id: UUID, body: ListingPatch, user: User = Depends(cu
                 raise AppError(422, f"{key} cannot be empty")
     for key, value in changes.items():
         setattr(listing, key, value)
+    if "quantity" in changes and listing.status == "sold_out" and listing.quantity > 0:
+        listing.status = "open"  # restocked
     if listing.min_order_qty is not None and listing.min_order_qty > listing.quantity:
         raise AppError(422, "min_order_qty cannot exceed quantity")
     db.commit()
@@ -214,6 +225,8 @@ class EnquiryOut(BaseModel):
     farmer_phone: str | None  # only for the buyer, only once accepted
     can_rate: bool = False
     my_rating: int | None = None  # the buyer's own stars, once given
+    order_id: UUID | None = None
+    order_status: str | None = None
 
 
 def _enquiry_out(e: Enquiry, listing: Listing, buyer: User, owner: User, viewer: User) -> EnquiryOut:
@@ -233,7 +246,10 @@ def create_enquiry(listing_id: UUID, body: EnquiryIn, user: User = Depends(custo
     if listing.status != "open":
         raise AppError(422, "This listing is no longer open")
     if body.quantity > listing.quantity:
-        raise AppError(422, "You asked for more than is listed")
+        raise AppError(422, f"Only {listing.quantity.normalize():f} {listing.unit} is available", code="NOT_ENOUGH_STOCK")
+    if listing.min_order_qty is not None and body.quantity < listing.min_order_qty:
+        raise AppError(422, f"The smallest order is {listing.min_order_qty.normalize():f} {listing.unit}",
+                       code="BELOW_MIN_ORDER")
     enquiry = Enquiry(listing_id=listing.id, buyer_id=user.id, quantity=body.quantity,
                       message=body.message.strip() if body.message else None)
     db.add(enquiry)
@@ -252,13 +268,17 @@ def my_enquiries(user: User = Depends(require_role("farmer", "customer")), db: S
     rows = db.execute(q.order_by(Enquiry.created_at.desc()).limit(100)).all()
     people = {u.id: u for u in db.scalars(select(User).where(User.id.in_(
         {e.buyer_id for e, _ in rows} | {l.farmer_id for _, l in rows})))}
-    rated = dict(db.execute(select(Rating.enquiry_id, Rating.stars)
-                            .where(Rating.enquiry_id.in_([e.id for e, _ in rows]))).all())
+    ids = [e.id for e, _ in rows]
+    rated = dict(db.execute(select(Rating.enquiry_id, Rating.stars).where(Rating.enquiry_id.in_(ids))).all())
+    orders = {o.enquiry_id: o for o in db.scalars(select(Order).where(Order.enquiry_id.in_(ids)))}
     out = []
     for e, listing in rows:
         item = _enquiry_out(e, listing, people[e.buyer_id], people[listing.farmer_id], user)
+        order = orders.get(e.id)
+        if order:
+            item.order_id, item.order_status = order.id, order.status
         if user.role == "customer":
-            item.can_rate = e.status == "accepted" and e.id not in rated
+            item.can_rate = order is not None and order.status == "delivered" and e.id not in rated
             item.my_rating = rated.get(e.id)
         out.append(item)
     return out
@@ -271,23 +291,30 @@ TRANSITIONS = {("farmer", "pending", "accepted"), ("farmer", "pending", "decline
 
 class EnquiryPatch(BaseModel):
     status: Literal["accepted", "declined", "withdrawn"]
+    # Agreed price when accepting; required if the listing has none, otherwise it overrides the listed price.
+    price_per_unit: Decimal | None = Field(None, gt=0, max_digits=12, decimal_places=2)
 
 
 @router.patch("/enquiries/{enquiry_id}", response_model=EnquiryOut)
 def update_enquiry(enquiry_id: UUID, body: EnquiryPatch, user: User = Depends(require_role("farmer", "customer")),
                    db: Session = Depends(get_db)):
-    enquiry = db.get(Enquiry, enquiry_id)
-    listing = db.get(Listing, enquiry.listing_id) if enquiry else None
+    enquiry = db.get(Enquiry, enquiry_id, with_for_update=True)
+    # Lock the listing too: two accepts at once must not sell the same stock twice.
+    listing = db.get(Listing, enquiry.listing_id, with_for_update=True) if enquiry else None
     party = (user.role == "farmer" and listing is not None and listing.farmer_id == user.id) or \
             (user.role == "customer" and enquiry is not None and enquiry.buyer_id == user.id)
     if not party:
         raise AppError(404, "Enquiry not found")
     if (user.role, enquiry.status, body.status) not in TRANSITIONS:
         raise AppError(409, f"Can't change an enquiry from {enquiry.status} to {body.status}")
+    order = create_order(db, enquiry, listing, body.price_per_unit) if body.status == "accepted" else None
     enquiry.status = body.status
     enquiry.responded_at = datetime.now(UTC)
     db.commit()
-    return _enquiry_out(enquiry, listing, db.get(User, enquiry.buyer_id), db.get(User, listing.farmer_id), user)
+    out = _enquiry_out(enquiry, listing, db.get(User, enquiry.buyer_id), db.get(User, listing.farmer_id), user)
+    if order:
+        out.order_id, out.order_status = order.id, order.status
+    return out
 
 
 # --- ratings (MKT-05) ---
@@ -313,12 +340,13 @@ class FarmerRatings(BaseModel):
 
 @router.post("/enquiries/{enquiry_id}/rating", status_code=201, response_model=RatingOut)
 def rate_farmer(enquiry_id: UUID, body: RatingIn, user: User = Depends(customer), db: Session = Depends(get_db)):
-    """Only the buyer of an accepted enquiry may rate, once (plan A-5: real counterparties only)."""
+    """Only the buyer, once their order is delivered, may rate, once (plan A-5: real counterparties only)."""
     enquiry = db.get(Enquiry, enquiry_id)
     if enquiry is None or enquiry.buyer_id != user.id:
         raise AppError(404, "Enquiry not found")
-    if enquiry.status != "accepted":
-        raise AppError(409, "You can rate a farmer after they accept your enquiry")
+    order = db.scalar(select(Order).where(Order.enquiry_id == enquiry.id))
+    if order is None or order.status != "delivered":
+        raise AppError(409, "You can rate the farmer once your order is delivered")
     listing = db.get(Listing, enquiry.listing_id)
     comment = body.comment.strip() if body.comment and body.comment.strip() else None
     rating = Rating(enquiry_id=enquiry.id, farmer_id=listing.farmer_id, buyer_id=user.id, stars=body.stars,

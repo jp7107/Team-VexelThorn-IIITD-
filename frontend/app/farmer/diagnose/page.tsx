@@ -2,16 +2,15 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type ChangeEvent } from "react";
-import { CROP_ICONS } from "@/components/icons";
+import { CROP_ICONS, SproutIcon } from "@/components/icons";
 import { Button, FormError, Loading, Screen } from "@/components/ui";
 import { api, ApiError, type Analysis, type Crop } from "@/lib/api";
 import { errorKey } from "@/lib/forms";
+import { cropLabel, useCrops } from "@/lib/catalogue";
 import { useI18n } from "@/lib/i18n";
 import { prepareLeafPhoto } from "@/lib/image";
 import { useSession } from "@/lib/session";
 
-// Crops the classifier knows (backend app/ml/labels.json). Others get the "unsupported" path server-side.
-const SUPPORTED = ["tomato", "potato", "maize"] as const;
 
 type Phase = "idle" | "preparing" | "checking";
 
@@ -54,7 +53,8 @@ function PhotoButton({ label, capture, onPick, primary }: {
 }
 
 export default function DiagnosePage() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
+  const catalogue = useCrops();
   const router = useRouter();
   const { user } = useSession(["farmer"]);
   const [crops, setCrops] = useState<Crop[]>([]);
@@ -119,14 +119,15 @@ export default function DiagnosePage() {
         </legend>
         <p className="mb-3 pl-8 text-sm text-muted">{t("diagnose.supportedNote")}</p>
         <div className="grid grid-cols-3 gap-2">
-          {SUPPORTED.map((c) => {
-            const Icon = CROP_ICONS[c];
+          {/* Crops the leaf model knows (leaf_check comes from the model's labels via /crops). */}
+          {(catalogue ?? []).filter((x) => x.leaf_check).map(({ code: c }) => {
+            const Icon = CROP_ICONS[c] ?? SproutIcon;
             return (
               <button key={c} type="button" aria-pressed={crop === c} onClick={() => setCrop(c)}
                 className={`flex min-h-20 flex-col items-center justify-center gap-1 rounded-2xl border text-sm font-bold transition
                   ${crop === c ? "border-white bg-white text-ink-strong" : "glass border-white/15 text-text"}`}>
                 <Icon className="size-7" />
-                {t(`crops.${c}`)}
+                {cropLabel(catalogue, c, lang)}
               </button>
             );
           })}

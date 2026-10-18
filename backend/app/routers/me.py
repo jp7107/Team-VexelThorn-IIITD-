@@ -28,12 +28,18 @@ class ProfilePatch(BaseModel):
     district: Place | None = None
     lat: float | None = Field(None, ge=-90, le=90)
     lon: float | None = Field(None, ge=-180, le=180)
+    # Farmers only: a UPI address (name@bank) buyers can pay directly. Empty string removes it.
+    upi_id: str | None = Field(None, max_length=60, pattern=r"^$|^[A-Za-z0-9._-]{2,40}@[A-Za-z][A-Za-z0-9.]{1,30}$")
 
 
 @router.patch("", response_model=UserOut)
 def update_profile(body: ProfilePatch, user: User = Depends(current_user), db: Session = Depends(get_db)):
     for key, value in body.model_dump(exclude_unset=True).items():
-        if value is None and key not in ("lat", "lon"):
+        if key == "upi_id":
+            if user.role != "farmer":
+                raise AppError(422, "Only farmers receive payments")
+            value = value or None
+        elif value is None and key not in ("lat", "lon"):
             raise AppError(422, f"{key} cannot be empty")
         setattr(user, key, value)
     db.commit()

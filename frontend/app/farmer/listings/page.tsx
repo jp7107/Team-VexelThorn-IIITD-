@@ -7,17 +7,17 @@ import { StatusPill, useFormat } from "@/components/market";
 import { Button, ButtonLink, ChoiceTile, Field, FormError, Loading, Screen, inputClass } from "@/components/ui";
 import { api, type Listing, type Unit } from "@/lib/api";
 import { describedBy, errorKey } from "@/lib/forms";
+import { cropLabel, useCrops } from "@/lib/catalogue";
 import { useI18n } from "@/lib/i18n";
 import { useSession } from "@/lib/session";
 
-const CROPS = ["tomato", "potato", "maize"] as const;
 const UNITS: Unit[] = ["quintal", "kg", "tonne", "dozen"];
 const num = (v: string) => v.replace(/[^\d.]/g, "");
 
 function NewListing({ onDone }: { onDone: () => void }) {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
+  const catalogue = useCrops();
   const [crop, setCrop] = useState("");
-  const [otherName, setOtherName] = useState("");
   const [form, setForm] = useState({ title: "", quantity: "", unit: "quintal" as Unit, price: "", minOrder: "", description: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState("");
@@ -26,7 +26,7 @@ function NewListing({ onDone }: { onDone: () => void }) {
 
   async function submit(e: FormEvent) {
     e.preventDefault();
-    const cropCode = crop === "other" ? otherName.trim().toLowerCase().slice(0, 30) : crop;
+    const cropCode = crop;
     const next: Record<string, string> = {};
     if (!cropCode) next.crop = t("errors.required");
     if (!form.title.trim()) next.title = t("errors.required");
@@ -58,19 +58,15 @@ function NewListing({ onDone }: { onDone: () => void }) {
       <fieldset className="mb-5">
         <legend className="mb-2 text-base font-semibold">{t("sell.crop")}</legend>
         <div className="grid grid-cols-2 gap-3">
-          {CROPS.map((c) => {
-            const Icon = CROP_ICONS[c];
-            return <ChoiceTile key={c} selected={crop === c} onSelect={() => setCrop(c)} icon={<Icon className="size-9" />} label={t(`crops.${c}`)} />;
+          {catalogue === null ? <Loading /> : catalogue.filter((c) => c.marketplace).map((c) => {
+            const Icon = CROP_ICONS[c.code] ?? SproutIcon;
+            return <ChoiceTile key={c.code} selected={crop === c.code} onSelect={() => setCrop(c.code)}
+              icon={<Icon className="size-8" />} label={cropLabel(catalogue, c.code, lang)} />;
           })}
-          <ChoiceTile selected={crop === "other"} onSelect={() => setCrop("other")} icon={<SproutIcon className="size-9" />} label={t("sell.otherCrop")} />
         </div>
+        <p className="mt-2 text-sm text-muted">{t("sell.missingCrop")}</p>
         {errors.crop && <p className="mt-2 font-semibold text-danger">{errors.crop}</p>}
       </fieldset>
-      {crop === "other" && (
-        <Field id="other" label={t("sell.otherCropName")}>
-          <input id="other" className={inputClass} maxLength={30} value={otherName} onChange={(e) => setOtherName(e.target.value)} />
-        </Field>
-      )}
       <Field id="title" label={t("sell.listingTitle")} hint={t("sell.titleHint")} error={errors.title}>
         <input {...describedBy("title", true, errors.title)} className={inputClass} maxLength={120} value={form.title}
           onChange={(e) => set("title")(e.target.value)} />

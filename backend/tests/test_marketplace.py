@@ -67,7 +67,7 @@ def test_enquiry_accept_reveals_phone_only_to_that_buyer():
     assert accepted.status_code == 200 and accepted.json()["farmer_phone"] is None  # farmer's own view
     sent = c.get("/me/enquiries").json()
     assert sent[0]["status"] == "accepted" and sent[0]["farmer_phone"] == farmer["phone"]
-    assert sent[0]["can_rate"] is True
+    assert sent[0]["order_status"] == "awaiting_payment" and sent[0]["can_rate"] is False  # rate after delivery
 
     other_buyer = make_client()
     register(other_buyer, role="customer")
@@ -121,10 +121,18 @@ def test_only_owner_edits_and_only_admin_hides():
 
 # --- ratings (MKT-05) ---
 
+def deliver(f, c, eid):
+    """Accept, pay cash, confirm, receive: the whole sale, so the buyer may rate."""
+    order_id = f.patch(f"/enquiries/{eid}", json={"status": "accepted"}).json()["order_id"]
+    assert c.post(f"/orders/{order_id}/payment", json={"method": "cash"}).status_code == 200
+    assert f.patch(f"/orders/{order_id}", json={"action": "confirm_payment"}).status_code == 200
+    assert c.patch(f"/orders/{order_id}", json={"action": "deliver"}).json()["status"] == "delivered"
+
+
 def accepted_enquiry():
     f, c, farmer, buyer, listing = setup()
     eid = c.post(f"/listings/{listing['id']}/enquiries", json={"quantity": "1"}).json()["id"]
-    f.patch(f"/enquiries/{eid}", json={"status": "accepted"})
+    deliver(f, c, eid)
     return f, c, farmer, listing, eid
 
 
@@ -142,7 +150,7 @@ def test_buyer_rates_once_and_average_shows_on_listings():
     other = make_client()
     register(other, role="customer", name="Bina Store")
     eid2 = other.post(f"/listings/{listing['id']}/enquiries", json={"quantity": "1"}).json()["id"]
-    f.patch(f"/enquiries/{eid2}", json={"status": "accepted"})
+    deliver(f, other, eid2)
     other.post(f"/enquiries/{eid2}/rating", json={"stars": 5})
     seller = c.get("/listings").json()[0]["farmer"]
     assert seller["rating_avg"] == 4.5 and seller["rating_count"] == 2

@@ -23,7 +23,8 @@ from sqlalchemy.orm import Session
 from app.core.config import get_settings
 from app.core.db import get_db
 from app.core.security import current_user
-from app.models import MarketPrice, User
+from app.core.platform import get_config
+from app.models import CropType, MarketPrice, User
 
 log = logging.getLogger(__name__)
 router = APIRouter(prefix="/market", tags=["prices"])
@@ -33,7 +34,6 @@ SOURCE = "data.gov.in (AGMARKNET)"
 CACHE_HOURS = 6
 STALE_DAYS = 7  # plan §21.3: older prices are flagged "may be outdated"
 FETCH_TIMEOUT_S = 8
-DEFAULT_COMMODITIES = ["Tomato", "Potato", "Maize"]
 
 
 def _norm_key(key: str) -> str:
@@ -162,10 +162,10 @@ def prices(commodity: str = Query(..., min_length=1, max_length=60), state: str 
         return list(db.scalars(q.order_by(MarketPrice.arrival_date.desc(), MarketPrice.market).limit(limit)))
 
     rows, status = query(False), "live" if fetched == "live" else "cached"
-    if not rows:
+    if not rows and get_config(db).show_demo_prices:  # the admin decides whether labelled demo rows appear
         rows, status = query(True), "demo"
-        if not rows:
-            status = "none"
+    if not rows:
+        status = "none"
     today = datetime.now(UTC).date()
     return PricesOut(
         meta=PriceMeta(commodity=commodity, source_status=status,
@@ -180,6 +180,8 @@ def prices(commodity: str = Query(..., min_length=1, max_length=60), state: str 
 
 @router.get("/commodities", response_model=list[str])
 def commodities(user: User = Depends(current_user), db: Session = Depends(get_db)):
-    """Commodities with any stored price, plus the MVP crops first."""
-    stored = sorted(set(db.scalars(select(MarketPrice.commodity).distinct())) - set(DEFAULT_COMMODITIES))
-    return DEFAULT_COMMODITIES + stored
+    """The crop catalogue's commodities first (admin-ordered), then any other commodity with a stored price."""
+    catalogue = list(db.scalars(select(CropType.mandi_commodity).where(
+        CropType.active.is_(True), CropType.mandi_commodity.is_not(None)).order_by(CropType.sort_order)))
+    stored = sorted(set(db.scalars(select(MarketPrice.commodity).distinct())) - set(catalogue))
+    return catalogue + stored

@@ -87,3 +87,21 @@ option {
     animation: none !important;
   }
 }
+
+/* Printing a receipt: only the receipt, black on white, no app chrome. */
+@media print {
+  body {
+    background: #fff !important;
+  }
+  body * {
+    visibility: hidden;
+  }
+  .receipt,
+  .receipt * {
+    visibility: visible;
+  }
+  .receipt {
+    position: absolute;
+    inset: 0 0 auto 0;
+  }
+}

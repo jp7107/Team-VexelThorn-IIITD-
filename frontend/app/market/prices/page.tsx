@@ -5,25 +5,29 @@ import { useFormat } from "@/components/market";
 import { FormError, Loading, Screen, inputClass } from "@/components/ui";
 import { api, type Prices } from "@/lib/api";
 import { errorKey } from "@/lib/forms";
+import { cropLabel, useCrops } from "@/lib/catalogue";
 import { useI18n } from "@/lib/i18n";
 import { STATES } from "@/lib/places";
 import { useSession } from "@/lib/session";
 
-// The commodity names AGMARKNET uses, mapped to our crop codes for display.
-const MVP: Record<string, string> = { Tomato: "tomato", Potato: "potato", Maize: "maize" };
 
 export default function PricesPage() {
   const { t, lang } = useI18n();
   const f = useFormat();
   const { user } = useSession(["farmer", "customer", "admin"]);
-  const [commodity, setCommodity] = useState("Tomato");
+  const catalogue = useCrops();
+  // The catalogue's AGMARKNET commodity names, mapped to crop codes for display (admin-maintained).
+  const MVP: Record<string, string> = Object.fromEntries((catalogue ?? [])
+    .filter((c) => c.mandi_commodity).map((c) => [c.mandi_commodity!, c.code]));
+  const [picked, setCommodity] = useState("");
+  const commodity = picked || Object.keys(MVP)[0] || "";
   const [other, setOther] = useState("");
   const [state, setState] = useState("");
   const [data, setData] = useState<Prices | null>(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!user) return;
+    if (!user || !commodity) return;
     const params = new URLSearchParams({ commodity });
     if (state) params.set("state", state);
     let cancelled = false;
@@ -56,7 +60,7 @@ export default function PricesPage() {
         {Object.entries(MVP).map(([name, code]) => (
           <button key={name} type="button" aria-pressed={commodity === name} onClick={() => setCommodity(name)}
             className={`min-h-11 rounded-full border px-4 text-base font-semibold ${commodity === name ? "border-white bg-white text-ink-strong" : "border-line bg-white/10"}`}>
-            {t(`crops.${code}`)}
+            {cropLabel(catalogue, code, lang)}
           </button>
         ))}
       </div>
@@ -81,7 +85,7 @@ export default function PricesPage() {
             </p>
           )}
           {status === "none" ? (
-            <p className="text-base text-muted">{t("prices.none", { commodity: MVP[commodity] ? t(`crops.${MVP[commodity]}`) : commodity })}</p>
+            <p className="text-base text-muted">{t("prices.none", { commodity: MVP[commodity] ? cropLabel(catalogue, MVP[commodity], lang) : commodity })}</p>
           ) : (
             <ul className="flex flex-col gap-3">
               {data.rows.map((r) => (

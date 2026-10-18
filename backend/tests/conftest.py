@@ -12,7 +12,7 @@ os.environ["JWT_SECRET"] = "test-secret-test-secret-test-secret-0000"
 os.environ["COOKIE_SECURE"] = "false"
 # Blank the LLM and price-API keys too: tests must never call real providers, even if backend/.env has keys.
 for key in ("BLUR_MIN", "BRIGHT_MIN", "BRIGHT_MAX", "CONF_ACCEPT", "CONF_FLOOR", "LLM_API_KEY", "LLM_MODEL",
-            "DATAGOV_API_KEY"):
+            "DATAGOV_API_KEY", "RAZORPAY_KEY_ID", "RAZORPAY_KEY_SECRET", "ADMIN_PHONE", "ADMIN_PASSWORD"):
     os.environ[key] = ""
 os.environ["LLM_FORCE_FAIL"] = "false"
 
@@ -24,7 +24,7 @@ from fastapi.testclient import TestClient  # noqa: E402
 from PIL import Image  # noqa: E402
 from sqlalchemy import text  # noqa: E402
 
-from app.core import ratelimit  # noqa: E402
+from app.core import platform, ratelimit  # noqa: E402
 from app.core.config import get_settings  # noqa: E402
 from app.core.db import engine  # noqa: E402
 from app.main import app  # noqa: E402
@@ -48,7 +48,12 @@ def clean_tables():
     tables = ", ".join(t.name for t in Base.metadata.sorted_tables)
     with engine.begin() as conn:
         conn.execute(text(f"TRUNCATE {tables} CASCADE"))
+        # The migration's starting crop catalogue: configuration the app needs, restored for every test.
+        conn.execute(text("INSERT INTO crop_catalogue (code, name_en, name_hi, mandi_commodity, sort_order) VALUES "
+                          "('tomato', 'Tomato', 'टमाटर', 'Tomato', 1), ('potato', 'Potato', 'आलू', 'Potato', 2), "
+                          "('maize', 'Maize', 'मक्का', 'Maize', 3)"))
     ratelimit.reset()
+    platform.reset_cache()
     yield
 
 

@@ -6,31 +6,30 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
 import {
-  ChatIcon, CROP_ICONS, DropIcon, HelpIcon, InboxIcon, LeafScanIcon, NewsIcon, PriceIcon, SchemeIcon, SproutIcon,
-  StoreIcon,
+  ChatIcon, CROP_ICONS, DropIcon, HelpIcon, InboxIcon, LeafScanIcon, NewsIcon, PriceIcon, ReceiptIcon, SchemeIcon,
+  SproutIcon, StoreIcon,
 } from "@/components/icons";
+import { useFormat } from "@/components/market";
 import { FormError, Loading, Screen } from "@/components/ui";
 import {
-  api, type Analysis, type Crop, type Enquiry, type FarmUpdate, type Listing, type PriceRow, type Prices,
+  api, type Analysis, type Crop, type Enquiry, type FarmUpdate, type Listing, type Order, type PriceRow, type Prices,
   type Reminder, type Scheme, type User, type WaterEstimate,
 } from "@/lib/api";
+import { getCrops } from "@/lib/catalogue";
 import { errorKey } from "@/lib/forms";
 import { useI18n } from "@/lib/i18n";
 import { useSession } from "@/lib/session";
-
-// Our crop codes → the commodity names AGMARKNET uses (same mapping as the prices page).
-const COMMODITY: Record<string, string> = { tomato: "Tomato", potato: "Potato", maize: "Maize" };
 
 const FEATURES = [
   { href: "/farmer/diagnose", key: "checkCrop", Icon: LeafScanIcon, tint: "bg-white/15 text-white" },
   { href: "/assistant", key: "askAssistant", Icon: ChatIcon, tint: "bg-white/15 text-white" },
   { href: "/market/prices", key: "prices", Icon: PriceIcon, tint: "bg-white/15 text-white" },
   { href: "/farmer/listings", key: "sell", Icon: StoreIcon, tint: "bg-white/15 text-white" },
+  { href: "/orders", key: "orders", Icon: ReceiptIcon, tint: "bg-white/15 text-white" },
   { href: "/enquiries", key: "enquiries", Icon: InboxIcon, tint: "bg-white/15 text-white" },
   { href: "/farmer/water", key: "water", Icon: DropIcon, tint: "bg-white/15 text-white" },
   { href: "/schemes", key: "schemes", Icon: SchemeIcon, tint: "bg-white/15 text-white" },
   { href: "/updates", key: "updates", Icon: NewsIcon, tint: "bg-white/15 text-white" },
-  { href: "/help", key: "help", Icon: HelpIcon, tint: "bg-white/15 text-white" },
 ];
 
 type Dashboard = {
@@ -39,6 +38,7 @@ type Dashboard = {
   analyses: Analysis[];
   listings: Listing[];
   enquiries: Enquiry[];
+  orders: Order[];
   prices: { code: string; row: PriceRow | null }[];
   water: { crop: Crop; estimate: WaterEstimate } | null;
   schemes: Scheme[];
@@ -51,13 +51,18 @@ async function loadDashboard(user: User): Promise<Dashboard> {
     api<Crop[]>("/me/crops"), api<Reminder[]>("/me/reminders?due=true"), api<Analysis[]>("/me/analyses?limit=20"),
   ]);
   const optional = <T,>(p: Promise<T>, fallback: T) => p.catch(() => fallback);
-  const firstCrop = crops.find((c) => c.crop_code in COMMODITY);
-  const [listings, enquiries, prices, water, schemes, updates] = await Promise.all([
+  const firstCrop = crops[0];
+  // Price rows for the catalogue's crops: the farmer's state first, else anywhere in India.
+  const priceFor = async (commodity: string) => {
+    const get = (q: Record<string, string>) => optional(api<Prices>(`/market/prices?${new URLSearchParams(q)}`), null);
+    return (await get({ commodity, state: user.state }))?.rows[0] ?? (await get({ commodity }))?.rows[0] ?? null;
+  };
+  const catalogue = (await optional(getCrops(), [])).filter((c) => c.mandi_commodity).slice(0, 4);
+  const [listings, enquiries, orders, prices, water, schemes, updates] = await Promise.all([
     optional(api<Listing[]>("/me/listings"), []),
     optional(api<Enquiry[]>("/me/enquiries"), []),
-    Promise.all(Object.entries(COMMODITY).map(([code, name]) =>
-      optional(api<Prices>(`/market/prices?${new URLSearchParams({ commodity: name, state: user.state })}`), null)
-        .then((p) => ({ code, row: p?.rows[0] ?? null })))),
+    optional(api<Order[]>("/me/orders"), []),
+    Promise.all(catalogue.map(async (c) => ({ code: c.code, row: await priceFor(c.mandi_commodity!) }))),
     firstCrop
       ? optional(api<WaterEstimate>(`/irrigation/estimate?farm_crop_id=${firstCrop.id}`)
         .then((estimate) => ({ crop: firstCrop, estimate })), null)
@@ -65,7 +70,7 @@ async function loadDashboard(user: User): Promise<Dashboard> {
     optional(api<Scheme[]>("/schemes"), []),
     optional(api<FarmUpdate[]>("/updates"), []),
   ]);
-  return { crops, reminders, analyses, listings, enquiries, prices, water, schemes, updates };
+  return { crops, reminders, analyses, listings, enquiries, orders, prices, water, schemes, updates };
 }
 
 function Panel({ title, action, children, className = "" }: {
@@ -107,6 +112,7 @@ function Stat({ href, Icon, tint, label, value, hint }: {
 
 export default function FarmerHome() {
   const { t, lang } = useI18n();
+  const fmt = useFormat();
   const router = useRouter();
   const { user } = useSession(["farmer"]);
   const [data, setData] = useState<Dashboard | null>(null);
@@ -135,7 +141,7 @@ export default function FarmerHome() {
   const locale = lang === "hi" ? "hi-IN" : "en-IN";
   const dateFmt = new Intl.DateTimeFormat(locale, { day: "numeric", month: "long" });
   const num = new Intl.NumberFormat(locale, { maximumFractionDigits: 0 });
-  const cropName = (code: string) => (code in CROP_ICONS ? t(`crops.${code}`) : code);
+  const cropName = fmt.crop;
   const last = data?.analyses[0];
   const lastTitle = last && (last.status === "ok" && last.prediction
     ? (lang === "hi" ? last.prediction.name_hi : last.prediction.name)
@@ -184,8 +190,9 @@ export default function FarmerHome() {
               value={data.listings.filter((l) => l.status === "open").length} hint={t("home.statListingsHint")} />
             <Stat href="/enquiries" Icon={InboxIcon} tint="bg-white/15 text-white" label={t("home.statEnquiries")}
               value={data.enquiries.filter((e) => e.status === "pending").length} hint={t("home.statEnquiriesHint")} />
-            <Stat href="#reminders" Icon={SproutIcon} tint="bg-white/15 text-white" label={t("home.statReminders")}
-              value={data.reminders.length} hint={t("home.statRemindersHint")} />
+            <Stat href="/orders" Icon={ReceiptIcon} tint="bg-white/15 text-white" label={t("home.statOrders")}
+              value={data.orders.filter((o) => ["payment_submitted", "paid"].includes(o.status)).length}
+              hint={t("home.statOrdersHint")} />
           </div>
 
           <div className="grid gap-5 lg:grid-cols-3">

@@ -22,16 +22,21 @@ function EnquiryForm({ listing }: { listing: Listing }) {
   async function submit(e: FormEvent) {
     e.preventDefault();
     const n = Number(qty);
-    setFieldError(!(n > 0) ? t("errors.required") : n > Number(listing.quantity) ? t("market.tooMuch") : "");
-    if (!(n > 0) || n > Number(listing.quantity)) return;
+    const min = listing.min_order_qty ? Number(listing.min_order_qty) : 0;
+    const problem = !(n > 0) ? t("errors.required") : n > Number(listing.quantity) ? t("market.tooMuch")
+      : n < min ? t("errors.BELOW_MIN_ORDER") : "";
+    setFieldError(problem);
+    if (problem) return;
     setBusy(true);
     setError("");
     try {
       await api(`/listings/${listing.id}/enquiries`, { method: "POST", body: { quantity: String(n), message: message || null } });
       setSent(true);
     } catch (err) {
-      const status = err instanceof ApiError ? err.status : 0;
-      setError(t(status === 409 ? "market.alreadyPending" : status === 422 ? "market.notOpen" : errorKey(err)));
+      const code = err instanceof ApiError ? err.code : "";
+      setError(t(code === "CONFLICT" ? "market.alreadyPending"
+        : code === "NOT_ENOUGH_STOCK" || code === "BELOW_MIN_ORDER" ? `errors.${code}`
+          : code === "VALIDATION_ERROR" ? "market.notOpen" : errorKey(err)));
     } finally {
       setBusy(false);
     }
@@ -119,7 +124,7 @@ function ListingView() {
         </div>
       </div>
       <dl className="mb-5 grid grid-cols-1 gap-2 rounded-2xl bg-surface p-4 text-base">
-        <div><dt className="sr-only">{t("sell.quantity")}</dt><dd className="font-bold">{f.qty(listing.quantity, listing.unit)}</dd></div>
+        <div><dt className="sr-only">{t("sell.quantity")}</dt><dd className="font-bold">{t("market.available", { qty: f.qty(listing.quantity, listing.unit) })}</dd></div>
         <div><dt className="sr-only">{t("market.price")}</dt><dd>{f.price(listing.price_per_unit, listing.unit)}</dd></div>
         {listing.min_order_qty && <div><dd>{t("market.minOrder", { qty: f.qty(listing.min_order_qty, listing.unit), unit: "" }).trim()}</dd></div>}
         <div><dd>{t("market.location", { district: listing.district, state: f.state(listing.state) })}</dd></div>

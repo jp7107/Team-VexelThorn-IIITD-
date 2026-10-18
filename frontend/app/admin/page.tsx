@@ -3,6 +3,9 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState, type FormEvent, type ReactNode } from "react";
+import {
+  CropsPanel, DashboardPanel, OrdersPanel, PricesPanel, SettingsPanel, UsersPanel,
+} from "@/components/admin-panels";
 import { StatusPill, useFormat } from "@/components/market";
 import { Button, Field, FormError, Loading, Screen, inputClass } from "@/components/ui";
 import { api, ApiError, type AdminUser, type FarmUpdate, type KbArticle, type Listing, type Scheme } from "@/lib/api";
@@ -10,8 +13,10 @@ import { errorKey } from "@/lib/forms";
 import { useI18n } from "@/lib/i18n";
 import { useSession } from "@/lib/session";
 
-type Tab = "schemes" | "updates" | "kb" | "listings" | "users" | "support";
-const TABS: Tab[] = ["support", "schemes", "updates", "kb", "listings", "users"];
+type Tab = "dashboard" | "orders" | "users" | "listings" | "crops" | "prices" | "schemes" | "updates" | "kb" | "support"
+  | "settings";
+const TABS: Tab[] = ["dashboard", "orders", "users", "listings", "crops", "prices", "schemes", "updates", "kb", "support",
+  "settings"];
 const small = "min-h-11 rounded-xl border border-white/30 px-3 font-bold text-ink";
 
 /** Loads a list, reloads on demand, and turns failures into a translated message. */
@@ -297,36 +302,6 @@ function ListingsPanel() {
   );
 }
 
-function UsersPanel() {
-  const { t } = useI18n();
-  const [role, setRole] = useState<"" | AdminUser["role"]>("");
-  const { items, error } = useList<AdminUser>(`/admin/users${role ? `?role=${role}` : ""}`);
-  return (
-    <>
-      <FormError message={error} />
-      <div className="mb-4 flex flex-wrap gap-2" role="group">
-        {(["", "farmer", "customer", "admin"] as const).map((r) => (
-          <button key={r || "all"} type="button" aria-pressed={role === r} onClick={() => setRole(r)}
-            className={`min-h-11 rounded-full border px-4 text-base font-semibold ${role === r ? "border-white bg-white text-ink-strong" : "border-line"}`}>
-            {r ? t(`admin.roles.${r}`) : t("admin.all")}
-          </button>
-        ))}
-      </div>
-      {items === null ? <Loading /> : (
-        <ul className="flex flex-col gap-2">
-          {items.map((u) => (
-            <li key={u.id} className="rounded-xl bg-surface px-4 py-3 text-base">
-              <span className="font-bold">{u.name}</span> · {t(`admin.roles.${u.role}`)}
-              {u.customer_type ? ` (${t(`buyerTypes.${u.customer_type}`)})` : ""}
-              <span className="block text-base text-muted">{u.district}, {u.state} · {t("admin.joined", { date: u.created_at.slice(0, 10) })}</span>
-            </li>
-          ))}
-        </ul>
-      )}
-    </>
-  );
-}
-
 type AdminTicket = { id: string; subject: string; message: string; status: "open" | "closed"; created_at: string;
   user_name: string; user_role: AdminUser["role"]; user_phone: string };
 
@@ -380,7 +355,7 @@ export default function AdminPage() {
   const { t } = useI18n();
   const router = useRouter();
   const { user } = useSession(["admin"]);
-  const [tab, setTab] = useState<Tab>("support");
+  const [tab, setTab] = useState<Tab>("dashboard");
   if (!user) return <Screen><Loading /></Screen>;
 
   async function logout() {
@@ -389,22 +364,28 @@ export default function AdminPage() {
   }
 
   return (
-    <Screen title={t("admin.title")}>
-      <nav className="-mx-4 mb-5 flex gap-2 overflow-x-auto px-4 pb-1" aria-label={t("admin.title")}>
+    <Screen title={t("admin.title")} wide>
+      <nav className="-mx-4 mb-5 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] lg:mx-0 lg:flex-wrap lg:px-0"
+        aria-label={t("admin.title")}>
         {TABS.map((k) => (
           <button key={k} type="button" aria-current={tab === k ? "page" : undefined} onClick={() => setTab(k)}
-            className={`min-h-11 shrink-0 rounded-full border px-4 text-base font-semibold ${tab === k ? "border-white bg-white text-ink-strong" : "border-line bg-white/10"}`}>
+            className={`min-h-9 shrink-0 rounded-full border px-3.5 text-sm font-semibold ${tab === k ? "border-white bg-white text-ink-strong" : "border-line bg-white/10"}`}>
             {t(`admin.${k}`)}
           </button>
         ))}
       </nav>
+      {tab === "dashboard" && <DashboardPanel />}
+      {tab === "orders" && <OrdersPanel />}
+      {tab === "crops" && <CropsPanel />}
+      {tab === "prices" && <PricesPanel />}
+      {tab === "settings" && <SettingsPanel />}
       {tab === "support" && <SupportPanel />}
       {tab === "schemes" && <SchemesPanel />}
       {tab === "updates" && <UpdatesPanel />}
       {tab === "kb" && <KbPanel />}
       {tab === "listings" && <ListingsPanel />}
       {tab === "users" && <UsersPanel />}
-      <button type="button" onClick={logout} className="mt-8 min-h-12 text-base font-semibold text-ink underline">{t("auth.logout")}</button>
+      <button type="button" onClick={logout} className="mt-8 min-h-12 text-base font-semibold text-ink underline lg:hidden">{t("auth.logout")}</button>
     </Screen>
   );
 }
