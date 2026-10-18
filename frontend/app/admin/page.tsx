@@ -270,7 +270,7 @@ function ListingsPanel() {
       <div className="mb-4 flex flex-wrap gap-2" role="group">
         {(["", "open", "closed", "hidden"] as const).map((s) => (
           <button key={s || "all"} type="button" aria-pressed={status === s} onClick={() => setStatus(s)}
-            className={`min-h-11 rounded-full border-2 px-4 text-lg font-semibold ${status === s ? "border-ink bg-ink text-white" : "border-line"}`}>
+            className={`min-h-11 rounded-full border-2 px-4 text-lg font-semibold ${status === s ? "border-lime bg-brand text-white" : "border-line"}`}>
             {s ? t(`statuses.${s}`) : t("admin.all")}
           </button>
         ))}
@@ -307,7 +307,7 @@ function UsersPanel() {
       <div className="mb-4 flex flex-wrap gap-2" role="group">
         {(["", "farmer", "customer", "admin"] as const).map((r) => (
           <button key={r || "all"} type="button" aria-pressed={role === r} onClick={() => setRole(r)}
-            className={`min-h-11 rounded-full border-2 px-4 text-lg font-semibold ${role === r ? "border-ink bg-ink text-white" : "border-line"}`}>
+            className={`min-h-11 rounded-full border-2 px-4 text-lg font-semibold ${role === r ? "border-lime bg-brand text-white" : "border-line"}`}>
             {r ? t(`admin.roles.${r}`) : t("admin.all")}
           </button>
         ))}
@@ -350,7 +350,7 @@ function SupportPanel() {
       <div className="mb-4 flex gap-2" role="group">
         {(["open", "closed"] as const).map((s) => (
           <button key={s} type="button" aria-pressed={status === s} onClick={() => setStatus(s)}
-            className={`min-h-11 rounded-full border-2 px-4 text-lg font-semibold ${status === s ? "border-ink bg-ink text-white" : "border-line"}`}>
+            className={`min-h-11 rounded-full border-2 px-4 text-lg font-semibold ${status === s ? "border-lime bg-brand text-white" : "border-line"}`}>
             {t(`help.${s}`)}
           </button>
         ))}
@@ -393,7 +393,7 @@ export default function AdminPage() {
       <nav className="-mx-4 mb-5 flex gap-2 overflow-x-auto px-4 pb-1" aria-label={t("admin.title")}>
         {TABS.map((k) => (
           <button key={k} type="button" aria-current={tab === k ? "page" : undefined} onClick={() => setTab(k)}
-            className={`min-h-11 shrink-0 rounded-full border-2 px-4 text-lg font-semibold ${tab === k ? "border-ink bg-ink text-white" : "border-line bg-white"}`}>
+            className={`min-h-11 shrink-0 rounded-full border-2 px-4 text-lg font-semibold ${tab === k ? "border-lime bg-brand text-white" : "border-line bg-white/10"}`}>
             {t(`admin.${k}`)}
           </button>
         ))}

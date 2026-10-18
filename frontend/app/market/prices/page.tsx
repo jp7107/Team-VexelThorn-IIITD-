@@ -55,7 +55,7 @@ export default function PricesPage() {
       <div className="mb-3 flex flex-wrap gap-2" role="group" aria-label={t("sell.crop")}>
         {Object.entries(MVP).map(([name, code]) => (
           <button key={name} type="button" aria-pressed={commodity === name} onClick={() => setCommodity(name)}
-            className={`min-h-11 rounded-full border-2 px-4 text-lg font-semibold ${commodity === name ? "border-ink bg-ink text-white" : "border-line bg-white"}`}>
+            className={`min-h-11 rounded-full border-2 px-4 text-lg font-semibold ${commodity === name ? "border-lime bg-brand text-white" : "border-line bg-white/10"}`}>
             {t(`crops.${code}`)}
           </button>
         ))}

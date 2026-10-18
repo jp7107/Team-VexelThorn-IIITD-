@@ -146,7 +146,7 @@ export default function WaterPage() {
                   <li key={d.date} className="grid grid-cols-[4.5rem_1fr] items-center gap-3">
                     <span className="text-base font-semibold">{dayFmt.format(new Date(d.date))}</span>
                     <span>
-                      <span className="block h-3 rounded-full bg-ink" style={{ width: `${(d.crop_need_mm / maxNeed) * 100}%` }} aria-hidden="true" />
+                      <span className="block h-3 rounded-full bg-lime" style={{ width: `${(d.crop_need_mm / maxNeed) * 100}%` }} aria-hidden="true" />
                       <span className="text-base text-muted">{t("water.dayRow", { need: num.format(d.crop_need_mm), rain: num.format(d.rain_mm) })}</span>
                     </span>
                   </li>

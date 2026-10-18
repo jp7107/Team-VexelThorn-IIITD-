@@ -42,7 +42,7 @@ export function ListingCard({ l }: { l: Listing }) {
   const { t } = useI18n();
   const f = useFormat();
   return (
-    <Link href={`/market/${l.id}`} className="flex gap-4 rounded-2xl border-2 border-line bg-white p-4">
+    <Link href={`/market/${l.id}`} className="flex gap-4 rounded-2xl border-2 border-line bg-white/10 p-4">
       <CropIcon code={l.crop_code} className="size-12 shrink-0 text-field" />
       <span className="min-w-0 flex-1">
         <span className="flex flex-wrap items-center gap-2">

@@ -88,7 +88,7 @@ export function AnalysisResult({ analysis }: { analysis: Analysis }) {
   return (
     <>
       {provenance === "mock" && (
-        <p className="mb-6 rounded-xl bg-ink px-4 py-3 font-semibold text-white">{t("result.mockBanner")}</p>
+        <p className="mb-6 rounded-xl bg-brand px-4 py-3 font-semibold text-white">{t("result.mockBanner")}</p>
       )}
       {verdict}
       {showRecheck && <p className="mb-4 text-lg">{t("result.recheckAdded")}</p>}

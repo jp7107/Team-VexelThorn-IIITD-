@@ -19,7 +19,7 @@ function EvidenceChip({ e }: { e: ChatEvidence }) {
   const kind = { kb_article: "ev_kb", db_record: "ev_record", ml_prediction: "ev_result", llm_general: "ev_general" }[e.type];
   const text = e.type === "kb_article" || e.type === "db_record" ? `${t(`chat.${kind}`)}: ${e.label}` : t(`chat.${kind}`);
   const look = e.type === "llm_general" ? "border-line text-muted" : "border-field text-field";
-  const cls = `inline-flex min-h-9 items-center rounded-full border-2 bg-white px-3 text-base font-semibold ${look}`;
+  const cls = `inline-flex min-h-9 items-center rounded-full border-2 bg-white/10 px-3 text-base font-semibold ${look}`;
   if (e.type === "ml_prediction" && e.ref?.startsWith("analysis:")) {
     return <Link href={`/farmer/analyses/${e.ref.slice("analysis:".length)}`} className={`${cls} underline`}>{text}</Link>;
   }
@@ -50,7 +50,7 @@ function AssistantBubble({ reply, onFollowUp }: { reply: ChatReply; onFollowUp: 
         <div className="mt-3 flex flex-col gap-2">
           {followUps.map((q) => (
             <button key={q} type="button" onClick={() => onFollowUp(q)}
-              className="min-h-11 rounded-xl border-2 border-ink bg-white px-3 py-2 text-left text-lg font-semibold text-ink">
+              className="min-h-11 rounded-xl border-2 border-ink bg-white/10 px-3 py-2 text-left text-lg font-semibold text-ink">
               {q}
             </button>
           ))}
@@ -147,14 +147,14 @@ function Chat() {
             <p className="text-lg text-muted">{t("chat.intro")}</p>
             {suggestions.map((key) => (
               <button key={key} type="button" onClick={() => send(t(key))}
-                className="min-h-12 rounded-xl border-2 border-line bg-white px-4 py-2 text-left text-lg font-semibold text-text">
+                className="min-h-12 rounded-xl border-2 border-line bg-white/10 px-4 py-2 text-left text-lg font-semibold text-text">
                 {t(key)}
               </button>
             ))}
           </>
         )}
         {entries.map((e) => e.role === "user" ? (
-          <p key={e.id} className="ml-8 self-end whitespace-pre-line rounded-2xl rounded-tr-sm bg-ink px-4 py-3 text-lg text-white">
+          <p key={e.id} className="ml-8 self-end whitespace-pre-line rounded-2xl rounded-tr-sm bg-brand px-4 py-3 text-lg text-white">
             {e.text}
           </p>
         ) : (
@@ -165,7 +165,7 @@ function Chat() {
       </div>
 
       <FormError message={error} />
-      <form onSubmit={submit} className="sticky bottom-0 -mx-4 border-t-2 border-line bg-white px-4 pb-4 pt-3">
+      <form onSubmit={submit} className="sticky bottom-0 -mx-4 border-t-2 border-line bg-white/10 px-4 pb-4 pt-3">
         {replyTo && (
           <p className="mb-2 flex items-start justify-between gap-2 text-base text-muted">
             <span>{t("chat.answering", { question: replyTo })}</span>

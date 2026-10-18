@@ -1,49 +1,126 @@
 "use client";
 
+// Farmer home. Phones: greeting, a big "check my crop" action and an app-style feature grid.
+// Desktop: stat cards and dashboard panels, all from the farmer's own data.
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { CROP_ICONS, SproutIcon } from "@/components/icons";
-import { ButtonLink, FormError, Loading, Screen } from "@/components/ui";
-import { api, type Analysis, type Crop, type Prices, type Reminder } from "@/lib/api";
+import { useEffect, useState, type ReactNode } from "react";
+import {
+  ChatIcon, CROP_ICONS, DropIcon, HelpIcon, InboxIcon, LeafScanIcon, NewsIcon, PriceIcon, SchemeIcon, SproutIcon,
+  StoreIcon,
+} from "@/components/icons";
+import { FormError, Loading, Screen } from "@/components/ui";
+import {
+  api, type Analysis, type Crop, type Enquiry, type FarmUpdate, type Listing, type PriceRow, type Prices,
+  type Reminder, type Scheme, type User, type WaterEstimate,
+} from "@/lib/api";
 import { errorKey } from "@/lib/forms";
 import { useI18n } from "@/lib/i18n";
 import { useSession } from "@/lib/session";
 
 // Our crop codes → the commodity names AGMARKNET uses (same mapping as the prices page).
 const COMMODITY: Record<string, string> = { tomato: "Tomato", potato: "Potato", maize: "Maize" };
-const COMMODITY_CODE = Object.fromEntries(Object.entries(COMMODITY).map(([k, v]) => [v, k]));
+
+const FEATURES = [
+  { href: "/farmer/diagnose", key: "checkCrop", Icon: LeafScanIcon, tint: "bg-emerald-400/15 text-emerald-200" },
+  { href: "/assistant", key: "askAssistant", Icon: ChatIcon, tint: "bg-violet-400/15 text-violet-200" },
+  { href: "/market/prices", key: "prices", Icon: PriceIcon, tint: "bg-amber-400/15 text-amber-200" },
+  { href: "/farmer/listings", key: "sell", Icon: StoreIcon, tint: "bg-orange-400/15 text-orange-200" },
+  { href: "/enquiries", key: "enquiries", Icon: InboxIcon, tint: "bg-sky-400/15 text-sky-200" },
+  { href: "/farmer/water", key: "water", Icon: DropIcon, tint: "bg-cyan-400/15 text-cyan-200" },
+  { href: "/schemes", key: "schemes", Icon: SchemeIcon, tint: "bg-lime-400/15 text-lime-200" },
+  { href: "/updates", key: "updates", Icon: NewsIcon, tint: "bg-rose-400/15 text-rose-200" },
+  { href: "/help", key: "help", Icon: HelpIcon, tint: "bg-teal-400/15 text-teal-200" },
+];
+
+type Dashboard = {
+  crops: Crop[];
+  reminders: Reminder[];
+  analyses: Analysis[];
+  listings: Listing[];
+  enquiries: Enquiry[];
+  prices: { code: string; row: PriceRow | null }[];
+  water: { crop: Crop; estimate: WaterEstimate } | null;
+  schemes: Scheme[];
+  updates: FarmUpdate[];
+};
+
+// Only crops, reminders and checks are essential; every other panel just hides if its call fails.
+async function loadDashboard(user: User): Promise<Dashboard> {
+  const [crops, reminders, analyses] = await Promise.all([
+    api<Crop[]>("/me/crops"), api<Reminder[]>("/me/reminders?due=true"), api<Analysis[]>("/me/analyses?limit=20"),
+  ]);
+  const optional = <T,>(p: Promise<T>, fallback: T) => p.catch(() => fallback);
+  const firstCrop = crops.find((c) => c.crop_code in COMMODITY);
+  const [listings, enquiries, prices, water, schemes, updates] = await Promise.all([
+    optional(api<Listing[]>("/me/listings"), []),
+    optional(api<Enquiry[]>("/me/enquiries"), []),
+    Promise.all(Object.entries(COMMODITY).map(([code, name]) =>
+      optional(api<Prices>(`/market/prices?${new URLSearchParams({ commodity: name, state: user.state })}`), null)
+        .then((p) => ({ code, row: p?.rows[0] ?? null })))),
+    firstCrop
+      ? optional(api<WaterEstimate>(`/irrigation/estimate?farm_crop_id=${firstCrop.id}`)
+        .then((estimate) => ({ crop: firstCrop, estimate })), null)
+      : null,
+    optional(api<Scheme[]>("/schemes"), []),
+    optional(api<FarmUpdate[]>("/updates"), []),
+  ]);
+  return { crops, reminders, analyses, listings, enquiries, prices, water, schemes, updates };
+}
+
+function Panel({ title, action, children, className = "" }: {
+  title: string;
+  action?: ReactNode;
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <section className={`glass rounded-3xl border border-white/15 p-5 ${className}`}>
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <h2 className="text-lg font-extrabold text-ink">{title}</h2>
+        {action}
+      </div>
+      {children}
+    </section>
+  );
+}
+
+function Stat({ href, Icon, tint, label, value, hint }: {
+  href: string;
+  Icon: typeof SproutIcon;
+  tint: string;
+  label: string;
+  value: number;
+  hint: string;
+}) {
+  return (
+    <Link href={href} className="glass flex items-center gap-4 rounded-2xl border border-white/15 p-4 hover:border-brand">
+      <span className={`grid size-12 shrink-0 place-items-center rounded-2xl ${tint}`}><Icon className="size-6" /></span>
+      <span className="min-w-0">
+        <span className="block text-sm font-semibold text-muted">{label}</span>
+        <span className="block text-3xl font-extrabold leading-tight text-ink">{value}</span>
+        <span className="block truncate text-sm text-muted">{hint}</span>
+      </span>
+    </Link>
+  );
+}
 
 export default function FarmerHome() {
   const { t, lang } = useI18n();
   const router = useRouter();
   const { user } = useSession(["farmer"]);
-  const [crops, setCrops] = useState<Crop[] | null>(null);
-  const [reminders, setReminders] = useState<Reminder[]>([]);
-  const [lastCheck, setLastCheck] = useState<Analysis | null>(null);
-  const [price, setPrice] = useState<Prices["rows"][number] | null>(null);
+  const [data, setData] = useState<Dashboard | null>(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
     if (!user) return;
-    Promise.all([api<Crop[]>("/me/crops"), api<Reminder[]>("/me/reminders?due=true"), api<Analysis[]>("/me/analyses?limit=1")])
-      .then(([c, r, a]) => {
-        setCrops(c);
-        setReminders(r);
-        setLastCheck(a[0] ?? null);
-        // Price card for the first MVP crop; a failed price fetch shouldn't hide the dashboard.
-        const code = c.find((x) => x.crop_code in COMMODITY)?.crop_code;
-        if (!code) return;
-        const q = new URLSearchParams({ commodity: COMMODITY[code], state: user.state });
-        return api<Prices>(`/market/prices?${q}`).then((p) => setPrice(p.rows[0] ?? null), () => undefined);
-      })
-      .catch((e) => setError(t(errorKey(e))));
+    loadDashboard(user).then(setData, (e) => setError(t(errorKey(e))));
   }, [user, t]);
 
   async function markDone(id: string) {
     try {
       await api(`/me/reminders/${id}`, { method: "PATCH", body: { done: true } });
-      setReminders((rs) => rs.filter((r) => r.id !== id));
+      setData((d) => d && { ...d, reminders: d.reminders.filter((r) => r.id !== id) });
     } catch (e) {
       setError(t(errorKey(e)));
     }
@@ -55,106 +132,233 @@ export default function FarmerHome() {
   }
 
   if (!user) return <Screen><Loading /></Screen>;
-  const dateFmt = new Intl.DateTimeFormat(lang === "hi" ? "hi-IN" : "en-IN", { day: "numeric", month: "long" });
+  const locale = lang === "hi" ? "hi-IN" : "en-IN";
+  const dateFmt = new Intl.DateTimeFormat(locale, { day: "numeric", month: "long" });
+  const num = new Intl.NumberFormat(locale, { maximumFractionDigits: 0 });
   const cropName = (code: string) => (code in CROP_ICONS ? t(`crops.${code}`) : code);
-  const num = new Intl.NumberFormat(lang === "hi" ? "hi-IN" : "en-IN", { maximumFractionDigits: 0 });
+  const last = data?.analyses[0];
+  const lastTitle = last && (last.status === "ok" && last.prediction
+    ? (lang === "hi" ? last.prediction.name_hi : last.prediction.name)
+    : t(`home.checkStatus.${last.status}`));
+  const viewAll = (href: string) => (
+    <Link href={href} className="text-sm font-semibold text-lime underline">{t("home.viewAll")}</Link>
+  );
 
   return (
-    <Screen title={t("home.greeting", { name: user.name })}>
+    <Screen wide>
       <FormError message={error} />
-      <div className="mb-8 flex flex-col gap-3">
-        <ButtonLink href="/farmer/diagnose">{t("home.checkCrop")}</ButtonLink>
-        <ButtonLink href="/farmer/water" variant="secondary">{t("home.water")}</ButtonLink>
-        <ButtonLink href="/market/prices" variant="secondary">{t("home.prices")}</ButtonLink>
-        <ButtonLink href="/farmer/listings" variant="secondary">{t("home.sell")}</ButtonLink>
-        <ButtonLink href="/enquiries" variant="secondary">{t("home.enquiries")}</ButtonLink>
-        <ButtonLink href="/assistant" variant="secondary">{t("home.askAssistant")}</ButtonLink>
-        <div className="grid grid-cols-2 gap-3">
-          <ButtonLink href="/schemes" variant="secondary">{t("home.schemes")}</ButtonLink>
-          <ButtonLink href="/updates" variant="secondary">{t("home.updates")}</ButtonLink>
-        </div>
-        <ButtonLink href="/help" variant="secondary">{t("home.help")}</ButtonLink>
-      </div>
 
-      <section className="mb-8">
-        <h2 className="mb-3 text-xl font-extrabold text-ink">{t("home.dueReminders")}</h2>
-        {reminders.length === 0 ? (
-          <p className="text-lg text-muted">{t("home.noReminders")}</p>
-        ) : (
-          <ul className="flex flex-col gap-2">
-            {reminders.map((r) => (
-              <li key={r.id} className="flex items-center justify-between gap-3 rounded-xl bg-haldi-soft px-4 py-3">
-                <span className="text-lg font-semibold">{r.title}</span>
-                <button type="button" onClick={() => markDone(r.id)}
-                  className="min-h-11 shrink-0 rounded-lg border-2 border-ink px-3 font-extrabold text-ink">
-                  {t("home.markDone")}
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
+      {/* Phone home: greeting, one big action, then the feature grid. */}
+      <section className="mb-6 lg:hidden">
+        <div className="glass mb-5 rounded-3xl border border-white/15 p-5">
+          <h1 className="text-2xl font-extrabold leading-tight text-ink">{t("home.greeting", { name: user.name })} 👋</h1>
+          <p className="mb-4 text-muted">{t("nav.tagline.farmer")}</p>
+          <Link href="/farmer/diagnose"
+            className="flex min-h-14 items-center justify-center gap-2 rounded-2xl bg-lime text-lg font-extrabold text-ink-strong shadow-[0_0_24px_rgb(196_239_94/0.4)]">
+            <LeafScanIcon className="size-6" /> {t("nav.analyze")}
+          </Link>
+        </div>
+        <h2 className="mb-3 text-lg font-extrabold text-ink">{t("home.features")}</h2>
+        <ul className="grid grid-cols-3 gap-3">
+          {FEATURES.map(({ href, key, Icon, tint }) => (
+            <li key={href}>
+              <Link href={href}
+                className="glass flex h-full min-h-28 flex-col items-center justify-center gap-2 rounded-2xl border border-white/15 p-2 text-center active:scale-95">
+                <span className={`grid size-12 place-items-center rounded-2xl ${tint}`}><Icon className="size-7" /></span>
+                <span className="text-sm font-semibold leading-tight">{t(`home.${key}`)}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </section>
 
-      {(lastCheck || price) && (
-        <section className="mb-8 grid gap-3">
-          {lastCheck && (
-            <Link href={`/farmer/analyses/${lastCheck.id}`} className="rounded-xl border-2 border-line px-4 py-3 hover:border-ink">
-              <span className="block text-base text-muted">
-                {t("home.lastCheck", { date: dateFmt.format(new Date(lastCheck.created_at)) })}
-              </span>
-              <span className="block text-lg font-extrabold">
-                {lastCheck.status === "ok" && lastCheck.prediction
-                  ? (lang === "hi" ? lastCheck.prediction.name_hi : lastCheck.prediction.name)
-                  : t(`home.checkStatus.${lastCheck.status}`)}
-              </span>
-            </Link>
-          )}
-          {price && (
-            <Link href="/market/prices" className="rounded-xl border-2 border-line px-4 py-3 hover:border-ink">
-              <span className="flex items-center gap-2 text-base text-muted">
-                {t("home.priceAt", { crop: cropName(COMMODITY_CODE[price.commodity] ?? price.commodity), market: price.market })}
-                {price.is_demo && <span className="rounded-full bg-haldi px-2 font-bold text-ink-strong">{t("prices.demoBadge")}</span>}
-              </span>
-              <span className="block text-2xl font-extrabold">
-                ₹{num.format(Number(price.modal_price))} <span className="text-lg font-semibold">{t("prices.perQuintal")}</span>
-              </span>
-            </Link>
-          )}
-        </section>
-      )}
+      {!data ? (
+        error ? null : <Loading />
+      ) : (
+        <>
+          <div className="mb-5 hidden grid-cols-4 gap-4 lg:grid">
+            <Stat href={last ? `/farmer/analyses/${last.id}` : "/farmer/diagnose"} Icon={LeafScanIcon}
+              tint="bg-emerald-400/15 text-emerald-200" label={t("home.statChecks")} value={data.analyses.length}
+              hint={last ? t("home.lastCheck", { date: dateFmt.format(new Date(last.created_at)) }) : t("home.noCheckShort")} />
+            <Stat href="/farmer/listings" Icon={StoreIcon} tint="bg-orange-400/15 text-orange-200" label={t("home.statListings")}
+              value={data.listings.filter((l) => l.status === "open").length} hint={t("home.statListingsHint")} />
+            <Stat href="/enquiries" Icon={InboxIcon} tint="bg-sky-400/15 text-sky-200" label={t("home.statEnquiries")}
+              value={data.enquiries.filter((e) => e.status === "pending").length} hint={t("home.statEnquiriesHint")} />
+            <Stat href="#reminders" Icon={SproutIcon} tint="bg-amber-400/15 text-amber-200" label={t("home.statReminders")}
+              value={data.reminders.length} hint={t("home.statRemindersHint")} />
+          </div>
 
-      <section className="mb-8">
-        <h2 className="mb-3 text-xl font-extrabold text-ink">{t("home.myCrops")}</h2>
-        {crops === null && !error ? (
-          <Loading />
-        ) : crops?.length ? (
-          <ul className="mb-4 flex flex-col gap-2">
-            {crops.map((c) => {
-              const Icon = CROP_ICONS[c.crop_code] ?? SproutIcon;
-              return (
-                <li key={c.id}>
-                  <Link href={`/farmer/crops/${c.id}`}
-                    className="flex items-center gap-4 rounded-xl border-2 border-line px-4 py-3 hover:border-ink">
-                    <Icon className="size-10 shrink-0 text-field" />
+          <div className="grid gap-5 lg:grid-cols-3">
+            <Panel title={t("home.glance")} className="lg:col-span-2">
+              {last ? (
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                  <span className={`grid size-24 shrink-0 place-items-center rounded-3xl ${
+                    last.status === "ok" && last.prediction?.is_healthy ? "bg-field-soft text-field"
+                      : last.status === "ok" ? "bg-danger-soft text-danger" : "bg-haldi-soft text-ink"}`}>
+                    <LeafScanIcon className="size-12" />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm text-muted">
+                      {cropName(last.crop_code_claimed)}, {dateFmt.format(new Date(last.created_at))}
+                    </p>
+                    <p className="text-2xl font-extrabold leading-tight">{lastTitle}</p>
+                    {last.status === "ok" && last.confidence !== null && (
+                      // A score, never certainty: capped at 99% like the assistant (plan §10).
+                      <p className="text-muted">{t("result.confidence", { pct: Math.min(99, Math.round(last.confidence * 100)) })}</p>
+                    )}
+                    <p className="mt-1 text-sm text-muted">{t("home.aiNote")}</p>
+                  </div>
+                  <div className="flex flex-col gap-2 sm:w-44">
+                    <Link href={`/farmer/analyses/${last.id}`}
+                      className="flex min-h-11 items-center justify-center rounded-xl bg-brand px-4 font-extrabold text-white">
+                      {t("home.viewResult")}
+                    </Link>
+                    <Link href="/farmer/diagnose"
+                      className="flex min-h-11 items-center justify-center rounded-xl border-2 border-ink bg-white/10 px-4 font-extrabold text-ink">
+                      {t("home.scanAnother")}
+                    </Link>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-lg text-muted">{t("home.noCheckYet")}</p>
+              )}
+            </Panel>
+
+            <Panel title={t("home.todayFarm")}>
+              <div id="reminders" className="flex flex-col gap-3">
+                {data.water?.estimate.totals && (
+                  <Link href="/farmer/water" className="flex items-center gap-3 rounded-2xl bg-cyan-400/15 p-3 hover:bg-cyan-400/25">
+                    <DropIcon className="size-8 shrink-0 text-cyan-200" />
                     <span>
-                      <span className="block text-lg font-extrabold">{cropName(c.crop_code)}</span>
-                      <span className="block text-base text-muted">
-                        {t(`stages.${c.stage}`)}, {t("home.sownOn", { date: dateFmt.format(new Date(c.sowing_date)) })},{" "}
-                        {t("home.acres", { area: Number(c.area_acres) })}
+                      <span className="block text-sm text-muted">{t("home.waterWeek", { crop: cropName(data.water.crop.crop_code) })}</span>
+                      <span className="block font-extrabold">
+                        {t("home.waterNet", { mm: data.water.estimate.totals.net_mm,
+                          litres: num.format(data.water.estimate.totals.litres_for_field) })}
                       </span>
                     </span>
                   </Link>
-                </li>
-              );
-            })}
-          </ul>
-        ) : (
-          <p className="mb-4 text-lg text-muted">{t("home.noCrops")}</p>
-        )}
-        <ButtonLink href="/onboarding" variant="secondary">{t("home.addCrop")}</ButtonLink>
-      </section>
+                )}
+                {data.reminders.length === 0 ? (
+                  <p className="text-muted">{t("home.noReminders")}</p>
+                ) : (
+                  <ul className="flex flex-col gap-2">
+                    {data.reminders.map((r) => (
+                      <li key={r.id} className="flex items-center justify-between gap-3 rounded-2xl bg-haldi-soft px-3 py-2">
+                        <span className="font-semibold">{r.title}</span>
+                        <button type="button" onClick={() => markDone(r.id)}
+                          className="min-h-11 shrink-0 rounded-lg border-2 border-ink px-3 font-extrabold text-ink">
+                          {t("home.markDone")}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </Panel>
 
-      <button type="button" onClick={logout} className="min-h-12 text-lg font-semibold text-ink underline">
+            <Panel title={t("home.priceSnapshot")} action={viewAll("/market/prices")} className="lg:col-span-2">
+              <table className="w-full text-left">
+                <thead className="text-sm text-muted">
+                  <tr>
+                    <th className="pb-2 font-semibold">{t("home.cropCol")}</th>
+                    <th className="pb-2 font-semibold">{t("home.priceCol")}</th>
+                    <th className="hidden pb-2 font-semibold sm:table-cell">{t("home.marketCol")}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.prices.map(({ code, row }) => {
+                    const Icon = CROP_ICONS[code] ?? SproutIcon;
+                    return (
+                      <tr key={code} className="border-t border-line">
+                        <td className="py-2">
+                          <span className="flex items-center gap-2 font-semibold">
+                            <Icon className="size-6 text-field" /> {cropName(code)}
+                          </span>
+                        </td>
+                        <td className="py-2 font-extrabold">
+                          {row ? `₹${num.format(Number(row.modal_price))}` : t("home.noPrice")}
+                          {row?.is_demo && (
+                            <span className="ml-2 rounded-full bg-haldi px-2 text-sm font-bold text-ink-strong">{t("prices.demoBadge")}</span>
+                          )}
+                        </td>
+                        <td className="hidden py-2 text-muted sm:table-cell">{row ? `${row.market}, ${row.district}` : ""}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </Panel>
+
+            <Panel title={t("home.quickActions")} className="hidden lg:block">
+              <ul className="flex flex-col gap-2">
+                {[["/farmer/listings", "qaList", StoreIcon], ["/assistant", "qaAsk", ChatIcon],
+                  ["/onboarding", "qaCrop", SproutIcon], ["/help", "qaHelp", HelpIcon]].map(([href, key, Icon]) => {
+                  const I = Icon as typeof SproutIcon;
+                  return (
+                    <li key={href as string}>
+                      <Link href={href as string} className="flex min-h-11 items-center gap-3 rounded-xl bg-white/10 px-3 font-semibold hover:bg-brand-soft">
+                        <I className="size-5 text-lime" /> {t(`home.${key}`)}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </Panel>
+
+            <Panel title={t("home.myCrops")} action={
+              <Link href="/onboarding" className="text-sm font-semibold text-lime underline">{t("home.addCrop")}</Link>
+            } className="lg:col-span-2">
+              {data.crops.length ? (
+                <ul className="grid gap-2 sm:grid-cols-2">
+                  {data.crops.map((c) => {
+                    const Icon = CROP_ICONS[c.crop_code] ?? SproutIcon;
+                    return (
+                      <li key={c.id}>
+                        <Link href={`/farmer/crops/${c.id}`}
+                          className="flex items-center gap-3 rounded-2xl bg-white/10 px-4 py-3 hover:bg-brand-soft">
+                          <Icon className="size-10 shrink-0 text-field" />
+                          <span>
+                            <span className="block text-lg font-extrabold">{cropName(c.crop_code)}</span>
+                            <span className="block text-sm text-muted">
+                              {t(`stages.${c.stage}`)}, {t("home.sownOn", { date: dateFmt.format(new Date(c.sowing_date)) })},{" "}
+                              {t("home.acres", { area: Number(c.area_acres) })}
+                            </span>
+                          </span>
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              ) : (
+                <p className="text-lg text-muted">{t("home.noCrops")}</p>
+              )}
+            </Panel>
+
+            <Panel title={t("home.schemesUpdates")} action={viewAll("/schemes")}>
+              <ul className="flex flex-col gap-2">
+                {data.schemes.slice(0, 2).map((s) => (
+                  <li key={s.id}>
+                    <Link href={`/schemes/${s.id}`} className="flex items-start gap-3 rounded-xl bg-white/10 p-3 hover:bg-brand-soft">
+                      <SchemeIcon className="mt-0.5 size-5 shrink-0 text-lime" />
+                      <span className="font-semibold leading-snug">{s.name}</span>
+                    </Link>
+                  </li>
+                ))}
+                {data.updates.slice(0, 2).map((u) => (
+                  <li key={u.id}>
+                    <Link href="/updates" className="flex items-start gap-3 rounded-xl bg-white/10 p-3 hover:bg-brand-soft">
+                      <NewsIcon className="mt-0.5 size-5 shrink-0 text-rose-200" />
+                      <span className="font-semibold leading-snug">{u.title}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </Panel>
+          </div>
+        </>
+      )}
+
+      <button type="button" onClick={logout} className="mt-8 min-h-12 text-lg font-semibold text-ink underline lg:hidden">
         {t("auth.logout")}
       </button>
     </Screen>

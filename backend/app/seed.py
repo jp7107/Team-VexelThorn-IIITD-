@@ -82,7 +82,7 @@ def _seed_demo_prices(db: Session) -> None:
     for commodity, state, district, market, lo, hi, modal in DEMO_PRICES:
         db.execute(insert(MarketPrice).values(
             commodity=commodity, variety="", state=state, district=district, market=market, arrival_date=today,
-            min_price=lo, max_price=hi, modal_price=modal, source="KisanSetu demo data", is_demo=True,
+            min_price=lo, max_price=hi, modal_price=modal, source="Kisan Mitra demo data", is_demo=True,
         ).on_conflict_do_nothing(constraint="one_price_per_market_day"))
 
 
@@ -135,7 +135,7 @@ def _seed_kb(db: Session) -> None:
     for article, topic in articles:
         if not db.scalar(select(KbArticle.id).where(KbArticle.title == article["title"],
                                                     KbArticle.source_url == article["source_url"])):
-            db.add(KbArticle(**article, topic=topic, language="en", verified_by="KisanSetu team",
+            db.add(KbArticle(**article, topic=topic, language="en", verified_by="Kisan Mitra team",
                              verified_at=date(2026, 10, 18)))
 
 

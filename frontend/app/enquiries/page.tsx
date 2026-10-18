@@ -124,7 +124,7 @@ export default function EnquiriesPage() {
                 <div className="mt-3 rounded-xl bg-field-soft p-3">
                   <p className="mb-2 text-lg font-semibold text-field">{t("enq.acceptedNote")}</p>
                   <div className="flex gap-2">
-                    <a href={`tel:+91${e.farmer_phone}`} className={`${actionClass} flex items-center justify-center bg-ink text-white`}>
+                    <a href={`tel:+91${e.farmer_phone}`} className={`${actionClass} flex items-center justify-center bg-brand text-white`}>
                       {t("enq.call", { phone: e.farmer_phone })}
                     </a>
                     <a href={`https://wa.me/91${e.farmer_phone}?text=${encodeURIComponent(t("enq.waText", { title: e.listing_title }))}`}

@@ -38,7 +38,7 @@ export default function LoginPage() {
   }
 
   return (
-    <Screen title={t("auth.loginTitle")} back="/">
+    <Screen plain title={t("auth.loginTitle")} back="/">
       <form onSubmit={submit} noValidate>
         <FormError message={formError} />
         <Field id="phone" label={t("auth.phone")} hint={t("auth.phoneHint")} error={errors.phone}>

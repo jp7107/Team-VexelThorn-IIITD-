@@ -68,7 +68,7 @@ function SupportForm() {
             {tickets.map((tk) => (
               <li key={tk.id} className="flex items-start justify-between gap-2 rounded-xl bg-surface px-4 py-3 text-lg">
                 <span>{tk.subject}</span>
-                <span className={`shrink-0 rounded-full px-3 text-base font-semibold ${tk.status === "open" ? "bg-haldi-soft text-ink" : "bg-white text-muted"}`}>
+                <span className={`shrink-0 rounded-full px-3 text-base font-semibold ${tk.status === "open" ? "bg-haldi-soft text-ink" : "bg-white/10 text-muted"}`}>
                   {t(`help.${tk.status}`)}
                 </span>
               </li>
@@ -96,7 +96,7 @@ export default function HelpPage() {
           {t("help.kccNumber")} <span className="text-lg font-semibold">{t("help.kccShort")}</span>
         </p>
         <p className="mt-1 text-lg">{t("help.kccDetails")}</p>
-        <a href="tel:18001801551" className="mt-3 flex min-h-14 items-center justify-center rounded-xl bg-ink text-lg font-extrabold text-white">
+        <a href="tel:18001801551" className="mt-3 flex min-h-14 items-center justify-center rounded-xl bg-brand text-lg font-extrabold text-white">
           {t("help.kccCall")}
         </a>
         <a href={KCC_SOURCE} target="_blank" rel="noopener noreferrer" className="mt-2 block text-base text-muted underline">

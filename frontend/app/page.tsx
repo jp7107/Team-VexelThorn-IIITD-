@@ -10,7 +10,7 @@ function ActionTile({ href, icon, label, hint }: { href: string; icon: ReactNode
   return (
     <Link
       href={href}
-      className="flex items-center gap-4 rounded-2xl bg-white p-4 shadow-[0_2px_0_0_var(--color-line)] ring-1 ring-line"
+      className="flex items-center gap-4 rounded-2xl bg-white/10 p-4 shadow-[0_2px_0_0_var(--color-line)] ring-1 ring-line"
     >
       <span className="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-haldi text-ink-strong">
         {icon}
@@ -29,7 +29,7 @@ export default function Landing() {
   return (
     <>
       <TopBar />
-      <section className="bg-ink pb-24 text-white">
+      <section className="pb-24 text-white">
         <p className="mx-auto max-w-md px-4 pt-6 text-3xl font-extrabold leading-tight">{t("app.tagline")}</p>
       </section>
       <main className="mx-auto -mt-16 w-full max-w-md flex-1 px-4 pb-12">

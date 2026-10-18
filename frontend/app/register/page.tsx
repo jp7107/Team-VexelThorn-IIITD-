@@ -53,7 +53,7 @@ export default function RegisterPage() {
   if (!role) {
     // Step 1: one decision per screen keeps it easy for first-time smartphone users.
     return (
-      <Screen title={t("auth.registerTitle")} back="/">
+      <Screen plain title={t("auth.registerTitle")} back="/">
         <h2 className="mb-3 text-xl font-semibold">{t("auth.whoAreYou")}</h2>
         <div className="flex flex-col gap-3">
           <ChoiceTile selected={false} onSelect={() => setRole("farmer")} icon={<FarmerIcon className="size-10" />}
@@ -70,7 +70,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <Screen title={t("auth.registerTitle")}>
+    <Screen plain title={t("auth.registerTitle")}>
       <p className="mb-5 flex items-center justify-between rounded-xl bg-surface px-4 py-3 text-lg font-semibold">
         <span>{role === "farmer" ? t("auth.farmer") : t("auth.buyer")}</span>
         <button type="button" onClick={() => setRole(null)} className="min-h-11 px-2 font-extrabold text-ink underline">

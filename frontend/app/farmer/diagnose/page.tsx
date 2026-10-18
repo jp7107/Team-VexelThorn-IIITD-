@@ -25,7 +25,7 @@ function PhotoButton({ label, capture, onPick, primary }: {
   return (
     <label className={`flex min-h-14 cursor-pointer items-center justify-center rounded-xl px-5 text-lg font-extrabold
       focus-within:outline-3 focus-within:outline-offset-2 focus-within:outline-haldi
-      ${primary ? "bg-ink text-white" : "border-2 border-ink bg-white text-ink"}`}>
+      ${primary ? "bg-brand text-white" : "border-2 border-ink bg-white/10 text-ink"}`}>
       <input type="file" accept="image/*" className="sr-only" onChange={onPick}
         {...(capture ? { capture: "environment" as const } : {})} />
       {label}
@@ -101,7 +101,7 @@ export default function DiagnosePage() {
             return (
               <button key={c} type="button" aria-pressed={crop === c} onClick={() => setCrop(c)}
                 className={`flex min-h-24 flex-col items-center justify-center gap-1 rounded-xl border-2 text-lg font-extrabold
-                  ${crop === c ? "border-ink bg-surface text-ink" : "border-line bg-white text-text"}`}>
+                  ${crop === c ? "border-ink bg-surface text-ink" : "border-line bg-white/10 text-text"}`}>
                 <Icon className="size-9" />
                 {t(`crops.${c}`)}
               </button>
