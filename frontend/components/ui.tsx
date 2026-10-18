@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import type { ComponentProps, ReactNode } from "react";
+import { AppShell } from "@/components/AppShell";
+import { LogoMark } from "@/components/icons";
 import { useI18n, type Lang } from "@/lib/i18n";
 
 export function LanguageSwitch() {
@@ -27,13 +29,14 @@ export function LanguageSwitch() {
   );
 }
 
-/** Indigo header band with the wordmark and language switch; every screen starts with it. */
+/** Green header band with the wordmark and language switch, for pages outside the signed-in shell. */
 export function TopBar({ right }: { right?: ReactNode }) {
   const { t } = useI18n();
   return (
     <header className="bg-ink text-white">
       <div className="mx-auto flex max-w-md items-center justify-between gap-3 px-4 py-3">
-        <Link href="/" className="text-xl font-extrabold tracking-tight">
+        <Link href="/" className="flex items-center gap-2 text-xl font-extrabold tracking-tight">
+          <LogoMark className="size-9 bg-white/15" />
           {t("app.name")}
         </Link>
         {right ?? <LanguageSwitch />}
@@ -42,20 +45,32 @@ export function TopBar({ right }: { right?: ReactNode }) {
   );
 }
 
-export function Screen({ title, children, back }: { title?: string; children: ReactNode; back?: string }) {
+export function Screen({ title, children, back, wide, plain }: {
+  title?: string;
+  children: ReactNode;
+  back?: string;
+  /** Use the full dashboard width on desktop instead of a single reading column. */
+  wide?: boolean;
+  /** Plain header instead of the signed-in app shell (login, register). */
+  plain?: boolean;
+}) {
   const { t } = useI18n();
+  const body = (
+    <>
+      {back && (
+        <Link href={back} className="mb-3 inline-flex min-h-11 items-center font-semibold text-ink underline">
+          {t("common.back")}
+        </Link>
+      )}
+      {title && <h1 className="mb-5 text-3xl font-extrabold leading-tight text-ink">{title}</h1>}
+      {children}
+    </>
+  );
+  if (!plain) return <AppShell wide={wide}>{body}</AppShell>;
   return (
     <>
       <TopBar />
-      <main className="mx-auto w-full max-w-md flex-1 px-4 pb-12 pt-6">
-        {back && (
-          <Link href={back} className="mb-3 inline-flex min-h-11 items-center font-semibold text-ink underline">
-            {t("common.back")}
-          </Link>
-        )}
-        {title && <h1 className="mb-5 text-3xl font-extrabold leading-tight text-ink">{title}</h1>}
-        {children}
-      </main>
+      <main className="mx-auto w-full max-w-md flex-1 px-4 pb-12 pt-6">{body}</main>
     </>
   );
 }
@@ -65,7 +80,7 @@ type ButtonProps = ComponentProps<"button"> & { variant?: "primary" | "secondary
 export function Button({ variant = "primary", className = "", ...props }: ButtonProps) {
   const look =
     variant === "primary"
-      ? "bg-haldi text-ink-strong hover:brightness-95"
+      ? "bg-brand text-white shadow-sm hover:bg-brand-strong"
       : "border-2 border-ink text-ink bg-white hover:bg-surface";
   return (
     <button
@@ -79,7 +94,7 @@ export function ButtonLink({ variant = "primary", className = "", ...props }: Co
   variant?: "primary" | "secondary";
 }) {
   const look =
-    variant === "primary" ? "bg-haldi text-ink-strong" : "border-2 border-ink text-ink bg-white";
+    variant === "primary" ? "bg-brand text-white shadow-sm hover:bg-brand-strong" : "border-2 border-ink text-ink bg-white";
   return (
     <Link
       className={`flex min-h-14 w-full items-center justify-center rounded-xl px-5 text-lg font-extrabold ${look} ${className}`}

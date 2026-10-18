@@ -1,14 +1,17 @@
 @import "tailwindcss";
 
-/* Neel (indigo) for structure, haldi (turmeric) as the single bold accent, field green for healthy.
-   High contrast on white because phones get used outdoors. */
+/* Kisan Mitra: field greens for structure and actions, haldi (turmeric) only for warnings and demo badges.
+   High contrast on light glass because phones get used outdoors. */
 @theme {
-  --color-ink: #1f2a6b;
-  --color-ink-strong: #141c4d;
-  --color-surface: #eef0fa;
-  --color-line: #c9cde3;
-  --color-text: #1f2433;
-  --color-muted: #545a70;
+  --color-brand: #1f6b3a;
+  --color-brand-strong: #17512c;
+  --color-brand-soft: #e3f1e6;
+  --color-ink: #17512c;
+  --color-ink-strong: #0f3a1f;
+  --color-surface: #eef6f0;
+  --color-line: #d3e2d7;
+  --color-text: #15231b;
+  --color-muted: #4d5e53;
   --color-haldi: #f2b705;
   --color-haldi-soft: #fff4cc;
   --color-field: #2e7d32;
@@ -19,14 +22,32 @@
 }
 
 html {
-  font-size: 112.5%; /* 18px base: easier reading for low-literacy users */
+  font-size: 112.5%; /* 18px base on phones: easier reading for low-literacy users */
+}
+
+@media (min-width: 1024px) {
+  html {
+    font-size: 100%; /* the desktop dashboard shows more at once */
+  }
 }
 
 body {
-  background: #ffffff;
   color: var(--color-text);
   font-family: var(--font-sans);
   line-height: 1.55;
+  background:
+    radial-gradient(900px 500px at 105% -10%, #fff6d8 0%, transparent 60%),
+    radial-gradient(800px 600px at -10% 110%, #dcefe0 0%, transparent 60%),
+    linear-gradient(180deg, #f5fbf6 0%, #edf6ef 100%);
+  background-attachment: fixed;
+}
+
+/* Frosted surface used across the app (a utility, so lg:glass works). Borders are added where needed. */
+@utility glass {
+  background: rgb(255 255 255 / 0.68);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  box-shadow: 0 8px 30px rgb(23 81 44 / 0.08);
 }
 
 :focus-visible {

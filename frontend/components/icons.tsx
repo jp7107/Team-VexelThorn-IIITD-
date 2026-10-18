@@ -99,3 +99,115 @@ export const CROP_ICONS: Record<string, (p: P) => React.JSX.Element> = {
   potato: PotatoIcon,
   maize: MaizeIcon,
 };
+
+export function HomeIcon(p: P) {
+  return (
+    <Svg {...p}>
+      <path d="M3 11 12 4l9 7M5 9.5V20h5v-6h4v6h5V9.5" />
+    </Svg>
+  );
+}
+
+export function ChatIcon(p: P) {
+  return (
+    <Svg {...p}>
+      <path d="M4 5h16v11H9l-5 4V5Z" />
+      <path d="M8 9.5h8M8 12.5h5" />
+    </Svg>
+  );
+}
+
+export function DropIcon(p: P) {
+  return (
+    <Svg {...p}>
+      <path d="M12 3c3.5 4.5 6 8 6 11a6 6 0 0 1-12 0c0-3 2.5-6.5 6-11Z" />
+      <path d="M9 14.5a3 3 0 0 0 3 3" />
+    </Svg>
+  );
+}
+
+export function SchemeIcon(p: P) {
+  return (
+    <Svg {...p}>
+      <path d="M3 9.5 12 4l9 5.5M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18" />
+    </Svg>
+  );
+}
+
+export function NewsIcon(p: P) {
+  return (
+    <Svg {...p}>
+      <path d="M4 10v4l3 .5L15 19V5L7 9.5 4 10ZM7 14.5l1 5h2.5" />
+      <path d="M18 9.5c1.2.7 1.2 4.3 0 5" />
+    </Svg>
+  );
+}
+
+export function HelpIcon(p: P) {
+  return (
+    <Svg {...p}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6M12 17h.01" />
+    </Svg>
+  );
+}
+
+export function InboxIcon(p: P) {
+  return (
+    <Svg {...p}>
+      <path d="M4 13 6.5 5h11L20 13v6H4v-6Z" />
+      <path d="M4 13h4.5l1 2h5l1-2H20" />
+    </Svg>
+  );
+}
+
+export function ShieldIcon(p: P) {
+  return (
+    <Svg {...p}>
+      <path d="M12 3 5 6v5.5c0 4.5 3 8 7 9.5 4-1.5 7-5 7-9.5V6l-7-3Z" />
+      <path d="m9 12 2 2 4-4" />
+    </Svg>
+  );
+}
+
+export function PinIcon(p: P) {
+  return (
+    <Svg {...p}>
+      <path d="M12 21s-6-5.5-6-11a6 6 0 0 1 12 0c0 5.5-6 11-6 11Z" />
+      <circle cx="12" cy="10" r="2.2" />
+    </Svg>
+  );
+}
+
+export function LogoutIcon(p: P) {
+  return (
+    <Svg {...p}>
+      <path d="M14 4h5v16h-5M10 8l-4 4 4 4M6 12h10" />
+    </Svg>
+  );
+}
+
+/** Wordmark tile: a leaf on the brand green. */
+export function LogoMark({ className = "" }: { className?: string }) {
+  return (
+    <span className={`grid shrink-0 place-items-center rounded-2xl bg-brand text-white ${className}`}>
+      <SproutIcon className="size-3/5" />
+    </span>
+  );
+}
+
+/** Hills, two trees and a sun for the foot of the sidebar. Decorative only. */
+export function FarmScene({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 240 110" aria-hidden="true" className={className}>
+      <circle cx="196" cy="34" r="14" fill="#f8d65b" opacity="0.9" />
+      <path d="M0 78c40-22 80-26 120-14s80 8 120-8v54H0Z" fill="#b9dcbf" />
+      <path d="M0 92c50-16 100-14 150-4s70 2 90-6v28H0Z" fill="#8cc596" />
+      <path d="M0 102c60-8 140-8 240 0v8H0Z" fill="#5fa86c" />
+      <path d="M44 84V66M70 88V62" stroke="#6b4f2a" strokeWidth="3" strokeLinecap="round" />
+      <circle cx="44" cy="60" r="10" fill="#3f8f4f" />
+      <circle cx="70" cy="54" r="13" fill="#2f7a40" />
+      <path d="M120 96h40M128 90h28M136 84h16" stroke="#e9f4ea" strokeWidth="2" strokeLinecap="round" opacity="0.7" />
+    </svg>
+  );
+}

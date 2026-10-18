@@ -11,13 +11,13 @@ const mukta = Mukta({
 });
 
 export const metadata: Metadata = {
-  title: "KisanSetu",
+  title: "Kisan Mitra",
   description: "Crop disease checks, mandi prices and direct buyers for farmers.",
-  appleWebApp: { capable: true, title: "KisanSetu" },
+  appleWebApp: { capable: true, title: "Kisan Mitra" },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#1f2a6b",
+  themeColor: "#1f6b3a",
   width: "device-width",
   initialScale: 1,
 };

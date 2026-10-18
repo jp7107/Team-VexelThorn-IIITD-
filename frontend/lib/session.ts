@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { api, ApiError, homeFor, type User, type UserRole } from "@/lib/api";
+import { ApiError, getMe, homeFor, type User, type UserRole } from "@/lib/api";
 
 /**
  * Loads the logged-in user and sends everyone else where they belong.
@@ -16,7 +16,7 @@ export function useSession(roles: UserRole[]) {
 
   useEffect(() => {
     let cancelled = false;
-    api<User>("/auth/me")
+    getMe()
       .then((me) => {
         if (cancelled) return;
         if (!rolesKey.split(",").includes(me.role)) router.replace(homeFor(me));

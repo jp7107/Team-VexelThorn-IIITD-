@@ -65,6 +65,8 @@ export async function api<T>(
     if (e instanceof DOMException && e.name === "TimeoutError") throw new ApiError(0, "TIMEOUT", "Timed out");
     throw new ApiError(0, "NETWORK", "Network error");
   }
+  // Logging in, registering or out changes who "me" is.
+  if (path.startsWith("/auth/") && init.method === "POST") forgetMe();
   if (res.status === 204) return undefined as T;
   const data = await res.json().catch(() => null);
   if (!res.ok) {
@@ -249,6 +251,21 @@ export type WaterEstimate = {
   sources: { name: string; url: string }[];
   label: "estimate";
 };
+
+let me: Promise<User> | null = null;
+
+/** The logged-in user, fetched once per page load and shared by the app shell and the pages. */
+export function getMe(): Promise<User> {
+  me ??= api<User>("/auth/me").catch((e) => {
+    me = null;
+    throw e;
+  });
+  return me;
+}
+
+export function forgetMe() {
+  me = null;
+}
 
 /** Where each role lands after logging in. */
 export function homeFor(user: User): string {

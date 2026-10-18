@@ -1,8 +1,9 @@
 {
   "app": {
-    "name": "KisanSetu",
+    "name": "Kisan Mitra",
     "tagline": "Check your crop, know today's price, and sell straight to buyers.",
-    "installHint": "Add KisanSetu to your home screen from your browser menu."
+    "installHint": "Add Kisan Mitra to your home screen from your browser menu.",
+    "motto": "Smart farming, brighter tomorrow"
   },
   "language": {
     "label": "Language",
@@ -98,7 +99,36 @@
       "rejected_quality": "Photo was unclear",
       "error": "Check failed",
       "ok": "Checked"
-    }
+    },
+    "features": "What do you want to do?",
+    "statChecks": "Crop health checks",
+    "noCheckShort": "No checks yet",
+    "statListings": "Active listings",
+    "statListingsHint": "On the marketplace",
+    "statEnquiries": "New enquiries",
+    "statEnquiriesHint": "Waiting for your reply",
+    "statReminders": "Due now",
+    "statRemindersHint": "Reminders to finish",
+    "glance": "Crop health at a glance",
+    "viewResult": "View result",
+    "scanAnother": "Scan another leaf",
+    "noCheckYet": "No leaf checks yet. Take a photo of a leaf to start.",
+    "aiNote": "AI check, not a lab test. Confirm with your KVK before spraying.",
+    "todayFarm": "Today on your farm",
+    "waterWeek": "Water for {crop} this week",
+    "waterNet": "{mm} mm, about {litres} litres",
+    "priceSnapshot": "Mandi price snapshot",
+    "cropCol": "Crop",
+    "priceCol": "₹ per quintal",
+    "marketCol": "Market",
+    "noPrice": "No price yet",
+    "quickActions": "Quick actions",
+    "qaList": "Add a produce listing",
+    "qaAsk": "Ask the AI assistant",
+    "qaCrop": "Add a crop",
+    "qaHelp": "Help and walkthrough",
+    "schemesUpdates": "Schemes & updates",
+    "viewAll": "View all"
   },
   "errors": {
     "required": "Fill this in",
@@ -171,7 +201,7 @@
     "sources": "Sources",
     "verified": "Verified source",
     "general": "General advice, not verified",
-    "savedInfo": "Written from KisanSetu's saved information.",
+    "savedInfo": "Written from Kisan Mitra's saved information.",
     "aiWritten": "Written with AI help from the result above.",
     "failed": "Couldn't load the report.",
     "retry": "Try again"
@@ -264,7 +294,7 @@
     "call": "Call {phone}",
     "whatsapp": "WhatsApp",
     "acceptedNote": "Accepted. Contact the farmer to agree price and delivery.",
-    "waText": "Hello, I'm contacting you about your KisanSetu listing: {title}",
+    "waText": "Hello, I'm contacting you about your Kisan Mitra listing: {title}",
     "browse": "Browse produce"
   },
   "units": {
@@ -322,7 +352,7 @@
     "eligibility": "Who can apply",
     "benefit": "Benefit",
     "official": "Open the official site",
-    "checkThere": "Check your eligibility and apply on the official site. KisanSetu does not decide eligibility.",
+    "checkThere": "Check your eligibility and apply on the official site. Kisan Mitra does not decide eligibility.",
     "verified": "Last checked against the official page on {date}.",
     "allIndia": "All India",
     "statesList": "For: {states}",
@@ -416,7 +446,7 @@
   },
   "help": {
     "title": "Help",
-    "guides": "How to use KisanSetu",
+    "guides": "How to use Kisan Mitra",
     "g_check": "Check a sick leaf",
     "g_check_1": "Tap “Check my crop” and choose the crop.",
     "g_check_2": "Photograph one leaf on a plain background, in daylight.",
@@ -437,7 +467,7 @@
     "kccDetails": "Toll-free. 6 AM to 10 PM, all seven days. Answers in 22 local languages.",
     "kccCall": "Call 1800-180-1551",
     "kccSource": "Source: Department of Agriculture KCC portal (checked 17 Oct 2026)",
-    "contact": "Message KisanSetu support",
+    "contact": "Message Kisan Mitra support",
     "subject": "Subject",
     "message": "Your message",
     "send": "Send message",
@@ -469,5 +499,43 @@
     "remindWater": "Water check in 7 days",
     "remindCheckTitle": "Check crop condition",
     "remindWaterTitle": "Check irrigation need"
+  },
+  "nav": {
+    "label": "Main menu",
+    "overview": "Overview",
+    "cropHealth": "Crop health",
+    "assistant": "AI assistant",
+    "prices": "Market prices",
+    "sell": "Sell my crop",
+    "enquiries": "Enquiries",
+    "water": "Irrigation",
+    "schemes": "Government schemes",
+    "updates": "Farming updates",
+    "help": "Help & videos",
+    "marketplace": "Marketplace",
+    "admin": "Admin console",
+    "analyze": "Analyze a crop",
+    "role": {
+      "farmer": "Farmer",
+      "customer": "Buyer",
+      "admin": "Admin"
+    },
+    "tagline": {
+      "farmer": "Your farm, healthier and smarter.",
+      "customer": "Buy fresh produce straight from farmers.",
+      "admin": "Keep schemes, updates and listings in order."
+    },
+    "short": {
+      "overview": "Home",
+      "cropHealth": "Scan",
+      "assistant": "Ask",
+      "prices": "Prices",
+      "sell": "Sell",
+      "enquiries": "Enquiries",
+      "marketplace": "Market",
+      "help": "Help",
+      "admin": "Admin",
+      "schemes": "Schemes"
+    }
   }
 }

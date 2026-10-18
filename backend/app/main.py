@@ -10,7 +10,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name
 
 PROD = get_settings().ENV == "prod"
 # API docs only outside production: the live contract doesn't need to be public.
-app = FastAPI(title="KisanSetu API", version="0.1.0", docs_url=None if PROD else "/api/docs",
+app = FastAPI(title="Kisan Mitra API", version="0.1.0", docs_url=None if PROD else "/api/docs",
               redoc_url=None, openapi_url=None if PROD else "/api/openapi.json")
 
 # No CORSMiddleware on purpose: the browser reaches the API same-origin through the Next.js /api rewrite, so no
