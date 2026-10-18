@@ -110,7 +110,7 @@ function ListingView() {
       <div className="mb-4 flex items-start gap-4">
         <CropIcon code={listing.crop_code} className="size-14 shrink-0 text-field" />
         <div>
-          <h1 className="text-3xl font-extrabold leading-tight text-ink">{listing.title}</h1>
+          <h1 className="text-2xl font-bold leading-tight text-ink lg:text-3xl">{listing.title}</h1>
           <p className="mt-1 flex flex-wrap items-center gap-2 text-lg text-muted">
             {f.crop(listing.crop_code)}
             {isBulk(listing) && <span className="rounded-full bg-haldi px-2 text-base font-bold text-ink-strong">{t("market.bulk")}</span>}

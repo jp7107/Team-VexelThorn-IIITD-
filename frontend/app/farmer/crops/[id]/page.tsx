@@ -86,7 +86,7 @@ function CropView() {
       <div className="mb-6 flex items-center gap-4">
         <Icon className="size-14 shrink-0 text-field" />
         <div>
-          <h1 className="text-3xl font-extrabold leading-tight text-ink">
+          <h1 className="text-2xl font-bold leading-tight text-ink lg:text-3xl">
             {crop.crop_code in CROP_ICONS ? t(`crops.${crop.crop_code}`) : crop.crop_code}
           </h1>
           <p className="text-base text-muted">

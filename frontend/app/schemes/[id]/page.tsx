@@ -43,7 +43,7 @@ function SchemeView() {
       )}
       <p className="mb-4 rounded-xl border-l-8 border-haldi bg-haldi-soft px-4 py-3 text-lg font-semibold">{t("schemes.checkThere")}</p>
       <a href={scheme.official_url} target="_blank" rel="noopener noreferrer"
-        className="mb-4 flex min-h-14 w-full items-center justify-center rounded-xl bg-haldi px-5 text-lg font-extrabold text-ink-strong">
+        className="mb-4 flex min-h-12 w-full items-center justify-center rounded-xl bg-haldi px-5 text-lg font-extrabold text-ink-strong">
         {t("schemes.official")}
       </a>
       <p className="text-base text-muted">{t("schemes.verified", { date: day.format(new Date(scheme.last_verified_at)) })}</p>

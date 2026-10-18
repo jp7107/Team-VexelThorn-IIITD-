@@ -23,7 +23,7 @@ function PhotoButton({ label, capture, onPick, primary }: {
 }) {
   // A real file input stays in the tab order (sr-only); the label is the visible, tappable button.
   return (
-    <label className={`flex min-h-14 cursor-pointer items-center justify-center rounded-xl px-5 text-lg font-extrabold
+    <label className={`flex min-h-12 cursor-pointer items-center justify-center rounded-xl px-5 text-lg font-extrabold
       focus-within:outline-3 focus-within:outline-offset-2 focus-within:outline-haldi
       ${primary ? "bg-brand text-white" : "border-2 border-ink bg-white/10 text-ink"}`}>
       <input type="file" accept="image/*" className="sr-only" onChange={onPick}

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Mukta } from "next/font/google";
+import { Bricolage_Grotesque, Mukta } from "next/font/google";
 import { I18nProvider } from "@/lib/i18n";
 import "./globals.css";
 
@@ -8,6 +8,14 @@ const mukta = Mukta({
   variable: "--font-mukta",
   subsets: ["devanagari", "latin"],
   weight: ["400", "600", "800"],
+});
+
+// Headings and numbers: a grotesk with character, so the app doesn't read as a template.
+// It has no Devanagari, so Hindi headings fall through to Mukta in the same stack.
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-bricolage",
+  subsets: ["latin"],
+  axes: ["opsz", "wdth"],
 });
 
 export const metadata: Metadata = {
@@ -24,7 +32,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="hi" className={`${mukta.variable} h-full antialiased`}>
+    <html lang="hi" className={`${mukta.variable} ${bricolage.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         <I18nProvider>{children}</I18nProvider>
       </body>

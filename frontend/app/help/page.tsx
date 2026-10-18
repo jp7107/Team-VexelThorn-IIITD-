@@ -96,7 +96,7 @@ export default function HelpPage() {
           {t("help.kccNumber")} <span className="text-lg font-semibold">{t("help.kccShort")}</span>
         </p>
         <p className="mt-1 text-lg">{t("help.kccDetails")}</p>
-        <a href="tel:18001801551" className="mt-3 flex min-h-14 items-center justify-center rounded-xl bg-brand text-lg font-extrabold text-white">
+        <a href="tel:18001801551" className="mt-3 flex min-h-12 items-center justify-center rounded-xl bg-brand text-lg font-extrabold text-white">
           {t("help.kccCall")}
         </a>
         <a href={KCC_SOURCE} target="_blank" rel="noopener noreferrer" className="mt-2 block text-base text-muted underline">

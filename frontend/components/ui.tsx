@@ -18,7 +18,7 @@ export function LanguageSwitch() {
           lang={l}
           aria-pressed={lang === l}
           onClick={() => setLang(l)}
-          className={`min-h-11 rounded-full px-4 text-base font-semibold ${
+          className={`min-h-9 rounded-full px-3 text-sm font-semibold ${
             lang === l ? "bg-lime text-ink-strong" : "text-white"
           }`}
         >
@@ -62,7 +62,7 @@ export function Screen({ title, children, back, wide, plain }: {
           {t("common.back")}
         </Link>
       )}
-      {title && <h1 className="mb-5 text-3xl font-extrabold leading-tight text-ink">{title}</h1>}
+      {title && <h1 className="mb-4 text-2xl font-bold leading-tight text-ink lg:text-3xl">{title}</h1>}
       {children}
     </>
   );
@@ -84,7 +84,7 @@ export function Button({ variant = "primary", className = "", ...props }: Button
       : "border-2 border-ink text-ink bg-white/10 hover:bg-surface";
   return (
     <button
-      className={`min-h-14 w-full rounded-xl px-5 text-lg font-extrabold disabled:opacity-60 ${look} ${className}`}
+      className={`min-h-12 w-full rounded-xl px-5 text-base font-bold disabled:opacity-60 ${look} ${className}`}
       {...props}
     />
   );
@@ -97,7 +97,7 @@ export function ButtonLink({ variant = "primary", className = "", ...props }: Co
     variant === "primary" ? "bg-brand text-white shadow-sm hover:bg-brand-strong" : "border-2 border-ink text-ink bg-white/10";
   return (
     <Link
-      className={`flex min-h-14 w-full items-center justify-center rounded-xl px-5 text-lg font-extrabold ${look} ${className}`}
+      className={`flex min-h-12 w-full items-center justify-center rounded-xl px-5 text-base font-bold ${look} ${className}`}
       {...props}
     />
   );
@@ -112,11 +112,11 @@ export function Field({ id, label, hint, error, children }: {
 }) {
   return (
     <div className="mb-5">
-      <label htmlFor={id} className="mb-1 block text-lg font-semibold text-text">
+      <label htmlFor={id} className="mb-1 block font-semibold text-text">
         {label}
       </label>
       {hint && (
-        <p id={`${id}-hint`} className="mb-2 text-base text-muted">
+        <p id={`${id}-hint`} className="mb-2 text-sm text-muted">
           {hint}
         </p>
       )}
@@ -131,7 +131,7 @@ export function Field({ id, label, hint, error, children }: {
 }
 
 export const inputClass =
-  "block min-h-14 w-full rounded-xl border-2 border-line bg-white/10 px-4 text-lg text-text " +
+  "block min-h-12 w-full rounded-xl border border-line bg-white/10 px-4 text-base text-text " +
   "aria-[invalid=true]:border-danger focus:border-ink";
 
 /** Big tap target used for every either/or choice (role, crop, stage). */
@@ -147,14 +147,14 @@ export function ChoiceTile({ selected, onSelect, icon, label, hint }: {
       type="button"
       aria-pressed={selected}
       onClick={onSelect}
-      className={`flex min-h-16 w-full items-center gap-3 rounded-xl border-2 px-4 py-3 text-left ${
+      className={`flex min-h-12 w-full items-center gap-3 rounded-xl border px-4 py-2.5 text-left ${
         selected ? "border-ink bg-surface" : "border-line bg-white/10"
       }`}
     >
       {icon && <span className={`shrink-0 ${selected ? "text-ink" : "text-muted"}`}>{icon}</span>}
       <span>
-        <span className="block text-lg font-extrabold text-text">{label}</span>
-        {hint && <span className="block text-base text-muted">{hint}</span>}
+        <span className="block font-bold text-text">{label}</span>
+        {hint && <span className="block text-sm text-muted">{hint}</span>}
       </span>
     </button>
   );
