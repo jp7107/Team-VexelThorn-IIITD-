@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from typing import Literal
 
 from pydantic import BaseModel, Field, ValidationError, field_validator
-from sqlalchemy import func, or_, select, text
+from sqlalchemy import Text, func, or_, select, text
 from sqlalchemy.orm import Session
 
 from app.ml import inference
@@ -105,10 +105,13 @@ def get_disease_info(db: Session, user: User, args: DiseaseArgs, lang: str) -> l
 
 
 def search_knowledge(db: Session, user: User, args: SearchArgs, lang: str) -> list[dict]:
-    q = select(KbArticle).where(KbArticle.tsv.op("@@")(func.plainto_tsquery("simple", args.query)))
+    # Any query word may match (plainto_tsquery alone ANDs them, so "prevent grey leaf spot" found nothing);
+    # the best-ranked articles come first.
+    terms = func.to_tsquery("simple", func.replace(func.plainto_tsquery("simple", args.query).cast(Text), "&", "|"))
+    q = select(KbArticle).where(KbArticle.tsv.op("@@")(terms))
     if args.crop_code:
         q = q.where(KbArticle.crop_code == args.crop_code)
-    return [_kb_row(k) for k in db.scalars(q.limit(3))]
+    return [_kb_row(k) for k in db.scalars(q.order_by(func.ts_rank(KbArticle.tsv, terms).desc()).limit(3))]
 
 
 def get_market_prices(db: Session, user: User, args: PriceArgs, lang: str) -> list[dict]:
@@ -149,9 +152,10 @@ TOOLS = {t.name: t for t in [
          NoArgs, FARMER_ONLY, get_my_crops),
     Tool("get_my_recent_analyses", "The farmer's latest leaf checks: status, disease found, confidence, date.",
          RecentArgs, FARMER_ONLY, get_my_recent_analyses),
-    Tool("get_disease_info", "Verified articles about one disease class, e.g. tomato__early_blight.",
+    Tool("get_disease_info", "Verified articles about one disease class. class_code is one of: "
+         + ", ".join(c["code"] for c in inference.labels() if not c["is_healthy"]) + ".",
          DiseaseArgs, EVERYONE, get_disease_info),
-    Tool("search_knowledge", "Search verified farming articles. Query in the article's language.",
+    Tool("search_knowledge", "Search verified farming articles by English keywords (articles are in English).",
          SearchArgs, EVERYONE, search_knowledge),
     Tool("get_market_prices", "Latest mandi prices for a commodity (English name, e.g. Tomato), optional state/district.",
          PriceArgs, EVERYONE, get_market_prices),

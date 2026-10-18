@@ -95,3 +95,29 @@ def test_admin_lists_users_without_phones_and_all_listings():
     assert [u["id"] for u in users] == [farmer["id"]] and "phone" not in users[0]
     a.patch(f"/listings/{lid}", json={"status": "hidden"})
     assert [l["id"] for l in a.get("/admin/listings?status=hidden").json()] == [lid]
+
+
+def test_kb_seed_covers_every_class_and_crop_and_is_idempotent():
+    from app.kb_articles import KB_ARTICLES, PRODUCTIVITY_ARTICLES
+    from app.ml.inference import labels
+    from app.seed import _seed_kb
+
+    diseases = {c["code"] for c in labels() if not c["is_healthy"]}
+    assert sorted(a["disease_class_code"] for a in KB_ARTICLES) == sorted(diseases)
+    assert all(a["source_url"].startswith("https://") and "label" in a["body"] for a in KB_ARTICLES)
+    assert sorted(a["crop_code"] for a in PRODUCTIVITY_ARTICLES) == ["maize", "potato", "tomato"]
+    for _ in range(2):
+        with SessionLocal() as db:
+            _seed_kb(db)
+            db.commit()
+    farmer = make_client()
+    register(farmer)
+    kb = farmer.get("/kb", params={"crop_code": "maize"}).json()
+    assert sorted(k["disease_class_code"] or k["topic"] for k in kb) == sorted(
+        [d for d in diseases if d.startswith("maize")] + ["productivity"])
+    from app.assistant.tools import SearchArgs, search_knowledge
+    with SessionLocal() as db:
+        disease = search_knowledge(db, None, SearchArgs(query="how to prevent grey leaf spot", crop_code="maize"), "en")
+        growing = search_knowledge(db, None, SearchArgs(query="maize fertiliser and water schedule"), "en")
+    assert disease and disease[0]["title"] == "Grey leaf spot of maize"
+    assert growing and growing[0]["title"] == "Irrigated maize: good practices for higher yield"

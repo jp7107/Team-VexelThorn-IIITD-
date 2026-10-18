@@ -1124,7 +1124,7 @@ Status values: `Not Started` · `In Progress` · `Blocked` · `Done`. **Everythi
 | FE-09 | Schemes + updates read pages | P1 | M3 | M4 | CNT-02, BE-09 (fixtures until H14) | 0.5 | H14–14.5 | Done | Official link + verified date visible | Updates list only |
 | MKT-01 | Price source verification, API key, snapshot, demo labelling plan | P0 | M4 | — | S-01 | 1.0 | H1–2 | In Progress | `docs/DATA_SOURCES.md` prices section | Demo rows labelled |
 | CNT-02 | 5 schemes from official pages (seed JSON) | P0 | M4 | — | S-04 | 1.0 | H2–3 | In Progress | Each row has `official_url`, `last_verified_at` | 3 schemes |
-| CNT-01 | KB articles: 1 per MVP disease class + 1 productivity per crop, each sourced | P0 | M4 | M2 | ML-01 (`labels.json`) | 2.5 | H3–5.5 | Not Started | Every row has `source_url`; second member spot-checks 5 | Healthy classes share one article |
+| CNT-01 | KB articles: 1 per MVP disease class + 1 productivity per crop, each sourced | P0 | M4 | M2 | ML-01 (`labels.json`) | 2.5 | H3–5.5 | Done | Every row has `source_url`; second member spot-checks 5 | Healthy classes share one article |
 | MKT-02 | Listings API + create/browse/filter/detail UI | P0 | M4 | M3 | BE-02 | 3.0 | H5.5–8.5 | Done | MKT-T1/T2 | No edit, only close |
 | MKT-03 | Enquiries: create, accept/decline/withdraw, contact reveal | P0 | M4 | M1 | MKT-02 | 2.0 | H8.5–10, H11.5–12 | Done | MKT-T3/T4 (phone hidden before accept) | No withdraw |
 | MKT-04 | Price fetch + cache + page | P0 | M4 | — | MKT-01 | 2.0 | H12–14 | Done | MKT-T5 (source/date/demo badge) | Snapshot only |
