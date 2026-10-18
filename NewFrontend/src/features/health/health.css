@@ -1,0 +1,785 @@
+/* Crop health feature styles. Scoped to .kmh-* so this file never collides with the shell, the dashboard
+   or another feature agent's CSS. Tokens come from src/app/globals.css. */
+
+.kmh-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--km-gap);
+  min-width: 0;
+}
+
+.kmh-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--km-gap);
+  min-width: 0;
+}
+
+.kmh-stack-sm {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* ---------- hub ---------- */
+
+.kmh-hub-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: var(--km-gap);
+  align-items: start;
+}
+
+.kmh-scan {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background:
+    radial-gradient(120% 140% at 100% 0%, #eef8ef 0%, rgba(238, 248, 239, 0) 60%),
+    var(--km-surface);
+}
+
+.kmh-scan-body {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.kmh-scan-head {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.kmh-scan-tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--km-green-100);
+  color: var(--km-green-700);
+  flex: none;
+}
+
+.kmh-scan-title {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+}
+
+.kmh-scan-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.kmh-facts {
+  display: grid;
+  gap: 6px;
+  padding-top: 2px;
+}
+
+.kmh-fact {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  padding: 7px 9px;
+  border-radius: 9px;
+  background: var(--km-green-50);
+  border: 1px solid var(--km-border-soft);
+}
+
+.kmh-fact-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid var(--km-border);
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--km-green-800);
+  flex: none;
+}
+
+.kmh-fact-title {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.kmh-fact-body {
+  display: block;
+  font-size: 11px;
+  color: var(--km-muted);
+  margin-top: 1px;
+}
+
+/* ---------- result hero ---------- */
+
+.kmh-result {
+  border-radius: 11px;
+  border: 1px solid rgba(217, 54, 54, 0.14);
+  background: linear-gradient(180deg, #fdf6f6 0%, #fdfaf8 100%);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.kmh-result[data-kind="healthy"] {
+  border-color: rgba(21, 147, 77, 0.22);
+  background: linear-gradient(180deg, #f2faf4 0%, #fbfdfb 100%);
+}
+
+.kmh-result[data-kind="uncertain"] {
+  border-color: rgba(37, 99, 217, 0.18);
+  background: linear-gradient(180deg, #f5f8fd 0%, #fbfcfe 100%);
+}
+
+.kmh-result[data-kind="unsupported"],
+.kmh-result[data-kind="rejected"],
+.kmh-result[data-kind="error"] {
+  border-color: var(--km-border-strong);
+  background: linear-gradient(180deg, #fafaf8 0%, #ffffff 100%);
+}
+
+.kmh-result-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.kmh-result-tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: #fbe4e4;
+  color: var(--km-red-600);
+  flex: none;
+}
+
+.kmh-result[data-kind="healthy"] .kmh-result-tile {
+  background: var(--km-green-100);
+  color: var(--km-green-700);
+}
+
+.kmh-result[data-kind="uncertain"] .kmh-result-tile {
+  background: var(--km-blue-100);
+  color: var(--km-blue-600);
+}
+
+.kmh-result[data-kind="unsupported"] .kmh-result-tile,
+.kmh-result[data-kind="rejected"] .kmh-result-tile {
+  background: #eef1f2;
+  color: var(--km-muted);
+}
+
+.kmh-result-title {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.kmh-result-body {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.kmh-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.kmh-hint {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  font-size: 11.5px;
+  color: var(--km-text-2);
+  background: #f4f8fb;
+  border: 1px solid var(--km-border-soft);
+  border-radius: 8px;
+  padding: 7px 9px;
+}
+
+.kmh-hint.good {
+  background: var(--km-green-50);
+  border-color: rgba(21, 147, 77, 0.18);
+  color: var(--km-green-800);
+  font-weight: 600;
+}
+
+.kmh-warning {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border-radius: 8px;
+  background: #fbe9e9;
+  color: #8f2424;
+  padding: 7px 10px;
+  font-size: 11.5px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.kmh-warning.compact {
+  font-size: 11px;
+  padding: 6px 9px;
+}
+
+/* ---------- confidence meter ---------- */
+
+.kmh-meter {
+  position: relative;
+  height: 9px;
+  border-radius: 99px;
+  background: #e6ebe7;
+  overflow: visible;
+  margin-top: 5px;
+}
+
+.kmh-meter.lg {
+  height: 11px;
+}
+
+.kmh-meter-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #2f9e5c, #08733b);
+  transition: width 240ms ease;
+}
+
+.kmh-meter-mark {
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  width: 2px;
+  border-radius: 2px;
+  background: rgba(16, 43, 53, 0.35);
+  transform: translateX(-1px);
+}
+
+.kmh-meter-mark.floor {
+  background: rgba(16, 43, 53, 0.18);
+}
+
+/* ---------- recent checks ---------- */
+
+.kmh-check-list {
+  display: grid;
+  gap: 6px;
+}
+
+.kmh-check-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 9px;
+  border-radius: 9px;
+  border: 1px solid var(--km-border-soft);
+  background: #fff;
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease;
+}
+
+.kmh-check-row:hover {
+  background: var(--km-green-50);
+  border-color: var(--km-border-strong);
+}
+
+.kmh-check-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: none;
+  background: var(--km-green-600);
+}
+
+.kmh-check-dot[data-kind="disease"],
+.kmh-check-dot[data-kind="error"] {
+  background: var(--km-red-600);
+}
+
+.kmh-check-dot[data-kind="uncertain"] {
+  background: var(--km-blue-600);
+}
+
+.kmh-check-dot[data-kind="rejected"] {
+  background: var(--km-amber-500);
+}
+
+.kmh-check-dot[data-kind="unsupported"] {
+  background: var(--km-subtle);
+}
+
+.kmh-check-title {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- diagnose ---------- */
+
+.kmh-diagnose-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: var(--km-gap);
+  align-items: start;
+}
+
+.kmh-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 208px;
+  padding: 20px 16px;
+  border-radius: 12px;
+  border: 1.5px dashed var(--km-border-strong);
+  background: var(--km-green-50);
+  text-align: center;
+  transition:
+    border-color 140ms ease,
+    background-color 140ms ease;
+}
+
+.kmh-dropzone:hover,
+.kmh-dropzone:focus-visible {
+  border-color: var(--km-green-600);
+  background: #eaf6ec;
+}
+
+.kmh-dropzone[data-dragging="true"] {
+  border-color: var(--km-green-600);
+  background: #eaf6ec;
+  box-shadow: inset 0 0 0 2px rgba(21, 147, 77, 0.16);
+}
+
+.kmh-dropzone-tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid var(--km-border);
+  color: var(--km-green-700);
+}
+
+.kmh-dropzone-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--km-text-2);
+}
+
+.kmh-preview {
+  border: 1px solid var(--km-border);
+  border-radius: 11px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.kmh-preview-img {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: #e9efe8;
+  overflow: hidden;
+}
+
+.kmh-preview-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.kmh-preview-meta {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 10px;
+}
+
+.kmh-file-name {
+  font-size: 12px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kmh-file-sub {
+  font-size: 10.5px;
+  color: var(--km-muted);
+}
+
+.kmh-form {
+  display: grid;
+  gap: 12px;
+}
+
+.kmh-form-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.kmh-inline-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  border-radius: 9px;
+  background: #fdf2f2;
+  border: 1px solid rgba(217, 54, 54, 0.24);
+  color: var(--km-red-700);
+  padding: 8px 10px;
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.kmh-upload-status {
+  font-size: 11.5px;
+  color: var(--km-muted);
+}
+
+/* ---------- detail page ---------- */
+
+.kmh-detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+  gap: var(--km-gap);
+  align-items: start;
+}
+
+.kmh-detail-main,
+.kmh-detail-side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--km-gap);
+  min-width: 0;
+}
+
+.kmh-crumb {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: var(--km-muted);
+}
+
+.kmh-crumb a:hover {
+  color: var(--km-green-700);
+  text-decoration: underline;
+}
+
+.kmh-topk {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.kmh-topk-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+
+.kmh-rank {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 19px;
+  height: 19px;
+  border-radius: 6px;
+  background: var(--km-surface-soft);
+  border: 1px solid var(--km-border-soft);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--km-muted);
+  flex: none;
+}
+
+.kmh-topk-name {
+  flex: 1;
+  min-width: 0;
+}
+
+.kmh-topk-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kmh-topk-track {
+  display: block;
+  height: 4px;
+  border-radius: 99px;
+  background: #edf1ee;
+  margin-top: 4px;
+  overflow: hidden;
+}
+
+.kmh-topk-track > span {
+  display: block;
+  height: 100%;
+  border-radius: 99px;
+  background: var(--km-green-500);
+}
+
+.kmh-topk-p {
+  font-size: 11.5px;
+  font-variant-numeric: tabular-nums;
+  flex: none;
+  min-width: 44px;
+  text-align: right;
+}
+
+.kmh-reasons {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 5px;
+  font-size: 11.5px;
+}
+
+.kmh-reasons li {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.kmh-code {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-size: 11px;
+  background: var(--km-surface-soft);
+  border: 1px solid var(--km-border-soft);
+  border-radius: 5px;
+  padding: 1px 5px;
+}
+
+.kmh-lang-switch {
+  display: inline-flex;
+  border: 1px solid var(--km-border-strong);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.kmh-lang-switch button {
+  padding: 3px 9px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--km-muted);
+  border: none;
+  background: transparent;
+}
+
+.kmh-lang-switch button + button {
+  border-left: 1px solid var(--km-border);
+}
+
+.kmh-lang-switch button.active {
+  background: var(--km-green-100);
+  color: var(--km-green-800);
+}
+
+.kmh-lang-switch button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ---------- report ---------- */
+
+.kmh-report {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 12.5px;
+}
+
+.kmh-report-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.kmh-report-summary {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+.kmh-report-h {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--km-muted);
+  margin-bottom: 4px;
+}
+
+.kmh-prose {
+  color: var(--km-text-2);
+  line-height: 1.5;
+}
+
+.kmh-bullets {
+  margin: 0;
+  padding-left: 17px;
+  display: grid;
+  gap: 4px;
+  color: var(--km-text-2);
+}
+
+.kmh-safety {
+  background: #fdf6ee;
+  border: 1px solid rgba(196, 122, 6, 0.22);
+  border-radius: 9px;
+  padding: 9px 10px;
+}
+
+.kmh-safety .kmh-report-h {
+  color: #8a5a05;
+}
+
+.kmh-sources {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 7px;
+}
+
+.kmh-break {
+  display: block;
+  overflow-wrap: anywhere;
+  margin-top: 1px;
+}
+
+/* ---------- history ---------- */
+
+.kmh-filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.kmh-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 148px;
+}
+
+.kmh-filter .km-select {
+  min-height: 32px;
+  font-size: 11.5px;
+  padding: 3px 9px;
+}
+
+.kmh-history-table td {
+  font-size: 12px;
+}
+
+.kmh-history-table .kmh-col-result {
+  max-width: 320px;
+}
+
+.kmh-result-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.kmh-result-cell-title {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kmh-num {
+  font-variant-numeric: tabular-nums;
+}
+
+.kmh-counts {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.kmh-status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: var(--km-radius-pill);
+  border: 1px solid var(--km-border);
+  background: #fff;
+  padding: 3px 9px;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--km-muted);
+}
+
+.kmh-status-chip[aria-pressed="true"] {
+  background: var(--km-green-100);
+  border-color: rgba(21, 147, 77, 0.3);
+  color: var(--km-green-800);
+}
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 1199px) {
+  .kmh-hub-grid,
+  .kmh-diagnose-grid,
+  .kmh-detail-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .kmh-result-title {
+    font-size: 15.5px;
+  }
+  .kmh-check-row {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .kmh-filter {
+    min-width: 100%;
+  }
+}

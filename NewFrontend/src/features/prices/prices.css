@@ -1,0 +1,184 @@
+/* Market Prices page. Dense, panel-based layout matching the dashboard.
+   Everything sits on the shared km-* tokens; no page-level overrides. */
+
+.km-prices {
+  display: flex;
+  flex-direction: column;
+  gap: var(--km-gap);
+  min-width: 0;
+}
+
+/* ---------- filters ---------- */
+
+.km-prices-filters {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+}
+
+.km-prices-custom {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 767px) {
+  .km-prices-filters {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ---------- meta strip ---------- */
+
+.km-prices-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 16px;
+  padding: 8px 11px;
+  border-radius: 9px;
+  border: 1px solid var(--km-border-soft);
+  background: var(--km-surface-soft);
+  font-size: 11.5px;
+  color: var(--km-muted);
+}
+
+.km-prices-meta.sample {
+  background: #fdf7e8;
+  border-color: rgba(196, 122, 6, 0.28);
+}
+
+.km-prices-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+}
+
+.km-prices-meta-item svg {
+  color: var(--km-subtle);
+  flex: none;
+}
+
+.km-prices-meta-item strong {
+  font-weight: 600;
+  color: var(--km-text-2);
+}
+
+.km-prices-meta-end {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--km-subtle);
+  white-space: nowrap;
+}
+
+/* ---------- table ---------- */
+
+.km-prices-scroll {
+  margin-top: 10px;
+  border-radius: 9px;
+}
+
+.km-prices-table {
+  min-width: 780px;
+}
+
+.km-prices-table th {
+  background: var(--km-surface-soft);
+  border-bottom: 1px solid var(--km-border);
+}
+
+.km-prices-table td {
+  vertical-align: top;
+  padding-top: 9px;
+  padding-bottom: 9px;
+}
+
+.km-prices-table tbody tr:hover td {
+  background: #fbfdfb;
+}
+
+/* Dim slightly while a refetch is in flight; the old rows stay readable. */
+.km-prices-table.km-prices-updating {
+  opacity: 0.62;
+  transition: opacity 140ms ease;
+}
+
+.km-prices-cell-main {
+  display: block;
+  font-weight: 600;
+  color: var(--km-text);
+}
+
+.km-prices-cell-sub {
+  display: block;
+  margin-top: 1px;
+  font-size: 10.5px;
+  color: var(--km-muted);
+}
+
+.km-prices-price {
+  display: block;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--km-text);
+}
+
+.km-prices-num {
+  font-variant-numeric: tabular-nums;
+}
+
+.km-prices-unit {
+  display: block;
+  margin-top: 1px;
+  font-size: 10.5px;
+  color: var(--km-muted);
+}
+
+.km-prices-arrival {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  white-space: nowrap;
+}
+
+/* ---------- trend ---------- */
+
+.km-prices-trend {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.km-prices-trend.up {
+  color: #0f7a3f;
+  background: #e9f6ee;
+}
+
+.km-prices-trend.down {
+  color: #b3261e;
+  background: #fdeceb;
+}
+
+.km-prices-trend.flat {
+  color: var(--km-muted);
+  background: #eef1f2;
+  font-weight: 500;
+}
+
+/* ---------- footnotes / skeleton ---------- */
+
+.km-prices-footnote {
+  margin-top: 9px;
+}
+
+.km-prices-skeleton {
+  display: grid;
+  gap: 6px;
+  margin-top: 10px;
+}

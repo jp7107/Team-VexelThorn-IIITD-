@@ -1,0 +1,318 @@
+/* Enquiries list — dense SaaS cards. All colour/radius/shadow comes from the km-* tokens. */
+
+.km-enquiries {
+  display: flex;
+  flex-direction: column;
+  gap: var(--km-gap);
+  min-width: 0;
+}
+
+.km-enq-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ---------- toolbar ---------- */
+
+.km-enq-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.km-enq-filters {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+  padding: 3px;
+  border-radius: 10px;
+  background: var(--km-surface-soft);
+  border: 1px solid var(--km-border-soft);
+}
+
+.km-enq-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 7px;
+  border: 1px solid transparent;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--km-muted);
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease,
+    color 140ms ease;
+}
+
+.km-enq-chip:hover {
+  color: var(--km-text-2);
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.km-enq-chip.active {
+  background: #fff;
+  color: var(--km-green-800);
+  border-color: var(--km-border);
+  box-shadow: 0 1px 2px rgba(20, 52, 36, 0.08);
+}
+
+.km-enq-chip-count {
+  font-size: 10.5px;
+  font-weight: 600;
+  min-width: 18px;
+  padding: 0 5px;
+  border-radius: var(--km-radius-pill);
+  background: #eef1f2;
+  color: var(--km-muted);
+  text-align: center;
+}
+
+.km-enq-chip.active .km-enq-chip-count {
+  background: var(--km-green-100);
+  color: var(--km-green-800);
+}
+
+.km-enq-total {
+  margin-left: auto;
+}
+
+/* ---------- cards ---------- */
+
+.km-enq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.km-enq-skel {
+  height: 112px;
+  border-radius: var(--km-radius-sm);
+}
+
+.km-enq-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 13px;
+  border: 1px solid var(--km-border);
+  border-radius: var(--km-radius-sm);
+  background: #fff;
+  min-width: 0;
+}
+
+.km-enq-card:hover {
+  border-color: var(--km-border-strong);
+}
+
+.km-enq-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.km-enq-card-heading {
+  min-width: 0;
+}
+
+.km-enq-listing {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--km-text);
+  letter-spacing: -0.01em;
+}
+
+.km-enq-listing:hover {
+  color: var(--km-green-700);
+  text-decoration: underline;
+}
+
+.km-enq-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+.km-enq-message {
+  margin: 0;
+  padding: 7px 10px;
+  border-left: 2px solid var(--km-green-200);
+  background: var(--km-green-50);
+  border-radius: 0 6px 6px 0;
+  font-size: 12px;
+  color: var(--km-text-2);
+  overflow-wrap: anywhere;
+}
+
+/* ---------- footer row ---------- */
+
+.km-enq-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-top: 8px;
+  border-top: 1px solid var(--km-border-soft);
+}
+
+.km-enq-person {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.km-enq-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  flex: none;
+  background: var(--km-green-100);
+  color: var(--km-green-800);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.km-enq-person-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.km-enq-person-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--km-text-2);
+}
+
+.km-enq-buyer-type {
+  margin-top: 0;
+}
+
+.km-enq-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.km-enq-note {
+  max-width: 340px;
+  text-align: right;
+}
+
+.km-enq-tel {
+  text-decoration: none;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- rating ---------- */
+
+.km-enq-rating {
+  padding-top: 9px;
+  border-top: 1px dashed var(--km-border);
+}
+
+.km-enq-rating-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.km-enq-star-row {
+  display: inline-flex;
+  gap: 1px;
+  color: var(--km-amber-500);
+}
+
+.km-enq-rating-form {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.km-enq-rating-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.km-enq-stars {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.km-enq-star-pick {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  color: #c9d3cd;
+  cursor: pointer;
+}
+
+.km-enq-star-pick:hover,
+.km-enq-star-pick:focus-within {
+  background: var(--km-amber-100);
+}
+
+.km-enq-star-pick.on {
+  color: var(--km-amber-500);
+}
+
+.km-enq-comment {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 560px;
+}
+
+.km-enq-comment-textarea {
+  min-height: 56px;
+  font-size: 12px;
+}
+
+.km-enq-comment-count {
+  align-self: flex-end;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 767px) {
+  .km-enq-foot {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .km-enq-actions {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .km-enq-note {
+    text-align: left;
+    max-width: none;
+  }
+
+  .km-enq-total {
+    margin-left: 0;
+  }
+}

@@ -1,0 +1,801 @@
+/* Marketplace: browse grid, cards, detail panel, farmer forms.
+   Compact dense SaaS look on the shared --km-* tokens; 13 px body. */
+
+.kmx-market {
+  display: flex;
+  flex-direction: column;
+  gap: var(--km-gap);
+  min-width: 0;
+}
+
+/* ---------- filter bar ---------- */
+
+.kmx-filter-panel .km-panel-body {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.kmx-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.kmx-chip-row-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--km-muted);
+  margin-right: 2px;
+}
+
+.kmx-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 27px;
+  padding: 0 10px;
+  border-radius: var(--km-radius-pill);
+  border: 1px solid var(--km-border-strong);
+  background: #fff;
+  color: var(--km-text-2);
+  font-size: 11.5px;
+  font-weight: 500;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease;
+}
+
+.kmx-chip:hover {
+  background: var(--km-surface-soft);
+  border-color: rgba(26, 67, 47, 0.24);
+}
+
+.kmx-chip[aria-pressed="true"],
+.kmx-chip.active {
+  background: var(--km-green-100);
+  border-color: var(--km-green-200);
+  color: var(--km-green-800);
+  font-weight: 600;
+}
+
+.kmx-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.kmx-filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 170px;
+}
+
+.kmx-filter-spacer {
+  flex: 1;
+}
+
+.kmx-price-form {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.kmx-wholesale-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--km-muted);
+}
+
+/* ---------- results ---------- */
+
+.kmx-results-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 11.5px;
+  color: var(--km-muted);
+}
+
+.kmx-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(232px, 1fr));
+  gap: var(--km-gap);
+}
+
+/* ---------- listing card ---------- */
+
+.kmx-listing-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border-radius: var(--km-radius);
+  border: 1px solid var(--km-border);
+  background: var(--km-surface);
+  box-shadow: var(--km-shadow);
+  overflow: hidden;
+  transition:
+    transform 140ms ease,
+    box-shadow 140ms ease,
+    border-color 140ms ease;
+}
+
+.kmx-listing-card:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--km-shadow-lg);
+  border-color: var(--km-border-strong);
+}
+
+.kmx-listing-art {
+  position: relative;
+  display: block;
+}
+
+.kmx-produce-art {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 0;
+}
+
+.kmx-produce-glyph {
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.14));
+  line-height: 1;
+}
+
+.kmx-produce-stripe {
+  position: absolute;
+  left: -12%;
+  right: -12%;
+  bottom: -46%;
+  height: 78%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.26);
+  transform: rotate(-6deg);
+}
+
+.kmx-listing-status {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  z-index: 2;
+}
+
+.kmx-listing-status .km-badge {
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 1px 3px rgba(20, 52, 36, 0.12);
+}
+
+.kmx-listing-mine {
+  position: absolute;
+  left: 7px;
+  bottom: 7px;
+  z-index: 2;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--km-green-800);
+  padding: 2px 7px;
+  border-radius: var(--km-radius-pill);
+}
+
+.kmx-listing-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 9px 11px 10px;
+  min-width: 0;
+}
+
+.kmx-listing-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10.5px;
+  color: var(--km-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kmx-dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--km-subtle);
+  flex: none;
+}
+
+.kmx-listing-title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--km-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kmx-listing-price {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--km-green-800);
+}
+
+.kmx-listing-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-top: 3px;
+  min-width: 0;
+}
+
+.kmx-farmer-name {
+  font-size: 11.5px;
+  color: var(--km-text-2);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kmx-listing-loc {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10.5px;
+  color: var(--km-subtle);
+  margin-top: 1px;
+}
+
+.kmx-skeleton-card {
+  pointer-events: none;
+}
+
+/* ---------- ratings ---------- */
+
+.kmx-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  flex: none;
+  color: #c47a06;
+  font-size: 11px;
+  line-height: 1.2;
+}
+
+.kmx-rating-stars {
+  display: inline-flex;
+  gap: 1px;
+}
+
+.kmx-rating-value {
+  font-weight: 700;
+  color: var(--km-text-2);
+}
+
+.kmx-rating-count {
+  color: var(--km-subtle);
+  font-size: 10.5px;
+}
+
+.kmx-rating-empty {
+  font-size: 10.5px;
+  color: var(--km-subtle);
+  white-space: nowrap;
+}
+
+/* ---------- detail page ---------- */
+
+.kmx-detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(300px, 1fr);
+  gap: var(--km-gap);
+  align-items: start;
+}
+
+@media (max-width: 1023px) {
+  .kmx-detail-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.kmx-detail-hero {
+  display: grid;
+  grid-template-columns: 148px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+
+@media (max-width: 560px) {
+  .kmx-detail-hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.kmx-detail-hero .kmx-produce-art {
+  border-radius: var(--km-radius-sm);
+  border: 1px solid var(--km-border-soft);
+}
+
+.kmx-detail-title {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.kmx-detail-sub {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: var(--km-muted);
+  margin-top: 3px;
+  flex-wrap: wrap;
+}
+
+.kmx-detail-price {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--km-green-800);
+  margin-top: 8px;
+}
+
+.kmx-detail-price small {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--km-muted);
+}
+
+.kmx-detail-desc {
+  font-size: 12.5px;
+  color: var(--km-text-2);
+  margin-top: 9px;
+  white-space: pre-wrap;
+  line-height: 1.55;
+}
+
+.kmx-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+  gap: 7px;
+  margin-top: 12px;
+}
+
+.kmx-fact {
+  border: 1px solid var(--km-border);
+  border-radius: var(--km-radius-sm);
+  background: var(--km-surface-soft);
+  padding: 7px 9px;
+  min-width: 0;
+}
+
+.kmx-fact-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--km-subtle);
+}
+
+.kmx-fact-value {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+  margin-top: 2px;
+  overflow-wrap: anywhere;
+}
+
+.kmx-rating-item {
+  display: flex;
+  gap: 9px;
+  padding: 8px 0;
+  border-top: 1px solid var(--km-border-soft);
+}
+
+.kmx-rating-item:first-child {
+  border-top: none;
+}
+
+.kmx-rating-item-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.kmx-rating-comment {
+  font-size: 12px;
+  color: var(--km-text-2);
+  margin-top: 2px;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- forms ---------- */
+
+.kmx-form {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.kmx-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.kmx-form-grid .span-2 {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 560px) {
+  .kmx-form-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.kmx-form-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.kmx-inline-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  border-radius: var(--km-radius-sm);
+  padding: 8px 10px;
+  font-size: 11.5px;
+  line-height: 1.45;
+}
+
+.kmx-inline-note.info {
+  background: #eef4fc;
+  border: 1px solid rgba(37, 99, 217, 0.14);
+  color: #24405c;
+}
+
+.kmx-inline-note.warn {
+  background: #fdf6ea;
+  border: 1px solid rgba(196, 122, 6, 0.22);
+  color: #6f4a07;
+}
+
+.kmx-inline-note.bad {
+  background: #fdf6f6;
+  border: 1px solid rgba(217, 54, 54, 0.22);
+  color: #8f2424;
+}
+
+.kmx-inline-note.good {
+  background: var(--km-green-50);
+  border: 1px solid var(--km-green-200);
+  color: var(--km-green-800);
+}
+
+.kmx-success {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--km-green-50);
+  border: 1px solid var(--km-green-200);
+  border-radius: var(--km-radius-sm);
+  padding: 8px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--km-green-800);
+}
+
+/* ---------- my listings ---------- */
+
+.kmx-mine-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.kmx-mine-row {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) auto;
+  gap: 11px;
+  align-items: center;
+  padding: 9px 0;
+  border-top: 1px solid var(--km-border-soft);
+}
+
+.kmx-mine-row:first-child {
+  border-top: none;
+}
+
+.kmx-mine-row .kmx-produce-art {
+  border-radius: var(--km-radius-sm);
+  border: 1px solid var(--km-border-soft);
+}
+
+.kmx-mine-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kmx-mine-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 11px;
+  color: var(--km-muted);
+  margin-top: 2px;
+}
+
+.kmx-tabs {
+  display: inline-flex;
+  gap: 4px;
+  padding: 3px;
+  border-radius: 9px;
+  background: var(--km-surface-soft);
+  border: 1px solid var(--km-border-soft);
+  flex-wrap: wrap;
+}
+
+.kmx-tab {
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 7px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--km-muted);
+}
+
+.kmx-tab[aria-selected="true"] {
+  background: #fff;
+  color: var(--km-green-800);
+  box-shadow: 0 1px 3px rgba(20, 52, 36, 0.1);
+}
+
+/* ---------- misc ---------- */
+
+.kmx-stars-inline {
+  display: inline-flex;
+  gap: 1px;
+  color: #c47a06;
+}
+
+.kmx-muted-note {
+  font-size: 11px;
+  color: var(--km-subtle);
+}
+
+@media (max-width: 640px) {
+  .kmx-grid {
+    grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+  }
+  .kmx-filter-field {
+    min-width: 100%;
+  }
+  .kmx-mine-row {
+    grid-template-columns: 44px minmax(0, 1fr);
+  }
+  .kmx-mine-row .kmx-mine-actions {
+    grid-column: 2;
+  }
+}
+
+/* ---------- detail page: side column, seller, owner/admin panels ---------- */
+
+.kmx-back {
+  align-self: flex-start;
+  font-size: 12px;
+}
+
+.kmx-detail-side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--km-gap);
+  min-width: 0;
+}
+
+.kmx-detail-art {
+  display: block;
+}
+
+.kmx-detail-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+dl.kmx-facts {
+  margin: 12px 0 0;
+}
+
+.kmx-fact dt,
+.kmx-fact dd {
+  margin: 0;
+}
+
+.kmx-panel-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Live regions stay mounted (so they announce); when empty they must not add a second flex gap. */
+.kmx-panel-stack > [aria-live]:empty {
+  margin-top: -10px;
+}
+
+.kmx-owner-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.kmx-owner-count {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--km-text-2);
+}
+
+.kmx-owner-count strong {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--km-green-800);
+}
+
+.kmx-seller {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.kmx-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--km-green-100);
+  border: 1px solid var(--km-green-200);
+  color: var(--km-green-800);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.kmx-avatar.sm {
+  width: 26px;
+  height: 26px;
+  font-size: 11px;
+}
+
+.kmx-seller-name {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.kmx-subhead {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--km-subtle);
+  margin: 14px 0 4px;
+}
+
+.kmx-rating-list,
+.kmx-mine-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.kmx-rating-buyer {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ---------- forms: extra layout ---------- */
+
+.kmx-form-panel {
+  scroll-margin-top: 84px;
+}
+
+.kmx-form-grid.three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (max-width: 720px) {
+  .kmx-form-grid.three {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* The live region stays mounted; when empty it must not add a second flex gap. */
+.kmx-form > .kmx-form-error:empty {
+  margin-top: -11px;
+}
+
+.kmx-success-dismiss {
+  margin-left: auto;
+}
+
+/* ---------- my listings: filter, rows ---------- */
+
+.kmx-mine {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.kmx-mine .kmx-tabs {
+  align-self: flex-start;
+}
+
+.kmx-tab:hover {
+  color: var(--km-text-2);
+}
+
+.kmx-tab[aria-pressed="true"] {
+  background: #fff;
+  color: var(--km-green-800);
+  box-shadow: 0 1px 3px rgba(20, 52, 36, 0.1);
+}
+
+.kmx-tab-count {
+  margin-left: 3px;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--km-subtle);
+}
+
+.kmx-mine-art {
+  display: block;
+}
+
+a.kmx-mine-title {
+  display: block;
+  color: var(--km-text);
+}
+
+a.kmx-mine-title:hover {
+  color: var(--km-green-800);
+  text-decoration: underline;
+}
+
+a.km-badge:hover {
+  text-decoration: underline;
+}

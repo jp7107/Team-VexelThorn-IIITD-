@@ -1,0 +1,304 @@
+/* Auth screens (login, register). The (auth) layout supplies `.km-auth-card .km-panel`; everything here is
+   the centred page wash, the compact form rhythm and the two radio-tile groups. Only km-* tokens. */
+
+.km-auth {
+  display: flex;
+  align-items: safe center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 28px 16px;
+  background:
+    radial-gradient(1200px 520px at 12% -8%, rgba(30, 167, 92, 0.1), transparent 62%),
+    radial-gradient(900px 460px at 92% 108%, rgba(30, 167, 92, 0.08), transparent 60%),
+    linear-gradient(180deg, var(--km-page) 0%, var(--km-page-2) 100%);
+}
+
+.km-auth-card {
+  width: 100%;
+  max-width: 424px;
+  padding: 26px 26px 22px;
+  border-radius: var(--km-radius);
+  box-shadow: var(--km-shadow-lg);
+}
+
+.km-auth-brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--km-border-soft);
+  border-radius: 8px;
+}
+
+.km-auth-brand .km-brand-name {
+  font-size: 19px;
+}
+
+.km-auth-brand .km-brand-tag {
+  margin-top: 1px;
+}
+
+/* ---------- form rhythm ---------- */
+
+.km-auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.km-auth-head {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.km-auth-title {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--km-text);
+}
+
+.km-auth-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 10px;
+}
+
+.km-auth-notice {
+  font-size: 11.5px;
+  color: var(--km-green-800);
+  background: var(--km-green-50);
+  border: 1px solid var(--km-green-200);
+  border-radius: var(--km-radius-sm);
+  padding: 7px 10px;
+}
+
+.km-auth-fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.km-auth-fieldset > legend {
+  padding: 0;
+  margin-bottom: 6px;
+}
+
+/* ---------- role tiles ---------- */
+
+.km-auth-tiles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.km-auth-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px;
+  border-radius: var(--km-radius-sm);
+  border: 1px solid var(--km-border-strong);
+  background: #fff;
+  cursor: pointer;
+  transition:
+    border-color 140ms ease,
+    background-color 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.km-auth-tile:hover {
+  border-color: rgba(26, 67, 47, 0.28);
+  background: var(--km-surface-soft);
+}
+
+.km-auth-tile.selected {
+  border-color: var(--km-green-600);
+  background: var(--km-green-50);
+  box-shadow: inset 0 0 0 1px var(--km-green-600);
+}
+
+.km-auth-tile:focus-within {
+  box-shadow: var(--km-ring);
+}
+
+.km-auth-tile input,
+.km-auth-segment-opt input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.km-auth-tile-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  margin-bottom: 3px;
+  background: var(--km-green-100);
+  color: var(--km-green-700);
+}
+
+.km-auth-tile.selected .km-auth-tile-icon {
+  background: var(--km-green-600);
+  color: #fff;
+}
+
+.km-auth-tile-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--km-text);
+}
+
+/* ---------- segmented choices (customer type, language) ---------- */
+
+.km-auth-segment {
+  display: flex;
+  gap: 4px;
+  padding: 3px;
+  border-radius: var(--km-radius-sm);
+  border: 1px solid var(--km-border-strong);
+  background: var(--km-surface-soft);
+}
+
+.km-auth-segment-opt {
+  position: relative;
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--km-muted);
+  cursor: pointer;
+  transition:
+    background-color 140ms ease,
+    color 140ms ease;
+}
+
+.km-auth-segment-opt:hover {
+  color: var(--km-text-2);
+}
+
+.km-auth-segment-opt.selected {
+  background: #fff;
+  color: var(--km-green-800);
+  box-shadow: 0 1px 3px rgba(20, 52, 36, 0.12);
+}
+
+.km-auth-segment-opt:focus-within {
+  box-shadow: var(--km-ring);
+}
+
+/* ---------- API error region ---------- */
+
+.km-auth-formerror {
+  display: flex;
+  flex-direction: column;
+}
+
+.km-auth-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  padding: 9px 11px;
+  border-radius: var(--km-radius-sm);
+  border: 1px solid rgba(217, 54, 54, 0.3);
+  background: #fdf6f6;
+  color: var(--km-red-700);
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.km-auth-alert svg {
+  flex: none;
+  margin-top: 1px;
+}
+
+/* ---------- footer links ---------- */
+
+.km-auth-swap {
+  text-align: center;
+  font-size: 11.5px;
+  color: var(--km-muted);
+}
+
+.km-auth-guest {
+  align-self: center;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--km-subtle);
+  border-radius: 6px;
+  padding: 2px 6px;
+}
+
+.km-auth-guest:hover {
+  color: var(--km-green-700);
+  text-decoration: underline;
+}
+
+/* ---------- demo hint (documented seed accounts, no passwords) ---------- */
+
+.km-auth-demo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 9px 11px;
+  border-radius: var(--km-radius-sm);
+  border: 1px dashed var(--km-border-strong);
+  background: var(--km-surface-warm);
+  color: var(--km-muted);
+  font-size: 11px;
+}
+
+.km-auth-demo-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 700;
+  color: var(--km-text-2);
+  font-size: 11.5px;
+}
+
+.km-auth-demo ul {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2px 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.km-auth-demo li span {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--km-text-2);
+}
+
+@media (max-width: 480px) {
+  .km-auth-card {
+    padding: 20px 18px 18px;
+  }
+
+  .km-auth-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .km-auth-demo ul {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

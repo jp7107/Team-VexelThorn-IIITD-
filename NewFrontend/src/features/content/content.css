@@ -1,0 +1,338 @@
+/* Government schemes & updates — content pages.
+   Uses the shared km-* tokens from globals.css; only layout specific to these pages lives here. */
+
+.kc-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--km-gap);
+  min-width: 0;
+}
+
+/* ---------- toolbar (search + filters) ---------- */
+
+.kc-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.kc-toolbar .kc-search {
+  flex: 1 1 260px;
+  min-width: 200px;
+}
+
+.kc-toolbar .kc-filter {
+  flex: 0 1 180px;
+  min-width: 150px;
+}
+
+.kc-toolbar-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+/* ---------- scheme cards ---------- */
+
+.kc-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--km-gap);
+}
+
+.kc-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 13px 14px;
+  border-radius: var(--km-radius);
+  border: 1px solid var(--km-border);
+  background: var(--km-surface);
+  box-shadow: var(--km-shadow);
+  min-width: 0;
+  transition:
+    transform 140ms ease,
+    box-shadow 140ms ease,
+    border-color 140ms ease;
+}
+
+.kc-card:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--km-shadow-lg);
+  border-color: var(--km-border-strong);
+}
+
+.kc-card-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.kc-card-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--km-text);
+}
+
+.kc-card-summary {
+  font-size: 12px;
+  color: var(--km-muted);
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.kc-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.kc-card-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 6px;
+  border-top: 1px solid var(--km-border-soft);
+}
+
+.kc-verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--km-green-800);
+  background: var(--km-green-50);
+  border: 1px solid rgba(8, 115, 59, 0.14);
+  border-radius: var(--km-radius-pill);
+  padding: 3px 8px;
+  white-space: nowrap;
+}
+
+.kc-verified.warn {
+  color: #8a5a05;
+  background: #fdf3df;
+  border-color: rgba(196, 122, 6, 0.2);
+}
+
+/* ---------- scheme detail ---------- */
+
+.kc-detail {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: var(--km-gap);
+  align-items: start;
+}
+
+.kc-detail-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--km-gap);
+  min-width: 0;
+}
+
+.kc-detail-aside {
+  display: flex;
+  flex-direction: column;
+  gap: var(--km-gap);
+  min-width: 0;
+}
+
+@media (max-width: 991px) {
+  .kc-detail {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.kc-verified-band {
+  display: flex;
+  gap: 11px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border-radius: var(--km-radius);
+  background: var(--km-green-50);
+  border: 1px solid rgba(8, 115, 59, 0.16);
+}
+
+.kc-verified-band .kc-verified-date {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--km-green-800);
+  letter-spacing: -0.01em;
+}
+
+.kc-verified-band.unknown {
+  background: var(--km-surface-soft);
+  border-color: var(--km-border-strong);
+}
+
+.kc-prose {
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--km-text-2);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.kc-section-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--km-text);
+  margin-bottom: 4px;
+}
+
+.kc-states {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.kc-state-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: var(--km-radius-pill);
+  padding: 3px 9px;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--km-surface-soft);
+  border: 1px solid var(--km-border);
+  color: var(--km-text-2);
+}
+
+.kc-official-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--km-green-700);
+  border-radius: 6px;
+  overflow-wrap: anywhere;
+}
+
+.kc-official-link:hover {
+  text-decoration: underline;
+}
+
+.kc-source-note {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  font-size: 11.5px;
+  color: var(--km-muted);
+  background: var(--km-surface-soft);
+  border: 1px solid var(--km-border-soft);
+  border-radius: 9px;
+  padding: 9px 10px;
+}
+
+/* ---------- updates timeline ---------- */
+
+.kc-timeline {
+  display: flex;
+  flex-direction: column;
+}
+
+.kc-update {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 11px;
+  padding: 12px 0;
+  border-top: 1px solid var(--km-border-soft);
+}
+
+.kc-update:first-child {
+  border-top: none;
+  padding-top: 2px;
+}
+
+.kc-update-rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.kc-update-dot {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--km-green-100);
+  color: var(--km-green-700);
+  flex: none;
+}
+
+.kc-update-body {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.kc-update-date {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--km-subtle);
+}
+
+.kc-update-title {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--km-text);
+}
+
+.kc-update-text {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--km-text-2);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.kc-update-source {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--km-green-700);
+  align-self: flex-start;
+  border-radius: 6px;
+}
+
+.kc-update-source:hover {
+  text-decoration: underline;
+}
+
+/* ---------- misc ---------- */
+
+.kc-page-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 640px) {
+  .kc-cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

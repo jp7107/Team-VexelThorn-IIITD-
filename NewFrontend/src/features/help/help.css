@@ -1,0 +1,272 @@
+/* Help & Videos: a two-column reference page — walkthrough + FAQ on the left, honest status and
+   availability panels on the right. Uses only the shared --km-* tokens; no new palette. */
+
+.km-help {
+  display: flex;
+  flex-direction: column;
+  gap: var(--km-gap);
+  min-width: 0;
+}
+
+.km-help-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.62fr) minmax(0, 1fr);
+  gap: var(--km-gap);
+  align-items: start;
+}
+
+.km-help-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--km-gap);
+  min-width: 0;
+}
+
+/* ---------- getting-started steps ---------- */
+
+.km-help-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  counter-reset: km-help-step;
+}
+
+.km-help-step {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr);
+  gap: 11px;
+  position: relative;
+  padding-bottom: 14px;
+}
+
+.km-help-step:last-child {
+  padding-bottom: 0;
+}
+
+/* connector line between numbered markers */
+.km-help-step:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  left: 12.5px;
+  top: 27px;
+  bottom: 3px;
+  width: 1px;
+  background: var(--km-border-strong);
+}
+
+.km-help-step-num {
+  position: relative;
+  z-index: 1;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--km-green-800);
+  background: var(--km-green-100);
+  border: 1px solid var(--km-green-200);
+  flex: none;
+}
+
+.km-help-step-main {
+  min-width: 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--km-border-soft);
+}
+
+.km-help-step:last-child .km-help-step-main {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.km-help-step-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin-bottom: 5px;
+}
+
+.km-help-step-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: var(--km-green-50);
+  color: var(--km-green-700);
+}
+
+.km-help-step-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--km-text);
+  letter-spacing: -0.01em;
+  margin-bottom: 2px;
+}
+
+.km-help-step-body {
+  margin-bottom: 6px;
+  line-height: 1.5;
+}
+
+/* ---------- FAQ accordion ---------- */
+
+.km-faq {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--km-border-soft);
+}
+
+.km-faq-item {
+  border-bottom: 1px solid var(--km-border-soft);
+}
+
+.km-faq-h {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.km-faq-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 4px;
+  text-align: left;
+  border-radius: 7px;
+  color: var(--km-text-2);
+  font-size: 12.5px;
+  font-weight: 600;
+  transition: background-color 140ms ease;
+}
+
+.km-faq-trigger:hover {
+  background: var(--km-green-50);
+}
+
+.km-faq-item.open .km-faq-trigger {
+  color: var(--km-green-800);
+}
+
+.km-faq-q {
+  min-width: 0;
+}
+
+.km-faq-chevron {
+  flex: none;
+  color: var(--km-subtle);
+  transition: transform 160ms ease;
+}
+
+.km-faq-trigger[aria-expanded="true"] .km-faq-chevron {
+  transform: rotate(180deg);
+  color: var(--km-green-700);
+}
+
+.km-faq-panel {
+  padding: 0 4px 12px 4px;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--km-muted);
+}
+
+.km-faq-panel[hidden] {
+  display: none;
+}
+
+/* ---------- system status ---------- */
+
+.km-status-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.km-status-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 9px 10px;
+  border: 1px solid var(--km-border-soft);
+  border-radius: 10px;
+  background: var(--km-surface-soft);
+}
+
+.km-status-row.down {
+  background: #fdf6f6;
+  border-color: rgba(217, 54, 54, 0.18);
+}
+
+.km-status-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: #fff;
+  color: var(--km-green-700);
+  border: 1px solid var(--km-border-soft);
+}
+
+.km-status-row.down .km-status-icon {
+  color: var(--km-red-700);
+}
+
+.km-status-main {
+  min-width: 0;
+  flex: 1;
+}
+
+.km-status-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 1px;
+}
+
+.km-status-label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--km-text-2);
+}
+
+/* keep model names and version strings from overflowing their panel on narrow widths */
+.km-help .km-footnote {
+  overflow-wrap: anywhere;
+}
+
+/* ---------- support panel ---------- */
+
+.km-help-support-lead {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--km-text-2);
+}
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 1099px) {
+  .km-help-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .km-help-step {
+    grid-template-columns: 24px minmax(0, 1fr);
+    gap: 9px;
+  }
+
+  .km-help-step:not(:last-child)::before {
+    left: 11.5px;
+  }
+
+  .km-help-step-num {
+    width: 24px;
+    height: 24px;
+  }
+}

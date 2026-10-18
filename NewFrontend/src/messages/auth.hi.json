@@ -1,0 +1,65 @@
+{
+  "auth": {
+    "guest": "मेहमान के रूप में जारी रखें",
+    "phoneLabel": "फ़ोन नंबर",
+    "phoneHint": "10 अंक, 6, 7, 8 या 9 से शुरू होने वाला।",
+    "passwordLabel": "पासवर्ड",
+    "passwordHint": "कम से कम 8 अक्षर।",
+    "nameLabel": "आपका नाम",
+    "roleLabel": "मैं हूँ",
+    "customerTypeLabel": "मैं खरीदता हूँ",
+    "languageLabel": "पसंदीदा भाषा",
+    "stateLabel": "राज्य",
+    "statePlaceholder": "अपना राज्य चुनें",
+    "districtLabel": "ज़िला",
+    "errNameRequired": "कृपया अपना नाम भरें।",
+    "errNameLong": "नाम 100 अक्षरों से अधिक नहीं होना चाहिए।",
+    "errPhoneRequired": "कृपया अपना फ़ोन नंबर भरें।",
+    "errPhoneFormat": "6, 7, 8 या 9 से शुरू होने वाला 10 अंकों का मोबाइल नंबर भरें।",
+    "errPhoneTaken": "यह फ़ोन नंबर पहले से पंजीकृत है। कृपया साइन इन करें।",
+    "errPasswordRequired": "कृपया अपना पासवर्ड भरें।",
+    "errPasswordShort": "पासवर्ड कम से कम 8 अक्षरों का होना चाहिए।",
+    "errPasswordLong": "पासवर्ड 128 अक्षरों से अधिक नहीं होना चाहिए।",
+    "errRoleRequired": "चुनें कि आप किसान हैं या खरीदार।",
+    "errCustomerTypeRequired": "चुनें कि आप खुदरा या थोक में खरीदते हैं।",
+    "errStateRequired": "कृपया अपना राज्य चुनें।",
+    "errDistrictRequired": "कृपया अपना ज़िला भरें।",
+    "errDistrictLong": "ज़िले का नाम 60 अक्षरों से अधिक नहीं होना चाहिए।",
+    "role": {
+      "farmer": "किसान",
+      "buyer": "खरीदार",
+      "buyerRetail": "खुदरा खरीदार",
+      "buyerWholesale": "थोक खरीदार",
+      "admin": "प्रशासक"
+    },
+    "customerType": {
+      "retail": "खुदरा",
+      "wholesale": "थोक"
+    },
+    "language": {
+      "en": "English",
+      "hi": "हिन्दी"
+    },
+    "login": {
+      "title": "साइन इन करें",
+      "subtitle": "फिर से स्वागत है। अपने किसान मित्र खाते में साइन इन करें।",
+      "continueNext": "साइन इन करने के बाद आप उसी पृष्ठ पर लौटेंगे जहाँ आप थे।",
+      "submit": "साइन इन करें",
+      "submitting": "साइन इन हो रहा है…",
+      "noAccount": "किसान मित्र पर नए हैं?",
+      "registerLink": "खाता बनाएँ",
+      "demoTitle": "डेमो खाते",
+      "demoNote": "डेमो खाते बैकएंड संचालक द्वारा बनाए जाते हैं। पासवर्ड संचालक तय करते हैं और यहाँ नहीं दिखाए जाते।"
+    },
+    "register": {
+      "title": "खाता बनाएँ",
+      "subtitle": "कुछ जानकारी दें और आपका कृषि डैशबोर्ड तैयार है।",
+      "farmerSub": "उपज बेचें और फ़सल जाँचें",
+      "buyerSub": "किसानों से सीधे उपज खरीदें",
+      "submit": "खाता बनाएँ",
+      "submitting": "खाता बन रहा है…",
+      "haveAccount": "पहले से खाता है?",
+      "loginLink": "साइन इन करें"
+    }
+  }
+}

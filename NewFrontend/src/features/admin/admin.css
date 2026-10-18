@@ -1,0 +1,343 @@
+/* Admin console — dense, professional tables with the shared km-* tokens. */
+
+.ka-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--km-gap);
+  min-width: 0;
+}
+
+/* ---------- tabs ---------- */
+
+.ka-tabs {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--km-border);
+  padding-bottom: 0;
+}
+
+.ka-tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--km-muted);
+  border-radius: 9px 9px 0 0;
+  border: 1px solid transparent;
+  border-bottom: none;
+  margin-bottom: -1px;
+}
+
+.ka-tab:hover {
+  color: var(--km-text);
+  background: var(--km-surface-soft);
+}
+
+.ka-tab[aria-selected="true"] {
+  color: var(--km-green-800);
+  background: var(--km-surface);
+  border-color: var(--km-border);
+  border-bottom: 1px solid var(--km-surface);
+}
+
+.ka-tab-count {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--km-muted);
+  background: var(--km-page-2);
+  border-radius: var(--km-radius-pill);
+  padding: 1px 7px;
+}
+
+.ka-tab[aria-selected="true"] .ka-tab-count {
+  background: var(--km-green-100);
+  color: var(--km-green-800);
+}
+
+/* ---------- table wrapper ---------- */
+
+.ka-table-wrap {
+  margin-top: 4px;
+}
+
+.ka-table {
+  width: 100%;
+}
+
+.ka-table th,
+.ka-table td {
+  vertical-align: top;
+}
+
+.ka-cell-title {
+  font-weight: 600;
+  color: var(--km-text);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.ka-cell-sub {
+  font-size: 11px;
+  color: var(--km-muted);
+  margin-top: 1px;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  max-width: 340px;
+}
+
+.ka-cell-nowrap {
+  white-space: nowrap;
+}
+
+.ka-row-actions {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: flex-end;
+  white-space: nowrap;
+}
+
+.ka-mono {
+  font-variant-numeric: tabular-nums;
+  font-size: 11.5px;
+  color: var(--km-text-2);
+}
+
+/* ---------- toolbar rows ---------- */
+
+.ka-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.ka-toolbar .km-field {
+  flex: 0 1 200px;
+  min-width: 150px;
+}
+
+.ka-toolbar-meta {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding-bottom: 8px;
+}
+
+/* ---------- forms ---------- */
+
+.ka-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.ka-form-grid .ka-span-2 {
+  grid-column: span 2;
+}
+
+@media (max-width: 767px) {
+  .ka-form-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ka-form-grid .ka-span-2 {
+    grid-column: span 1;
+  }
+}
+
+.ka-chip-input {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.ka-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 7px;
+}
+
+.ka-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: var(--km-radius-pill);
+  padding: 3px 5px 3px 9px;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--km-green-50);
+  border: 1px solid rgba(8, 115, 59, 0.18);
+  color: var(--km-green-800);
+}
+
+.ka-chip button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  color: var(--km-green-800);
+  background: rgba(8, 115, 59, 0.1);
+}
+
+.ka-chip button:hover {
+  background: rgba(8, 115, 59, 0.22);
+}
+
+.ka-checkbox-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 9px 10px;
+  border: 1px solid var(--km-border);
+  border-radius: 9px;
+  background: var(--km-surface-soft);
+}
+
+.ka-checkbox-row input {
+  margin-top: 1px;
+  accent-color: var(--km-green-700);
+  width: 15px;
+  height: 15px;
+}
+
+.ka-form-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--km-border-soft);
+}
+
+.ka-edit-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  background: #fcf7e7;
+  border: 1px solid rgba(196, 122, 6, 0.22);
+  border-radius: 9px;
+  padding: 7px 10px;
+  font-size: 11.5px;
+  color: #7c5a0b;
+  margin-bottom: 10px;
+}
+
+/* ---------- confirm row ---------- */
+
+.ka-confirm {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  background: #fdf6f6;
+  border: 1px solid rgba(217, 54, 54, 0.24);
+  border-radius: 9px;
+  padding: 7px 10px;
+  font-size: 11.5px;
+  color: var(--km-red-700);
+  margin: 6px 0;
+  max-width: 380px;
+}
+
+.ka-confirm-text {
+  flex: 1 1 160px;
+  min-width: 0;
+}
+
+.ka-confirm-text strong {
+  display: block;
+  font-size: 12px;
+}
+
+.ka-confirm-actions {
+  display: inline-flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* ---------- notices ---------- */
+
+.ka-notice {
+  border-radius: 9px;
+  padding: 8px 11px;
+  font-size: 11.5px;
+  font-weight: 600;
+  border: 1px solid transparent;
+}
+
+.ka-notice.good {
+  background: var(--km-green-50);
+  border-color: rgba(8, 115, 59, 0.2);
+  color: var(--km-green-800);
+}
+
+.ka-notice.bad {
+  background: #fdf6f6;
+  border-color: rgba(217, 54, 54, 0.28);
+  color: var(--km-red-700);
+}
+
+/* ---------- status pill ---------- */
+
+.ka-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.ka-status::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.75;
+}
+
+.ka-status.good {
+  color: var(--km-green-700);
+}
+
+.ka-status.bad {
+  color: var(--km-red-700);
+}
+
+.ka-status.warn {
+  color: #9a6408;
+}
+
+.ka-status.neutral {
+  color: var(--km-muted);
+}
+
+/* ---------- small helpers ---------- */
+
+.ka-note {
+  font-size: 11px;
+  color: var(--km-subtle);
+  margin-top: 7px;
+}
+
+.ka-section-gap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--km-gap);
+  min-width: 0;
+}

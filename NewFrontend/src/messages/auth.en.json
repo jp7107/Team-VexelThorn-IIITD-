@@ -1,0 +1,65 @@
+{
+  "auth": {
+    "guest": "Continue as guest",
+    "phoneLabel": "Phone number",
+    "phoneHint": "10 digits, starting with 6, 7, 8 or 9.",
+    "passwordLabel": "Password",
+    "passwordHint": "At least 8 characters.",
+    "nameLabel": "Your name",
+    "roleLabel": "I am a",
+    "customerTypeLabel": "I buy for",
+    "languageLabel": "Preferred language",
+    "stateLabel": "State",
+    "statePlaceholder": "Select your state",
+    "districtLabel": "District",
+    "errNameRequired": "Please enter your name.",
+    "errNameLong": "Name must be 100 characters or fewer.",
+    "errPhoneRequired": "Please enter your phone number.",
+    "errPhoneFormat": "Enter a 10-digit mobile number starting with 6, 7, 8 or 9.",
+    "errPhoneTaken": "This phone number is already registered. Try signing in instead.",
+    "errPasswordRequired": "Please enter your password.",
+    "errPasswordShort": "Password must be at least 8 characters.",
+    "errPasswordLong": "Password must be 128 characters or fewer.",
+    "errRoleRequired": "Choose whether you are a farmer or a buyer.",
+    "errCustomerTypeRequired": "Choose whether you buy at retail or wholesale.",
+    "errStateRequired": "Please select your state.",
+    "errDistrictRequired": "Please enter your district.",
+    "errDistrictLong": "District must be 60 characters or fewer.",
+    "role": {
+      "farmer": "Farmer",
+      "buyer": "Buyer",
+      "buyerRetail": "Retail buyer",
+      "buyerWholesale": "Wholesale buyer",
+      "admin": "Admin"
+    },
+    "customerType": {
+      "retail": "Retail",
+      "wholesale": "Wholesale"
+    },
+    "language": {
+      "en": "English",
+      "hi": "हिन्दी"
+    },
+    "login": {
+      "title": "Sign in",
+      "subtitle": "Welcome back. Sign in to your Kisan Mitra account.",
+      "continueNext": "You will return to the page you were on after signing in.",
+      "submit": "Sign in",
+      "submitting": "Signing in…",
+      "noAccount": "New to Kisan Mitra?",
+      "registerLink": "Create an account",
+      "demoTitle": "Demo accounts",
+      "demoNote": "Demo accounts are seeded by the backend operator. Passwords are set by the operator and are not shown here."
+    },
+    "register": {
+      "title": "Create an account",
+      "subtitle": "A few details and your farm dashboard is ready.",
+      "farmerSub": "Sell produce and check crops",
+      "buyerSub": "Find produce directly from farmers",
+      "submit": "Create account",
+      "submitting": "Creating account…",
+      "haveAccount": "Already have an account?",
+      "loginLink": "Sign in"
+    }
+  }
+}
