@@ -1,0 +1,21 @@
+flowchart TB
+    subgraph clients [Clients]
+        F["Farmer app<br/>installable PWA, Hindi / English"]
+        B["Buyer app<br/>retail and wholesale"]
+        A["Admin console"]
+    end
+
+    F & B & A --> N["Next.js 16 · React 19 · Tailwind 4<br/>/api rewrite keeps the session cookie same-origin"]
+    N --> API["FastAPI · 12 routers<br/>role checked on every route, rate limited"]
+
+    API --> ML["ONNX Runtime<br/>disease model, CPU"]
+    API --> AS["Assistant orchestrator<br/>6 read-only tools"]
+    API --> DB[("PostgreSQL 16<br/>SQLAlchemy + Alembic")]
+    AS --> DB
+
+    AS -.-> G["Groq LLM API"]
+    API -.-> DG["data.gov.in mandi prices"]
+    API -.-> OM["Open-Meteo forecast"]
+    API -.-> RZ["Razorpay, test mode"]
+
+    T["ml/ offline training<br/>PlantVillage → ONNX"] -. "model file + SHA-256" .-> ML

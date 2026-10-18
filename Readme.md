@@ -41,29 +41,7 @@ It is a working app, not a mock-up. Every screenshot below comes from this repos
 
 ## Architecture
 
-```mermaid
-flowchart TB
-    subgraph clients [Clients]
-        F["Farmer app<br/>installable PWA, Hindi / English"]
-        B["Buyer app<br/>retail and wholesale"]
-        A["Admin console"]
-    end
-
-    F & B & A --> N["Next.js 16 · React 19 · Tailwind 4<br/>/api rewrite keeps the session cookie same-origin"]
-    N --> API["FastAPI · 12 routers<br/>role checked on every route, rate limited"]
-
-    API --> ML["ONNX Runtime<br/>disease model, CPU"]
-    API --> AS["Assistant orchestrator<br/>6 read-only tools"]
-    API --> DB[("PostgreSQL 16<br/>SQLAlchemy + Alembic")]
-    AS --> DB
-
-    AS -.-> G["Groq LLM API"]
-    API -.-> DG["data.gov.in mandi prices"]
-    API -.-> OM["Open-Meteo forecast"]
-    API -.-> RZ["Razorpay, test mode"]
-
-    T["ml/ offline training<br/>PlantVillage → ONNX"] -. "model file + SHA-256" .-> ML
-```
+<p align="center"><img src="docs/diagrams/architecture.png" alt="Architecture: clients, Next.js, FastAPI, model, assistant, Postgres and external services" width="100%"></p>
 
 A few decisions worth explaining:
 
@@ -74,19 +52,7 @@ A few decisions worth explaining:
 
 ## From a leaf photo to a report
 
-```mermaid
-flowchart TB
-    P["Leaf photo<br/>+ crop chosen"] --> Q{"Sharp and<br/>bright enough?"}
-    Q -- no --> R["rejected_quality<br/>ask for a retake"]
-    Q -- yes --> M["MobileNetV2 + logistic head<br/>ONNX on CPU"]
-    M --> C["Temperature scaling<br/>T = 2.01"]
-    C --> D{"Calibrated<br/>confidence"}
-    D -- "below 0.30" --> U["unsupported<br/>no guess shown"]
-    D -- "0.30 to 0.47, a second disease<br/>at 0.30+, or a different crop" --> UN["uncertain<br/>top guesses, ask for more"]
-    D -- "0.47 or more" --> OK["ok"]
-    OK --> REP["Report<br/>LLM JSON checked by Pydantic"]
-    REP -. "LLM off or failing" .-> TPL["Bilingual templates"]
-```
+<p align="center"><img src="docs/diagrams/leaf-check-flow.png" alt="Flowchart from leaf photo through quality gate, model and confidence thresholds to the report" width="520"></p>
 
 The thresholds aren't guesses. They were picked on the validation split after calibration, and they live in [`backend/app/ml/model/model.json`](backend/app/ml/model/model.json) next to the model's SHA-256. The report can explain the prediction but can never change it.
 
@@ -108,20 +74,7 @@ Trained in this repo by [`ml/baseline_b0.py`](ml/baseline_b0.py). Numbers come f
 
 ## Orders and payments
 
-```mermaid
-stateDiagram-v2
-    [*] --> awaiting_payment: farmer accepts enquiry, stock reserved
-    awaiting_payment --> paid: Razorpay, signature verified
-    awaiting_payment --> payment_submitted: buyer sends UPI ref or chooses cash
-    payment_submitted --> paid: farmer confirms
-    payment_submitted --> awaiting_payment: farmer rejects
-    paid --> dispatched: farmer
-    dispatched --> delivered: buyer
-    paid --> delivered: collected in person
-    awaiting_payment --> cancelled: cancelled, or unpaid past the admin's limit
-    payment_submitted --> cancelled: cancelled
-    delivered --> [*]: buyer can rate the farmer once
-```
+<p align="center"><img src="docs/diagrams/order-states.png" alt="Order states from awaiting payment to delivered or cancelled" width="680"></p>
 
 Every transition is checked against one table (`TRANSITIONS` in [`orders.py`](backend/app/routers/orders.py)), so only the right person can move an order. Cancelling returns the stock to the listing. Paying issues a receipt number like `KM-2026-000001`. The farmer's phone number is shown to a buyer only after their enquiry is accepted.
 
@@ -230,7 +183,7 @@ frontend/
   components/      shared UI, charts, admin panels
   messages/        en.json, hi.json (every user-facing string)
 ml/                data prep, training, ONNX export, run metrics, split manifest
-docs/              data sources, screenshots
+docs/              data sources, screenshots, diagrams (PNG + Mermaid source)
 ```
 
 ## What's next

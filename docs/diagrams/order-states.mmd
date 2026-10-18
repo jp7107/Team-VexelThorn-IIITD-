@@ -1,0 +1,12 @@
+stateDiagram-v2
+    [*] --> awaiting_payment: farmer accepts enquiry, stock reserved
+    awaiting_payment --> paid: Razorpay, signature verified
+    awaiting_payment --> payment_submitted: buyer sends UPI ref or chooses cash
+    payment_submitted --> paid: farmer confirms
+    payment_submitted --> awaiting_payment: farmer rejects
+    paid --> dispatched: farmer
+    dispatched --> delivered: buyer
+    paid --> delivered: collected in person
+    awaiting_payment --> cancelled: cancelled or unpaid too long
+    payment_submitted --> cancelled: cancelled
+    delivered --> [*]: buyer can rate the farmer once

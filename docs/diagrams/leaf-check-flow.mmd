@@ -1,0 +1,11 @@
+flowchart TB
+    P["Leaf photo<br/>+ crop chosen"] --> Q{"Sharp and<br/>bright enough?"}
+    Q -- no --> R["rejected_quality<br/>ask for a retake"]
+    Q -- yes --> M["MobileNetV2 + logistic head<br/>ONNX on CPU"]
+    M --> C["Temperature scaling<br/>T = 2.01"]
+    C --> D{"Calibrated<br/>confidence"}
+    D -- "below 0.30" --> U["unsupported<br/>no guess shown"]
+    D -- "0.30 to 0.47, a second disease<br/>at 0.30+, or a different crop" --> UN["uncertain<br/>top guesses, ask for more"]
+    D -- "0.47 or more" --> OK["ok"]
+    OK --> REP["Report<br/>LLM JSON checked by Pydantic"]
+    REP -. "LLM off or failing" .-> TPL["Bilingual templates"]
