@@ -25,6 +25,8 @@ export type Crop = {
   created_at: string;
 };
 
+export type CropUpdate = { id: string; condition: "good" | "concern" | "bad"; note: string | null; created_at: string };
+
 export type Reminder = {
   id: string;
   title: string;

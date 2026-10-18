@@ -1,6 +1,7 @@
 "use client";
 
 // Minimal home so onboarding has somewhere to land. The full dashboard is plan task FE-03.
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CROP_ICONS, SproutIcon } from "@/components/icons";
@@ -91,15 +92,18 @@ export default function FarmerHome() {
             {crops.map((c) => {
               const Icon = CROP_ICONS[c.crop_code] ?? SproutIcon;
               return (
-                <li key={c.id} className="flex items-center gap-4 rounded-xl border-2 border-line px-4 py-3">
-                  <Icon className="size-10 shrink-0 text-field" />
-                  <span>
-                    <span className="block text-lg font-extrabold">{cropName(c.crop_code)}</span>
-                    <span className="block text-base text-muted">
-                      {t(`stages.${c.stage}`)}, {t("home.sownOn", { date: dateFmt.format(new Date(c.sowing_date)) })},{" "}
-                      {t("home.acres", { area: Number(c.area_acres) })}
+                <li key={c.id}>
+                  <Link href={`/farmer/crops/${c.id}`}
+                    className="flex items-center gap-4 rounded-xl border-2 border-line px-4 py-3 hover:border-ink">
+                    <Icon className="size-10 shrink-0 text-field" />
+                    <span>
+                      <span className="block text-lg font-extrabold">{cropName(c.crop_code)}</span>
+                      <span className="block text-base text-muted">
+                        {t(`stages.${c.stage}`)}, {t("home.sownOn", { date: dateFmt.format(new Date(c.sowing_date)) })},{" "}
+                        {t("home.acres", { area: Number(c.area_acres) })}
+                      </span>
                     </span>
-                  </span>
+                  </Link>
                 </li>
               );
             })}

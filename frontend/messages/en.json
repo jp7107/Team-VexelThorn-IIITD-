@@ -438,5 +438,27 @@
     "open": "Open",
     "closed": "Closed",
     "link": "Help"
+  },
+  "crop": {
+    "notFound": "This crop was not found.",
+    "howIsIt": "How does the crop look today?",
+    "cond": {
+      "good": "Looks good",
+      "concern": "Something looks off",
+      "bad": "Looks bad"
+    },
+    "noteLabel": "What did you see? (optional)",
+    "noteHint": "For example: yellow leaves, spots, wilting.",
+    "save": "Save update",
+    "saved": "Update saved.",
+    "checkPhoto": "Check with a photo",
+    "history": "Past updates",
+    "noHistory": "No updates yet. Tap one above to start.",
+    "reminders": "Reminders for this crop",
+    "noReminders": "No reminders for this crop.",
+    "remindCheck": "Check again in 3 days",
+    "remindWater": "Water check in 7 days",
+    "remindCheckTitle": "Check crop condition",
+    "remindWaterTitle": "Check irrigation need"
   }
 }

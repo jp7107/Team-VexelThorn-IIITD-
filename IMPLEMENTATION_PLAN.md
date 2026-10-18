@@ -1098,7 +1098,7 @@ Status values: `Not Started` · `In Progress` · `Blocked` · `Done`. **Everythi
 | BE-03 | Seed script (users, classes, demo data) | P0 | M1 | M4 | BE-01 | 0.5 | H5–5.5 | Done | `python -m app.seed` idempotent | — |
 | DEP-01 | Backend + Neon deploy (Dockerfile, env, migrations on release) | P0 | M1 | — | BE-02 | 1.0 | H5.5–6.5 | Not Started | `/readyz` 200 in prod over HTTPS | Alternate host (CP2) |
 | BE-07 | 6 retrieval tools + executor + role filter + audit | P0 | M1 | M2 | BE-01 | 2.0 | H7.5–9.5 | Done | BE-T5 (scoping), BE-T6 (injection args) | Cut to 4 tools (drop `search_schemes`, `get_my_crops`) |
-| BE-09 | Reminders, crop updates, support tickets API + public content reads (`/schemes`, `/updates`, `/kb`) | P1 | M1 | M3, M4 | BE-02 | 1.0 | H13–14 | In Progress | CRUD tests, owner checks | Crop updates without photo |
+| BE-09 | Reminders, crop updates, support tickets API + public content reads (`/schemes`, `/updates`, `/kb`) | P1 | M1 | M3, M4 | BE-02 | 1.0 | H13–14 | Done | CRUD tests, owner checks | Crop updates without photo |
 | BE-06 | Wire real `predict` + model load at startup + timeout | P0 | M1 | M2 | ML-03 | 1.0 | H9.5–10.5 | Done | ML-T1/T2 on deployed backend; latency logged | F-ML-3 |
 | BE-08 | Rate limits (login, analyses, chat), size limits, security headers, CORS lock | P0 | M1 | — | BE-02 | 1.0 | H14–15 | Done | BE-T7 (429s) | Login + chat limits only |
 | BE-10 | Backend tests: auth, role isolation, IDOR, tools scoping, contracts | P0 | M1 | All | BE-* | 2.0 | H15–17 | Not Started | `pytest -q` green in CI | Keep P0 tests only (§20.1) |
@@ -1119,7 +1119,7 @@ Status values: `Not Started` · `In Progress` · `Blocked` · `Done`. **Everythi
 | FE-04 | Diagnose flow: crop pick, capture, client resize, all result states, photo tips | P0 | M3 | M2 | BE-05 | 2.5 | H6.5–9 | Done | FE-T2/T3 | — |
 | FE-05 | Report view + "Ask about this" | P0 | M3 | M2 | LLM-02 (fixtures until H10.5) | 1.5 | H9–10.5 | Done | Evidence and `llm_general` labels visible | — |
 | FE-06 | Chat UI: evidence chips, follow-ups, Hindi, thinking/timeout states | P0 | M3 | M2 | LLM-03 (fixtures until H13) | 2.5 | H10.5–13 | Done | FE-T4 | Plain text answers without chips |
-| FE-07 | Reminders + crop updates UI | P1 | M3 | M1 | BE-09 | 1.0 | H16–17 | Not Started | Due reminder visible on dashboard | Reminders only |
+| FE-07 | Reminders + crop updates UI | P1 | M3 | M1 | BE-09 | 1.0 | H16–17 | Done | Due reminder visible on dashboard | Reminders only |
 | FE-08 | Irrigation card | P1 | M3 | M1 | AG-01 | 1.0 | H13–14 | Done | Shows estimate label + sources | Text only |
 | FE-09 | Schemes + updates read pages | P1 | M3 | M4 | CNT-02, BE-09 (fixtures until H14) | 0.5 | H14–14.5 | Done | Official link + verified date visible | Updates list only |
 | MKT-01 | Price source verification, API key, snapshot, demo labelling plan | P0 | M4 | — | S-01 | 1.0 | H1–2 | In Progress | `docs/DATA_SOURCES.md` prices section | Demo rows labelled |

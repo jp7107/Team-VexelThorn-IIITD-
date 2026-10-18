@@ -13,7 +13,7 @@ from sqlalchemy.orm import Session
 from app.core.db import get_db
 from app.core.errors import AppError
 from app.core.security import current_user, require_role
-from app.models import CROP_STAGES, FarmCrop, Reminder, User
+from app.models import CROP_STAGES, CropUpdate, FarmCrop, Reminder, User
 from app.routers.auth import Place, UserOut
 
 router = APIRouter(prefix="/me", tags=["me"])
@@ -83,6 +83,11 @@ def add_crop(body: CropIn, user: User = Depends(farmer), db: Session = Depends(g
     return crop
 
 
+@router.get("/crops/{crop_id}", response_model=CropOut)
+def get_crop(crop_id: UUID, user: User = Depends(farmer), db: Session = Depends(get_db)):
+    return owned_crop(db, crop_id, user)
+
+
 @router.patch("/crops/{crop_id}", response_model=CropOut)
 def update_crop(crop_id: UUID, body: CropPatch, user: User = Depends(farmer), db: Session = Depends(get_db)):
     crop = owned_crop(db, crop_id, user)
@@ -99,6 +104,36 @@ def delete_crop(crop_id: UUID, user: User = Depends(farmer), db: Session = Depen
     db.delete(owned_crop(db, crop_id, user))
     db.commit()
     return Response(status_code=204)
+
+
+class CropUpdateIn(BaseModel):
+    condition: Literal["good", "concern", "bad"]
+    note: str | None = Field(None, max_length=500)
+
+
+class CropUpdateOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: UUID
+    condition: str
+    note: str | None
+    created_at: datetime
+
+
+@router.get("/crops/{crop_id}/updates", response_model=list[CropUpdateOut])
+def list_crop_updates(crop_id: UUID, user: User = Depends(farmer), db: Session = Depends(get_db)):
+    crop = owned_crop(db, crop_id, user)
+    q = select(CropUpdate).where(CropUpdate.farm_crop_id == crop.id).order_by(CropUpdate.created_at.desc())
+    return db.scalars(q.limit(50)).all()
+
+
+@router.post("/crops/{crop_id}/updates", status_code=201, response_model=CropUpdateOut)
+def add_crop_update(crop_id: UUID, body: CropUpdateIn, user: User = Depends(farmer), db: Session = Depends(get_db)):
+    crop = owned_crop(db, crop_id, user)
+    note = body.note.strip() if body.note and body.note.strip() else None
+    update = CropUpdate(farm_crop_id=crop.id, condition=body.condition, note=note)
+    db.add(update)
+    db.commit()
+    return update
 
 
 class ReminderIn(BaseModel):
