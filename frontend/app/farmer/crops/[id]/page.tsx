@@ -82,7 +82,7 @@ function CropView() {
   const timeFmt = new Intl.DateTimeFormat(locale, { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" });
 
   return (
-    <Screen back="/farmer">
+    <Screen back="/farmer" title={crop.crop_code in CROP_ICONS ? t(`crops.${crop.crop_code}`) : crop.crop_code}>
       <div className="mb-6 flex items-center gap-4">
         <Icon className="size-14 shrink-0 text-field" />
         <div>
@@ -98,7 +98,7 @@ function CropView() {
       <FormError message={error} />
 
       <section className="mb-8">
-        <h2 className="mb-3 text-xl font-extrabold text-ink">{t("crop.howIsIt")}</h2>
+        <h2 className="mb-3 text-base font-semibold text-ink">{t("crop.howIsIt")}</h2>
         <div className="mb-4 flex flex-col gap-2">
           {CONDITIONS.map((c) => (
             <ChoiceTile key={c} selected={condition === c} label={t(`crop.cond.${c}`)}
@@ -122,17 +122,17 @@ function CropView() {
       </section>
 
       <section className="mb-8">
-        <h2 className="mb-3 text-xl font-extrabold text-ink">{t("crop.history")}</h2>
+        <h2 className="mb-3 text-base font-semibold text-ink">{t("crop.history")}</h2>
         {updates.length === 0 ? (
-          <p className="text-lg text-muted">{t("crop.noHistory")}</p>
+          <p className="text-base text-muted">{t("crop.noHistory")}</p>
         ) : (
           <ol className="flex flex-col gap-3 border-l-2 border-line pl-4">
             {updates.map((u) => (
               <li key={u.id} className="relative">
                 <span className={`absolute -left-[1.45rem] top-1.5 size-3 rounded-full ${DOT[u.condition]}`} />
-                <span className="block text-lg font-extrabold">{t(`crop.cond.${u.condition}`)}</span>
+                <span className="block text-base font-bold">{t(`crop.cond.${u.condition}`)}</span>
                 <span className="block text-base text-muted">{timeFmt.format(new Date(u.created_at))}</span>
-                {u.note && <span className="block text-lg">{u.note}</span>}
+                {u.note && <span className="block text-base">{u.note}</span>}
               </li>
             ))}
           </ol>
@@ -140,19 +140,19 @@ function CropView() {
       </section>
 
       <section className="mb-8">
-        <h2 className="mb-3 text-xl font-extrabold text-ink">{t("crop.reminders")}</h2>
+        <h2 className="mb-3 text-base font-semibold text-ink">{t("crop.reminders")}</h2>
         {reminders.length === 0 ? (
-          <p className="mb-3 text-lg text-muted">{t("crop.noReminders")}</p>
+          <p className="mb-3 text-base text-muted">{t("crop.noReminders")}</p>
         ) : (
           <ul className="mb-3 flex flex-col gap-2">
             {reminders.map((r) => (
               <li key={r.id} className="flex items-center justify-between gap-3 rounded-xl bg-haldi-soft px-4 py-3">
                 <span>
-                  <span className="block text-lg font-semibold">{r.title}</span>
+                  <span className="block text-base font-semibold">{r.title}</span>
                   <span className="block text-base text-muted">{dayFmt.format(new Date(r.due_at))}</span>
                 </span>
                 <button type="button" onClick={() => markDone(r.id)}
-                  className="min-h-11 shrink-0 rounded-lg border-2 border-ink px-3 font-extrabold text-ink">
+                  className="min-h-11 shrink-0 rounded-lg border border-white/30 px-3 font-bold text-ink">
                   {t("home.markDone")}
                 </button>
               </li>
@@ -160,8 +160,8 @@ function CropView() {
           </ul>
         )}
         <div className="grid grid-cols-2 gap-3">
-          <Button variant="secondary" onClick={() => remind("crop.remindCheckTitle", 3)}>{t("crop.remindCheck")}</Button>
-          <Button variant="secondary" onClick={() => remind("crop.remindWaterTitle", 7)}>{t("crop.remindWater")}</Button>
+          <Button variant="secondary" className="min-h-11 px-2 text-sm leading-tight" onClick={() => remind("crop.remindCheckTitle", 3)}>{t("crop.remindCheck")}</Button>
+          <Button variant="secondary" className="min-h-11 px-2 text-sm leading-tight" onClick={() => remind("crop.remindWaterTitle", 7)}>{t("crop.remindWater")}</Button>
         </div>
       </section>
 

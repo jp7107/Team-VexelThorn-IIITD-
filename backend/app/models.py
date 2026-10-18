@@ -19,8 +19,11 @@ ANALYSIS_STATUSES = ("ok", "uncertain", "unsupported", "rejected_quality", "erro
 # "mock" exists so a stand-in model can never be shown as a real one (plan §17.2 CP4).
 PROVENANCES = ("trained_in_house", "third_party_pretrained", "mock")
 UNITS = ("kg", "quintal", "tonne", "dozen")
-LISTING_STATUSES = ("open", "closed", "hidden")
+LISTING_STATUSES = ("open", "closed", "hidden", "sold_out")
 ENQUIRY_STATUSES = ("pending", "accepted", "declined", "withdrawn")
+# awaiting_payment -> payment_submitted (UPI/cash, farmer to confirm) -> paid -> dispatched -> delivered; or cancelled.
+ORDER_STATUSES = ("awaiting_payment", "payment_submitted", "paid", "dispatched", "delivered", "cancelled")
+PAYMENT_METHODS = ("online", "upi", "cash")
 
 
 def enum(name: str, *values: str) -> Enum:
@@ -63,6 +66,8 @@ class User(Base):
     district: Mapped[str] = mapped_column(String(60))
     lat: Mapped[float | None] = mapped_column(Float)
     lon: Mapped[float | None] = mapped_column(Float)
+    upi_id: Mapped[str | None] = mapped_column(String(60))  # farmers: where buyers pay directly
+    is_active: Mapped[bool] = mapped_column(default=True, server_default=text("true"))  # admins can block
     created_at: Mapped[datetime] = created()
 
 
@@ -214,7 +219,8 @@ class Update(Base):
 class Listing(Base):
     __tablename__ = "listings"
     __table_args__ = (
-        CheckConstraint("quantity > 0", name="quantity_positive"),
+        # Available stock: accepted orders take it down, so it may reach 0 (status sold_out).
+        CheckConstraint("quantity >= 0", name="quantity_non_negative"),
         CheckConstraint("price_per_unit IS NULL OR price_per_unit >= 0", name="price_non_negative"),
         Index("ix_listings_browse", "crop_code", "state", "status"),
     )
@@ -305,3 +311,59 @@ class AssistantAudit(Base):
     llm_status: Mapped[str] = mapped_column(String(20))
     latency_ms: Mapped[int] = mapped_column(Integer)
     created_at: Mapped[datetime] = created()
+
+
+class Order(Base):
+    """A sale: created when the farmer accepts an enquiry. Prices are copied in so the receipt never changes."""
+    __tablename__ = "orders"
+    __table_args__ = (
+        CheckConstraint("quantity > 0", name="order_quantity_positive"),
+        CheckConstraint("subtotal >= 0 AND platform_fee >= 0 AND total >= 0", name="order_amounts_non_negative"),
+    )
+    id: Mapped[uuid.UUID] = pk()
+    enquiry_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("enquiries.id", ondelete="RESTRICT"), unique=True)
+    listing_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("listings.id", ondelete="RESTRICT"), index=True)
+    buyer_id: Mapped[uuid.UUID] = user_fk(ondelete="RESTRICT")
+    farmer_id: Mapped[uuid.UUID] = user_fk(ondelete="RESTRICT")
+    crop_code: Mapped[str] = mapped_column(String(30))
+    title: Mapped[str] = mapped_column(String(120))
+    unit: Mapped[str] = mapped_column(enum("order_unit", *UNITS))
+    quantity: Mapped[Decimal] = mapped_column(Numeric(12, 2))
+    price_per_unit: Mapped[Decimal] = mapped_column(Numeric(12, 2))
+    subtotal: Mapped[Decimal] = mapped_column(Numeric(14, 2))
+    platform_fee: Mapped[Decimal] = mapped_column(Numeric(14, 2))
+    total: Mapped[Decimal] = mapped_column(Numeric(14, 2))
+    status: Mapped[str] = mapped_column(enum("order_status", *ORDER_STATUSES), server_default="awaiting_payment",
+                                        index=True)
+    payment_method: Mapped[str | None] = mapped_column(enum("payment_method", *PAYMENT_METHODS))
+    payment_ref: Mapped[str | None] = mapped_column(String(100))  # gateway payment id or UPI transaction ref
+    gateway_order_id: Mapped[str | None] = mapped_column(String(60), index=True)
+    receipt_no: Mapped[str | None] = mapped_column(String(30), unique=True)
+    cancelled_by: Mapped[str | None] = mapped_column(String(10))
+    cancel_reason: Mapped[str | None] = mapped_column(String(300))
+    created_at: Mapped[datetime] = created()
+    paid_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    dispatched_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    delivered_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    cancelled_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class PlatformSetting(Base):
+    """Admin-editable parameters (app.core.platform validates and supplies defaults)."""
+    __tablename__ = "platform_settings"
+    key: Mapped[str] = mapped_column(String(60), primary_key=True)
+    value: Mapped[dict] = mapped_column(JSONB)
+    updated_at: Mapped[datetime] = created()
+    updated_by: Mapped[uuid.UUID | None] = user_fk(ondelete="SET NULL", nullable=True, index=False)
+
+
+class CropType(Base):
+    """Crop catalogue the admin maintains: names, the AGMARKNET commodity, and whether it can be sold."""
+    __tablename__ = "crop_catalogue"
+    code: Mapped[str] = mapped_column(String(30), primary_key=True)
+    name_en: Mapped[str] = mapped_column(String(60))
+    name_hi: Mapped[str] = mapped_column(String(60))
+    mandi_commodity: Mapped[str | None] = mapped_column(String(80))
+    marketplace: Mapped[bool] = mapped_column(default=True, server_default=text("true"))
+    active: Mapped[bool] = mapped_column(default=True, server_default=text("true"))
+    sort_order: Mapped[int] = mapped_column(SmallInteger, default=0, server_default=text("0"))

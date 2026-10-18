@@ -232,27 +232,6 @@ def delete_kb(article_id: UUID, user: User = Depends(admin), db: Session = Depen
 
 # --- moderation and users ---
 
-class UserRow(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-    id: UUID
-    name: str
-    role: str
-    customer_type: str | None
-    state: str
-    district: str
-    created_at: datetime
-
-
-@router.get("/admin/users", response_model=list[UserRow])
-def admin_users(role: Literal["farmer", "customer", "admin"] | None = None, user: User = Depends(admin),
-                db: Session = Depends(get_db)):
-    # Phone numbers are deliberately not listed: moderation doesn't need them.
-    q = select(User).order_by(User.created_at.desc()).limit(200)
-    if role:
-        q = q.where(User.role == role)
-    return db.scalars(q).all()
-
-
 @router.get("/admin/listings", response_model=list[ListingOut])
 def admin_listings(status: Literal["open", "closed", "hidden"] | None = None, user: User = Depends(admin),
                    db: Session = Depends(get_db)):

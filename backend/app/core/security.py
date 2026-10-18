@@ -54,6 +54,8 @@ def current_user(request: Request, db: Session = Depends(get_db)) -> User:
         raise AppError(401, "Session invalid or expired")
     if user is None:
         raise AppError(401, "Session invalid or expired")
+    if not user.is_active:
+        raise AppError(403, "This account has been blocked. Contact support.", code="ACCOUNT_BLOCKED")
     return user
 
 

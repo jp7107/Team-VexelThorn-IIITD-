@@ -4,7 +4,9 @@ from fastapi import FastAPI, Request
 
 from app.core import errors
 from app.core.config import get_settings
-from app.routers import analyses, assistant, auth, content, irrigation, marketplace, me, ops, prices, support
+from app.routers import (
+    admin, analyses, assistant, auth, content, irrigation, marketplace, me, ops, orders, prices, support,
+)
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
 
@@ -37,5 +39,5 @@ async def security_headers(request: Request, call_next):
 errors.install(app)
 
 for router in (ops.router, auth.router, me.router, analyses.router, assistant.router, marketplace.router,
-               prices.router, content.router, irrigation.router, support.router):
+               prices.router, content.router, irrigation.router, support.router, orders.router, admin.router):
     app.include_router(router, prefix="/api/v1")

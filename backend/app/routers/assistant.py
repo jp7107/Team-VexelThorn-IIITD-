@@ -9,6 +9,7 @@ from app.assistant import chat
 from app.core import ratelimit
 from app.core.db import get_db
 from app.core.errors import AppError
+from app.core.platform import get_config
 from app.core.security import current_user
 from app.models import Analysis, User
 
@@ -53,6 +54,8 @@ class ChatOut(BaseModel):
 @router.post("/chat", response_model=ChatOut,
              dependencies=[Depends(ratelimit.per_user("chat", (10, 60), (100, 86400)))])
 def assistant_chat(body: ChatIn, request: Request, user: User = Depends(current_user), db: Session = Depends(get_db)):
+    if not get_config(db).assistant_enabled:
+        raise AppError(503, "The assistant is switched off right now", code="ASSISTANT_OFF")
     analysis = None
     if body.analysis_id:
         analysis = db.get(Analysis, body.analysis_id)

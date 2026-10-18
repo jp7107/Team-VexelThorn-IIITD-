@@ -1,13 +1,22 @@
-"""Idempotent seed: disease classes plus one demo account per role.
+"""Idempotent setup. By default it adds nothing but what the app needs to run:
 
-Run: python -m app.seed   (needs SEED_DEMO_PASSWORD in the environment or .env)
+  python -m app.seed                   disease classes (from the model's labels) and, if ADMIN_PHONE and
+                                       ADMIN_PASSWORD are set, the first admin account
+  python -m app.seed --content         also load the verified starter schemes and knowledge-base articles
+                                       (admins can edit or delete them afterwards)
+  python -m app.seed --demo            also add demo users, [DEMO] listings and labelled demo prices
+                                       (needs SEED_DEMO_PASSWORD; for local testing only)
+  python -m app.seed --purge-demo      remove every demo account, [DEMO] listing and demo price row
+
+Everything else (crops, settings, prices, schemes, updates, articles) is maintained from the admin console.
 """
 
+import argparse
 import sys
 from datetime import date
 from decimal import Decimal
 
-from sqlalchemy import select
+from sqlalchemy import delete, select
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 
@@ -16,7 +25,8 @@ from app.core.db import SessionLocal
 from app.core.security import hash_password
 from app.kb_articles import KB_ARTICLES, PRODUCTIVITY_ARTICLES
 from app.ml.inference import labels
-from app.models import DiseaseClass, KbArticle, Listing, MarketPrice, Scheme, User
+
+from app.models import DiseaseClass, Enquiry, KbArticle, Listing, MarketPrice, Order, Scheme, User
 
 DEMO_USERS = [
     {"phone": "9000000001", "name": "Demo Admin", "role": "admin", "customer_type": None},
@@ -27,11 +37,33 @@ DEMO_USERS = [
 ]
 
 
-def seed(db: Session, password: str) -> None:
+def seed_required(db: Session) -> list[str]:
+    done = []
     for c in labels():
         row = {k: c[k] for k in ("code", "crop_code", "name_en", "name_hi", "is_healthy")}
         db.execute(insert(DiseaseClass).values(**row)
                    .on_conflict_do_update(index_elements=["code"], set_=row))
+    done.append(f"{len(labels())} disease classes")
+    s = get_settings()
+    if s.ADMIN_PHONE and s.ADMIN_PASSWORD:
+        if len(s.ADMIN_PASSWORD) < 8:
+            sys.exit("ADMIN_PASSWORD must be at least 8 characters.")
+        db.execute(insert(User).values(phone=s.ADMIN_PHONE, name=s.ADMIN_NAME, role="admin",
+                                       password_hash=hash_password(s.ADMIN_PASSWORD), language="en",
+                                       state="Delhi", district="New Delhi")
+                   .on_conflict_do_nothing(index_elements=["phone"]))
+        done.append(f"admin {s.ADMIN_PHONE}")
+    db.commit()
+    return done
+
+
+def seed_content(db: Session) -> None:
+    _seed_schemes(db)
+    _seed_kb(db)
+    db.commit()
+
+
+def seed_demo(db: Session, password: str) -> None:
     password_hash = hash_password(password)
     for u in DEMO_USERS:
         db.execute(insert(User).values(**u, password_hash=password_hash, language="hi",
@@ -40,9 +72,25 @@ def seed(db: Session, password: str) -> None:
     db.flush()
     _seed_demo_listings(db)
     _seed_demo_prices(db)
-    _seed_schemes(db)
-    _seed_kb(db)
     db.commit()
+
+
+def purge_demo(db: Session) -> dict[str, int]:
+    # Admins are kept so the console stays reachable; replace them via ADMIN_PHONE and block the demo one.
+    demo_ids = list(db.scalars(select(User.id).where(User.phone.in_([u["phone"] for u in DEMO_USERS]),
+                                                     User.role != "admin")))
+    demo_listings = select(Listing.id).where(Listing.title.like("[DEMO]%") | Listing.farmer_id.in_(demo_ids))
+    touched = Order.listing_id.in_(demo_listings) | Order.buyer_id.in_(demo_ids) | Order.farmer_id.in_(demo_ids)
+    counts = {
+        "orders": db.execute(delete(Order).where(touched)).rowcount,
+        "enquiries": db.execute(delete(Enquiry).where(Enquiry.listing_id.in_(demo_listings)
+                                                      | Enquiry.buyer_id.in_(demo_ids))).rowcount,
+        "listings": db.execute(delete(Listing).where(Listing.id.in_(demo_listings))).rowcount,
+        "users": db.execute(delete(User).where(User.id.in_(demo_ids))).rowcount,
+        "prices": db.execute(delete(MarketPrice).where(MarketPrice.is_demo.is_(True))).rowcount,
+    }
+    db.commit()
+    return counts
 
 
 # Visibly labelled so nobody mistakes them for real produce (plan §7).
@@ -140,9 +188,23 @@ def _seed_kb(db: Session) -> None:
 
 
 if __name__ == "__main__":
-    password = get_settings().SEED_DEMO_PASSWORD
-    if len(password) < 8:
-        sys.exit("Set SEED_DEMO_PASSWORD (min 8 characters) before seeding.")
+    parser = argparse.ArgumentParser(description="Set up the database (see the module docstring).")
+    parser.add_argument("--content", action="store_true", help="load verified starter schemes and articles")
+    parser.add_argument("--demo", action="store_true", help="add demo users, listings and prices (testing only)")
+    parser.add_argument("--purge-demo", action="store_true", help="remove all demo data")
+    args = parser.parse_args()
     with SessionLocal() as session:
-        seed(session, password)
-    print(f"Seeded {len(labels())} disease classes, {len(DEMO_USERS)} demo users, demo listings and prices, verified schemes, {len(KB_ARTICLES) + len(PRODUCTIVITY_ARTICLES)} sourced KB articles.")
+        if args.purge_demo:
+            print("Removed demo data:", purge_demo(session))
+            sys.exit()
+        done = seed_required(session)
+        if args.content:
+            seed_content(session)
+            done.append(f"{len(SCHEMES)} verified schemes, {len(KB_ARTICLES) + len(PRODUCTIVITY_ARTICLES)} KB articles")
+        if args.demo:
+            password = get_settings().SEED_DEMO_PASSWORD
+            if len(password) < 8:
+                sys.exit("Set SEED_DEMO_PASSWORD (min 8 characters) for --demo.")
+            seed_demo(session, password)
+            done.append(f"{len(DEMO_USERS)} demo users, demo listings and prices")
+    print("Seeded: " + "; ".join(done))

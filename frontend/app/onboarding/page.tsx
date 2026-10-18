@@ -7,11 +7,10 @@ import { CROP_ICONS, SproutIcon } from "@/components/icons";
 import { Button, ChoiceTile, Field, FormError, Loading, Screen, inputClass } from "@/components/ui";
 import { api, type Crop } from "@/lib/api";
 import { describedBy, errorKey } from "@/lib/forms";
+import { cropLabel, useCrops } from "@/lib/catalogue";
 import { useI18n } from "@/lib/i18n";
 import { useSession } from "@/lib/session";
 
-// The crops the disease model covers first (plan D-09); anything else goes in "Other".
-const KNOWN_CROPS = ["tomato", "potato", "maize"] as const;
 const STAGES = ["initial", "development", "mid", "late"] as const;
 
 function today() {
@@ -19,7 +18,8 @@ function today() {
 }
 
 export default function OnboardingPage() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
+  const catalogue = useCrops();
   const router = useRouter();
   const { user } = useSession(["farmer"]);
   const [crop, setCrop] = useState<string>("");
@@ -61,17 +61,17 @@ export default function OnboardingPage() {
 
   return (
     <Screen title={t("onboarding.title")}>
-      <p className="mb-6 text-lg text-muted">{t("onboarding.intro")}</p>
+      <p className="mb-6 text-base text-muted">{t("onboarding.intro")}</p>
       <form onSubmit={submit} noValidate>
         <FormError message={formError} />
         <fieldset className="mb-6" aria-describedby={errors.crop ? "crop-error" : undefined}>
-          <legend className="mb-2 text-lg font-semibold">{t("onboarding.crop")}</legend>
+          <legend className="mb-2 text-base font-semibold">{t("onboarding.crop")}</legend>
           <div className="grid grid-cols-2 gap-3">
-            {KNOWN_CROPS.map((c) => {
-              const Icon = CROP_ICONS[c];
+            {(catalogue ?? []).map((c) => {
+              const Icon = CROP_ICONS[c.code] ?? SproutIcon;
               return (
-                <ChoiceTile key={c} selected={crop === c} onSelect={() => setCrop(c)}
-                  icon={<Icon className="size-9" />} label={t(`crops.${c}`)} />
+                <ChoiceTile key={c.code} selected={crop === c.code} onSelect={() => setCrop(c.code)}
+                  icon={<Icon className="size-8" />} label={cropLabel(catalogue, c.code, lang)} />
               );
             })}
             <ChoiceTile selected={crop === "other"} onSelect={() => setCrop("other")}
@@ -88,7 +88,7 @@ export default function OnboardingPage() {
         )}
 
         <fieldset className="mb-6" aria-describedby={errors.stage ? "stage-error" : undefined}>
-          <legend className="mb-2 text-lg font-semibold">{t("onboarding.stage")}</legend>
+          <legend className="mb-2 text-base font-semibold">{t("onboarding.stage")}</legend>
           <div className="grid grid-cols-2 gap-3">
             {STAGES.map((s) => (
               <ChoiceTile key={s} selected={stage === s} onSelect={() => setStage(s)} label={t(`stages.${s}`)} />
@@ -108,7 +108,7 @@ export default function OnboardingPage() {
 
         <Button type="submit" disabled={busy}>{busy ? t("common.loading") : t("onboarding.save")}</Button>
       </form>
-      <Link href="/farmer" className="mt-4 flex min-h-12 items-center justify-center text-lg font-semibold text-ink underline">
+      <Link href="/farmer" className="mt-4 flex min-h-12 items-center justify-center text-base font-semibold text-ink underline">
         {t("onboarding.skip")}
       </Link>
     </Screen>

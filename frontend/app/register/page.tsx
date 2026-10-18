@@ -61,9 +61,9 @@ export default function RegisterPage() {
           <ChoiceTile selected={false} onSelect={() => setRole("customer")} icon={<StoreIcon className="size-10" />}
             label={t("auth.buyer")} hint={t("auth.buyerHint")} />
         </div>
-        <p className="mt-6 text-lg">
+        <p className="mt-6 text-base">
           {t("auth.haveAccount")}{" "}
-          <Link href="/login" className="font-extrabold text-ink underline">{t("landing.login")}</Link>
+          <Link href="/login" className="font-bold text-ink underline">{t("landing.login")}</Link>
         </p>
       </Screen>
     );
@@ -71,9 +71,9 @@ export default function RegisterPage() {
 
   return (
     <Screen plain title={t("auth.registerTitle")}>
-      <p className="mb-5 flex items-center justify-between rounded-xl bg-surface px-4 py-3 text-lg font-semibold">
+      <p className="mb-5 flex items-center justify-between rounded-xl bg-surface px-4 py-3 text-base font-semibold">
         <span>{role === "farmer" ? t("auth.farmer") : t("auth.buyer")}</span>
-        <button type="button" onClick={() => setRole(null)} className="min-h-11 px-2 font-extrabold text-ink underline">
+        <button type="button" onClick={() => setRole(null)} className="min-h-11 px-2 font-bold text-ink underline">
           {t("auth.changeRole")}
         </button>
       </p>
@@ -81,7 +81,7 @@ export default function RegisterPage() {
         <FormError message={formError} />
         {role === "customer" && (
           <fieldset className="mb-5">
-            <legend className="mb-2 text-lg font-semibold">{t("auth.buyerType")}</legend>
+            <legend className="mb-2 text-base font-semibold">{t("auth.buyerType")}</legend>
             <div className="grid grid-cols-2 gap-3">
               {(["retail", "wholesale"] as const).map((type) => (
                 <ChoiceTile key={type} selected={buyerType === type} onSelect={() => setBuyerType(type)}

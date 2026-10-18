@@ -52,9 +52,9 @@ export default function LoginPage() {
         </Field>
         <Button type="submit" disabled={busy}>{busy ? t("common.loading") : t("auth.submitLogin")}</Button>
       </form>
-      <p className="mt-6 text-lg">
+      <p className="mt-6 text-base">
         {t("auth.noAccount")}{" "}
-        <Link href="/register" className="font-extrabold text-ink underline">{t("landing.createAccount")}</Link>
+        <Link href="/register" className="font-bold text-ink underline">{t("landing.createAccount")}</Link>
       </p>
     </Screen>
   );

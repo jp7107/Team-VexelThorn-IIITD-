@@ -71,9 +71,9 @@ function AssistantBubble({ reply, onFollowUp }: { reply: ChatReply; onFollowUp: 
   // Route H answers are the follow-up questions themselves; don't repeat them as buttons and text.
   const followUps = reply.route === "H" ? reply.follow_up_questions : reply.follow_up_questions.slice(0, 2);
   return (
-    <div className="flex gap-3 pr-6">
+    <div className="flex gap-2.5 pr-2 sm:gap-3 sm:pr-6">
       <span className="mt-1 grid size-8 shrink-0 place-items-center rounded-full bg-lime/15 text-lime"><SparkIcon className="size-4" /></span>
-      <div className="min-w-0 flex-1 rounded-2xl rounded-tl-sm border border-white/10 bg-white/5 px-4 py-3">
+      <div className="glass min-w-0 flex-1 rounded-2xl rounded-tl-sm border border-white/15 px-4 py-3">
         {reply.route !== "H" && <p className="whitespace-pre-line">{reply.answer}</p>}
         {reply.safety_notes.length > 0 && (
           <ul className="mt-2 list-disc pl-5 text-sm text-muted">
@@ -89,7 +89,7 @@ function AssistantBubble({ reply, onFollowUp }: { reply: ChatReply; onFollowUp: 
           <div className="mt-3 flex flex-col gap-2">
             {followUps.map((q) => (
               <button key={q} type="button" onClick={() => onFollowUp(q)}
-                className="min-h-11 rounded-xl border border-lime/40 bg-lime/5 px-3 py-2 text-left font-semibold text-ink">
+                className="min-h-10 rounded-xl border border-white/25 bg-white/10 px-3 py-2 text-left text-sm font-semibold text-ink">
                 {q}
               </button>
             ))}
@@ -111,15 +111,15 @@ function FeatureCard({ icon, action, title, body, onClick, href }: {
 }) {
   const inner = (
     <>
-      <span className="mb-4 flex items-start justify-between gap-3">
-        <span className="grid size-10 place-items-center rounded-xl border border-white/10 bg-white/5 text-ink">{icon}</span>
-        <span className="rounded-full border border-white/10 bg-black/10 px-3 py-1 text-sm font-semibold text-lime">{action}</span>
+      <span className="mb-3 flex items-start justify-between gap-3 sm:mb-4">
+        <span className="grid size-9 place-items-center rounded-xl bg-white/90 text-ink-strong sm:size-10">{icon}</span>
+        <span className="hidden rounded-full border border-white/20 bg-white/10 px-3 py-1 text-sm font-semibold text-lime sm:inline">{action}</span>
       </span>
-      <span className="block font-display text-lg font-semibold leading-snug">{title}</span>
-      <span className="mt-1 block text-sm text-muted">{body}</span>
+      <span className="block font-display text-[0.95rem] font-semibold leading-snug sm:text-lg">{title}</span>
+      <span className="mt-1 hidden text-sm text-muted sm:block">{body}</span>
     </>
   );
-  const cls = "glass block rounded-2xl border border-white/10 p-4 text-left transition hover:border-lime/40";
+  const cls = "glass block rounded-2xl border border-white/15 p-3 text-left transition hover:border-white/40 sm:p-4";
   return href ? <Link href={href} className={cls}>{inner}</Link>
     : <button type="button" onClick={onClick} className={cls}>{inner}</button>;
 }
@@ -237,7 +237,8 @@ function Chat() {
 
   const composer = (
     <form onSubmit={submit}
-      className={`glass rounded-2xl border border-white/15 p-3 ${empty ? "" : "sticky bottom-[4.5rem] z-10 lg:bottom-4"}`}>
+      className={`glass fixed inset-x-3 bottom-[calc(4.25rem+env(safe-area-inset-bottom))] z-20 rounded-2xl border border-white/20 p-2.5
+        lg:static lg:inset-auto lg:p-3 ${empty ? "" : "lg:sticky lg:bottom-4"}`}>
       {replyTo && (
         <p className="mb-2 flex items-start justify-between gap-2 text-sm text-muted">
           <span>{t("chat.answering", { question: replyTo })}</span>
@@ -249,20 +250,20 @@ function Chat() {
       <label htmlFor="chat-input" className="sr-only">{t("chat.inputLabel")}</label>
       <div className="flex items-start gap-2">
         <SparkIcon className="mt-2.5 size-4 shrink-0 text-lime" />
-        <textarea id="chat-input" ref={inputRef} rows={empty ? 3 : 1} maxLength={MAX_CHARS} value={text}
+        <textarea id="chat-input" ref={inputRef} rows={1} maxLength={MAX_CHARS} value={text}
           onChange={(e) => setText(e.target.value)} onKeyDown={onKeyDown}
           placeholder={listening ? t("chat.listening") : t("chat.askAnything")}
-          className="min-h-10 flex-1 resize-none bg-transparent py-1.5 outline-none placeholder:text-muted" />
+          className={`min-h-10 flex-1 resize-none bg-transparent py-1.5 outline-none placeholder:text-muted ${empty ? "lg:min-h-20" : ""}`} />
       </div>
       <div className="mt-2 flex items-center gap-1 border-t border-white/10 pt-2 text-sm">
         {farmer && (
           <Link href="/farmer/diagnose" className="flex min-h-10 items-center gap-1.5 rounded-lg px-2 text-muted hover:bg-white/5 hover:text-text">
-            <LeafScanIcon className="size-4" /> {t("chat.attachPhoto")}
+            <LeafScanIcon className="size-4" /> <span className="max-sm:sr-only">{t("chat.attachPhoto")}</span>
           </Link>
         )}
         {!empty && (
           <button type="button" onClick={newChat} className="flex min-h-10 items-center gap-1.5 rounded-lg px-2 text-muted hover:bg-white/5 hover:text-text">
-            <ChatIcon className="size-4" /> {t("chat.newChat")}
+            <ChatIcon className="size-4" /> <span className="max-sm:sr-only">{t("chat.newChat")}</span>
           </button>
         )}
         <span className="flex-1" />
@@ -289,7 +290,7 @@ function Chat() {
         {/* Left rail: start over, and ready-made questions. */}
         <aside className="glass hidden self-start rounded-2xl border border-white/10 p-3 lg:block">
           <button type="button" onClick={newChat}
-            className="mb-4 flex min-h-10 w-full items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 font-semibold hover:border-lime/40">
+            className="mb-4 flex min-h-10 w-full items-center gap-2 rounded-xl bg-white/90 px-3 font-semibold text-ink-strong hover:bg-white">
             <ChatIcon className="size-4" /> {t("chat.newChat")}
           </button>
           <p className="mb-1 px-2 text-xs font-semibold text-muted">{t("chat.askAbout")}</p>
@@ -305,7 +306,7 @@ function Chat() {
           </ul>
         </aside>
 
-        <section className="flex min-w-0 flex-col gap-4">
+        <section className="flex min-w-0 flex-col gap-4 pb-24 lg:pb-0">
           {analysisId && (
             <p className="flex items-center justify-between gap-3 rounded-xl border border-haldi/40 bg-haldi-soft px-4 py-2 text-sm font-semibold">
               <span>{t("chat.aboutCheck")}</span>
@@ -316,13 +317,13 @@ function Chat() {
           )}
 
           {empty ? (
-            <div className="pt-2 lg:pt-10">
-              <h1 className="text-3xl font-semibold leading-[1.05] text-ink lg:text-5xl">{t("chat.heroTitle")}</h1>
-              <p className="mt-3 max-w-xl text-muted">{analysisId ? t("chat.intro") : t("chat.heroSub")}</p>
-              <div className="-mx-4 mt-6 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] lg:mx-0 lg:flex-wrap lg:px-0">
+            <div className="lg:pt-10">
+              <h1 className="text-[1.75rem] font-semibold leading-[1.05] text-ink lg:text-5xl">{t("chat.heroTitle")}</h1>
+              <p className="mt-2 max-w-xl text-sm text-muted lg:mt-3 lg:text-base">{analysisId ? t("chat.intro") : t("chat.heroSub")}</p>
+              <div className="-mx-4 mt-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] lg:mx-0 lg:mt-6 lg:flex-wrap lg:px-0">
                 {(analysisId ? ["s_check"] : farmer ? ["s_farmer_1", "s_farmer_2", "s_farmer_3"] : ["s_buyer_1", "s_buyer_2"]).map((k) => (
                   <button key={k} type="button" onClick={() => send(t(`chat.${k}`))}
-                    className="flex min-h-9 shrink-0 items-center gap-1.5 rounded-full border border-white/15 bg-black/10 px-3 text-sm backdrop-blur hover:border-lime/40">
+                    className="flex min-h-9 shrink-0 items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 text-sm backdrop-blur hover:bg-white/20">
                     <SparkIcon className="size-3 text-lime" /> {t(`chat.${k}`)}
                   </button>
                 ))}
@@ -331,7 +332,7 @@ function Chat() {
           ) : (
             <div role="log" aria-live="polite" aria-label={t("chat.title")} className="flex flex-col gap-4 pb-2">
               {entries.map((e) => e.role === "user" ? (
-                <p key={e.id} className="ml-10 self-end whitespace-pre-line rounded-2xl rounded-tr-sm bg-brand px-4 py-2.5 text-white">
+                <p key={e.id} className="ml-10 self-end whitespace-pre-line rounded-2xl rounded-tr-sm bg-white/90 px-4 py-2.5 text-ink-strong">
                   {e.text}
                 </p>
               ) : (
@@ -351,7 +352,7 @@ function Chat() {
           {composer}
 
           {empty && (
-            <div className="grid gap-3 sm:grid-cols-2">
+            <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
               {farmer && (
                 <FeatureCard href="/farmer/diagnose" icon={<LeafScanIcon className="size-5" />} action={t("chat.c_photo_action")}
                   title={t("chat.c_photo_title")} body={t("chat.c_photo_body")} />

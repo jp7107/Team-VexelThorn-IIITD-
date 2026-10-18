@@ -25,7 +25,7 @@ function AnalysisView() {
   }, [user, id, t]);
 
   return (
-    <Screen back="/farmer">
+    <Screen title={t("result.pageTitle")} back="/farmer">
       {error ? <FormError message={error} /> : analysis ? <AnalysisResult analysis={analysis} /> : <Loading />}
     </Screen>
   );

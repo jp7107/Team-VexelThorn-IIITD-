@@ -1,0 +1,147 @@
+{
+  "snapshot_id": "sha256:5b9b089fa6c9b71f55e525525e16da0d2d644d334edfa03b62a1e86009580f58",
+  "format_version": 1,
+  "enola_version": "0.4.21",
+  "extractor_version": "v270",
+  "generated_at": "2026-10-18T01:10:26Z",
+  "duration": "4m55.8189772s",
+  "repo_path": "D:\\Team-VexelThorn-IIITD-",
+  "git": {
+    "ref": "yash",
+    "commit": "5a1b23dddbc925bea98622330ee97903aae256d4",
+    "dirty": true,
+    "remote": "github.com/jp7107/team-vexelthorn-iiitd-"
+  },
+  "extractors": [
+    "manifests",
+    "mdintent",
+    "grpc",
+    "python",
+    "typescript"
+  ],
+  "explainers": [
+    "cycles",
+    "layers",
+    "crossrepo",
+    "coverage",
+    "unused-routes",
+    "domain",
+    "query-loops",
+    "dead-methods",
+    "entry-points",
+    "messaging-coverage",
+    "god-class",
+    "hotspots",
+    "dependency-depth",
+    "exported-surface",
+    "complexity-outliers",
+    "intent",
+    "constraints",
+    "vendored-candidates",
+    "import-closure",
+    "package-metrics",
+    "dead-code",
+    "performance"
+  ],
+  "renderers": [
+    "llm_context"
+  ],
+  "config_hash": "sha256:73d78ea79f51e19979d4c7d00bd9463ae684ebcb909116abad86675323c32c05",
+  "ignore_glob_hash": "sha256:7523cc6397a498e151125a682d28fbf6df20c6f51f6dfaf18fd8f5239a20d2d8",
+  "output_hashes": {
+    "facts.jsonl": "sha256:8e0a82e15f8e3c466b77992ac682b6732551dda64be95c7239973aa3d01c2dea",
+    "insights.json": "sha256:13cd7200695d5439380888c8b65519f880792c7c2b00831502a72aa7052be2f5",
+    "llm_context.md": "sha256:122a402d777de82c5eb391c5f424b0f073b4540676fc764e4160beb8a7f71448"
+  },
+  "fact_count": 2417,
+  "insight_count": 177,
+  "quality": {
+    "files_seen": 25734,
+    "files_parsed": 304,
+    "files_skipped": 13,
+    "dirs_skipped": 14,
+    "skipped_sample": [
+      ".git/ (glob: **/.git/**)",
+      "backend/.pytest_cache/ (glob: **/.pytest_cache/**)",
+      "backend/.venv/ (glob: **/.venv/**)",
+      "backend/app/__pycache__/ (glob: **/__pycache__/**)",
+      "backend/app/assistant/__pycache__/ (glob: **/__pycache__/**)",
+      "backend/app/core/__pycache__/ (glob: **/__pycache__/**)",
+      "backend/app/ml/__pycache__/ (glob: **/__pycache__/**)",
+      "backend/app/routers/__pycache__/ (glob: **/__pycache__/**)",
+      "backend/tests/__init__.py (glob: **/tests/**/*.py)",
+      "backend/tests/conftest.py (glob: **/conftest.py)",
+      "backend/tests/test_analyses.py (glob: **/test_*.py)",
+      "backend/tests/test_assistant.py (glob: **/test_*.py)",
+      "backend/tests/test_auth.py (glob: **/test_*.py)",
+      "backend/tests/test_content.py (glob: **/test_*.py)",
+      "backend/tests/test_irrigation.py (glob: **/test_*.py)",
+      "backend/tests/test_marketplace.py (glob: **/test_*.py)",
+      "backend/tests/test_prices.py (glob: **/test_*.py)",
+      "backend/tests/test_reports.py (glob: **/test_*.py)",
+      "backend/tests/test_security.py (glob: **/test_*.py)",
+      "backend/tests/test_support.py (glob: **/test_*.py)"
+    ],
+    "parse_errors": 0,
+    "heuristic_insights": 175,
+    "coverage": {
+      "services_total": 0,
+      "coverage_gaps": 0,
+      "unresolved_edges": 0,
+      "extractors_reporting": 1,
+      "extraction_unresolved": 116
+    },
+    "census": {
+      "files_walked": 25747,
+      "parsed": 304,
+      "excluded_by_ignore": 13,
+      "excluded_by_kind": 25106,
+      "excluded_kinds": {
+        "(no extension)": 11,
+        ".body": 3,
+        ".css": 7,
+        ".csv": 3,
+        ".del": 2,
+        ".env": 1,
+        ".example": 1,
+        ".gitignore": 2,
+        ".ini": 1,
+        ".joblib": 1,
+        ".jpeg": 1,
+        ".jpg": 24166,
+        ".json": 298,
+        ".log": 1,
+        ".mako": 1,
+        ".map": 381,
+        ".meta": 59,
+        ".npz": 1,
+        ".onnx": 1,
+        ".png": 9,
+        ".previewinfo": 1,
+        ".rsc": 84,
+        ".rscinfo": 2,
+        ".sst": 40,
+        ".svg": 1,
+        ".tsbuildinfo": 2,
+        ".txt": 1,
+        ".woff2": 24,
+        ".yml": 1
+      },
+      "skipped_with_cause": 324,
+      "top_skip_causes": [
+        {
+          "cause": "claimed by typescript, no facts emitted",
+          "count": 316
+        },
+        {
+          "cause": "claimed by python, no facts emitted",
+          "count": 5
+        },
+        {
+          "cause": "claimed by manifests, no facts emitted",
+          "count": 3
+        }
+      ]
+    }
+  }
+}

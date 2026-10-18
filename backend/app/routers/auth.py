@@ -55,6 +55,7 @@ class UserOut(BaseModel):
     district: str
     lat: float | None
     lon: float | None
+    upi_id: str | None = None
 
 
 @router.post("/register", status_code=201, response_model=UserOut,
@@ -80,6 +81,8 @@ def login(body: LoginIn, response: Response, db: Session = Depends(get_db)):
     user = db.scalar(select(User).where(User.phone == body.phone))
     if not verify_password(user.password_hash if user else None, body.password):
         raise AppError(401, "Wrong phone number or password")
+    if not user.is_active:
+        raise AppError(403, "This account has been blocked. Contact support.", code="ACCOUNT_BLOCKED")
     set_session(response, user)
     return user
 

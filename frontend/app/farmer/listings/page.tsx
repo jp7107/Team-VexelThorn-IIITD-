@@ -7,17 +7,17 @@ import { StatusPill, useFormat } from "@/components/market";
 import { Button, ButtonLink, ChoiceTile, Field, FormError, Loading, Screen, inputClass } from "@/components/ui";
 import { api, type Listing, type Unit } from "@/lib/api";
 import { describedBy, errorKey } from "@/lib/forms";
+import { cropLabel, useCrops } from "@/lib/catalogue";
 import { useI18n } from "@/lib/i18n";
 import { useSession } from "@/lib/session";
 
-const CROPS = ["tomato", "potato", "maize"] as const;
 const UNITS: Unit[] = ["quintal", "kg", "tonne", "dozen"];
 const num = (v: string) => v.replace(/[^\d.]/g, "");
 
 function NewListing({ onDone }: { onDone: () => void }) {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
+  const catalogue = useCrops();
   const [crop, setCrop] = useState("");
-  const [otherName, setOtherName] = useState("");
   const [form, setForm] = useState({ title: "", quantity: "", unit: "quintal" as Unit, price: "", minOrder: "", description: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState("");
@@ -26,7 +26,7 @@ function NewListing({ onDone }: { onDone: () => void }) {
 
   async function submit(e: FormEvent) {
     e.preventDefault();
-    const cropCode = crop === "other" ? otherName.trim().toLowerCase().slice(0, 30) : crop;
+    const cropCode = crop;
     const next: Record<string, string> = {};
     if (!cropCode) next.crop = t("errors.required");
     if (!form.title.trim()) next.title = t("errors.required");
@@ -53,24 +53,20 @@ function NewListing({ onDone }: { onDone: () => void }) {
   }
 
   return (
-    <form onSubmit={submit} noValidate className="mb-6 rounded-2xl border-2 border-ink p-4">
+    <form onSubmit={submit} noValidate className="mb-6 rounded-2xl border border-white/30 p-4">
       <FormError message={formError} />
       <fieldset className="mb-5">
-        <legend className="mb-2 text-lg font-semibold">{t("sell.crop")}</legend>
+        <legend className="mb-2 text-base font-semibold">{t("sell.crop")}</legend>
         <div className="grid grid-cols-2 gap-3">
-          {CROPS.map((c) => {
-            const Icon = CROP_ICONS[c];
-            return <ChoiceTile key={c} selected={crop === c} onSelect={() => setCrop(c)} icon={<Icon className="size-9" />} label={t(`crops.${c}`)} />;
+          {catalogue === null ? <Loading /> : catalogue.filter((c) => c.marketplace).map((c) => {
+            const Icon = CROP_ICONS[c.code] ?? SproutIcon;
+            return <ChoiceTile key={c.code} selected={crop === c.code} onSelect={() => setCrop(c.code)}
+              icon={<Icon className="size-8" />} label={cropLabel(catalogue, c.code, lang)} />;
           })}
-          <ChoiceTile selected={crop === "other"} onSelect={() => setCrop("other")} icon={<SproutIcon className="size-9" />} label={t("sell.otherCrop")} />
         </div>
+        <p className="mt-2 text-sm text-muted">{t("sell.missingCrop")}</p>
         {errors.crop && <p className="mt-2 font-semibold text-danger">{errors.crop}</p>}
       </fieldset>
-      {crop === "other" && (
-        <Field id="other" label={t("sell.otherCropName")}>
-          <input id="other" className={inputClass} maxLength={30} value={otherName} onChange={(e) => setOtherName(e.target.value)} />
-        </Field>
-      )}
       <Field id="title" label={t("sell.listingTitle")} hint={t("sell.titleHint")} error={errors.title}>
         <input {...describedBy("title", true, errors.title)} className={inputClass} maxLength={120} value={form.title}
           onChange={(e) => set("title")(e.target.value)} />
@@ -138,13 +134,13 @@ export default function MyListingsPage() {
         <Button type="button" onClick={() => setAdding(true)} className="mb-6">{t("sell.new")}</Button>
       )}
       {listings === null ? <Loading /> : listings.length === 0 ? (
-        <p className="text-lg text-muted">{t("sell.none")}</p>
+        <p className="text-base text-muted">{t("sell.none")}</p>
       ) : (
         <ul className="flex flex-col gap-3">
           {listings.map((l) => (
-            <li key={l.id} className="rounded-2xl border-2 border-line p-4">
-              <Link href={`/market/${l.id}`} className="block text-lg font-extrabold text-ink underline">{l.title}</Link>
-              <p className="text-lg">{f.qty(l.quantity, l.unit)} · {f.price(l.price_per_unit, l.unit)}</p>
+            <li key={l.id} className="glass rounded-2xl border border-white/15 p-4">
+              <Link href={`/market/${l.id}`} className="block text-base font-bold text-ink underline">{l.title}</Link>
+              <p className="text-base">{f.qty(l.quantity, l.unit)} · {f.price(l.price_per_unit, l.unit)}</p>
               <p className="mt-2 flex flex-wrap items-center gap-2">
                 <StatusPill status={l.status} />
                 {(l.pending_enquiries ?? 0) > 0 && (
@@ -157,7 +153,7 @@ export default function MyListingsPage() {
                 <p className="mt-2 text-base text-muted">{t("sell.hiddenNote")}</p>
               ) : (
                 <button type="button" onClick={() => setStatus(l, l.status === "open" ? "closed" : "open")}
-                  className="mt-3 min-h-11 rounded-xl border-2 border-ink px-4 font-extrabold text-ink">
+                  className="mt-3 min-h-11 rounded-xl border border-white/30 px-4 font-bold text-ink">
                   {l.status === "open" ? t("sell.close") : t("sell.reopen")}
                 </button>
               )}

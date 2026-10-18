@@ -1,18 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ListingCard } from "@/components/market";
+import { ListingCard, useFormat } from "@/components/market";
 import { ButtonLink, FormError, Loading, Screen, inputClass } from "@/components/ui";
 import { api, type Listing } from "@/lib/api";
 import { errorKey } from "@/lib/forms";
+import { useCrops } from "@/lib/catalogue";
 import { useI18n } from "@/lib/i18n";
 import { STATES } from "@/lib/places";
 import { useSession } from "@/lib/session";
 
-const CROPS = ["", "tomato", "potato", "maize"];
 
 export default function MarketPage() {
   const { t, lang } = useI18n();
+  const f = useFormat();
+  const catalogue = useCrops();
   const { user } = useSession(["customer", "farmer", "admin"]);
   const [crop, setCrop] = useState("");
   const [state, setState] = useState("");
@@ -45,15 +47,15 @@ export default function MarketPage() {
 
   return (
     <Screen title={t("market.title")} back={user.role === "farmer" ? "/farmer" : undefined}>
-      <div className="mb-5 grid grid-cols-2 gap-3">
+      <div className="mb-5 hidden grid-cols-2 gap-3 lg:grid">
         <ButtonLink href="/market/prices" variant="secondary">{t("home.prices")}</ButtonLink>
         {user.role === "customer" && <ButtonLink href="/enquiries" variant="secondary">{t("market.myEnquiries")}</ButtonLink>}
       </div>
       <div className="mb-3 flex flex-wrap gap-2" role="group" aria-label={t("sell.crop")}>
-        {CROPS.map((c) => (
+        {["", ...(catalogue ?? []).filter((x) => x.marketplace).map((x) => x.code)].map((c) => (
           <button key={c || "all"} type="button" aria-pressed={crop === c} onClick={() => setCrop(c)}
-            className={`min-h-11 rounded-full border-2 px-4 text-lg font-semibold ${crop === c ? "border-lime bg-brand text-white" : "border-line bg-white/10"}`}>
-            {c ? t(`crops.${c}`) : t("market.allCrops")}
+            className={`min-h-11 rounded-full border px-4 text-base font-semibold ${crop === c ? "border-white bg-white text-ink-strong" : "border-line bg-white/10"}`}>
+            {c ? f.crop(c) : t("market.allCrops")}
           </button>
         ))}
       </div>
@@ -64,14 +66,14 @@ export default function MarketPage() {
       </select>
       {wholesaler && (
         <div className="mb-3">
-          <label htmlFor="minq" className="mb-1 block text-lg font-semibold">{t("market.minQty")}</label>
+          <label htmlFor="minq" className="mb-1 block text-base font-semibold">{t("market.minQty")}</label>
           <input id="minq" inputMode="decimal" value={minQuintal} className={inputClass}
             onChange={(e) => setMinQuintal(e.target.value.replace(/[^\d.]/g, ""))} />
         </div>
       )}
       <FormError message={error} />
       {listings === null ? <Loading /> : listings.length === 0 ? (
-        <p className="py-6 text-lg text-muted">{t("market.empty")}</p>
+        <p className="py-6 text-base text-muted">{t("market.empty")}</p>
       ) : (
         <div className="mt-4 flex flex-col gap-3">{listings.map((l) => <ListingCard key={l.id} l={l} />)}</div>
       )}

@@ -12,6 +12,7 @@ export type User = {
   district: string;
   lat: number | null;
   lon: number | null;
+  upi_id?: string | null;
 };
 
 export type Crop = {
@@ -145,7 +146,7 @@ export type Listing = {
   min_order_qty: string | null;
   state: string;
   district: string;
-  status: "open" | "closed" | "hidden";
+  status: "open" | "closed" | "hidden" | "sold_out";
   created_at: string;
   farmer: { id: string; first_name: string; rating_avg: number | null; rating_count: number };
   is_mine: boolean;
@@ -168,6 +169,96 @@ export type Enquiry = {
   farmer_phone: string | null;
   can_rate: boolean;
   my_rating: number | null;
+  order_id: string | null;
+  order_status: OrderStatus | null;
+};
+
+export type OrderStatus = "awaiting_payment" | "payment_submitted" | "paid" | "dispatched" | "delivered" | "cancelled";
+export type PayMethod = "online" | "upi" | "cash";
+
+export type Order = {
+  id: string;
+  enquiry_id: string;
+  listing_id: string;
+  crop_code: string;
+  title: string;
+  unit: Unit;
+  quantity: string;
+  price_per_unit: string;
+  subtotal: string;
+  platform_fee: string;
+  total: string;
+  status: OrderStatus;
+  payment_method: PayMethod | null;
+  payment_ref: string | null;
+  receipt_no: string | null;
+  cancelled_by: string | null;
+  cancel_reason: string | null;
+  created_at: string;
+  paid_at: string | null;
+  dispatched_at: string | null;
+  delivered_at: string | null;
+  cancelled_at: string | null;
+  role: "buyer" | "farmer" | "admin";
+  buyer_name: string;
+  buyer_district: string;
+  farmer_name: string;
+  farmer_district: string;
+  farmer_phone: string | null;
+  buyer_phone: string | null;
+  farmer_upi_id: string | null;
+  pay_methods: PayMethod[];
+};
+
+export type Receipt = { receipt_no: string; issued_at: string; order: Order };
+
+/** Admin-maintained crop catalogue entry (GET /crops). */
+export type CropType = {
+  code: string;
+  name_en: string;
+  name_hi: string;
+  mandi_commodity: string | null;
+  marketplace: boolean;
+  active: boolean;
+  sort_order: number;
+  leaf_check: boolean;
+};
+
+/** Admin-maintained platform parameters everyone may read (GET /config). */
+export type PublicConfig = {
+  helpline_number: string;
+  helpline_short: string;
+  helpline_open_hour: number;
+  helpline_close_hour: number;
+  helpline_languages: number;
+  support_phone: string;
+  support_email: string;
+  platform_fee_percent: string;
+  payment_methods: PayMethod[];
+  assistant_enabled: boolean;
+  show_demo_prices: boolean;
+  announcement: string;
+};
+
+export type AdminSettings = Omit<PublicConfig, "payment_methods"> & {
+  payments_online: boolean;
+  payments_upi: boolean;
+  payments_cash: boolean;
+  unpaid_order_hours: number;
+  online_gateway_configured: boolean;
+};
+
+export type Named = { key: string; label: string; value: string };
+
+export type AdminStats = {
+  days: number;
+  totals: Record<string, string>;
+  daily: { date: string; signups: number; orders: number; sales: string; leaf_checks: number; chats: number }[];
+  funnel: Named[];
+  orders_by_status: Named[];
+  listings_by_crop: Named[];
+  top_diseases: Named[];
+  users_by_state: Named[];
 };
 
 export type FarmerRatings = {
@@ -235,6 +326,7 @@ export type AdminUser = {
   customer_type: "retail" | "wholesale" | null;
   state: string;
   district: string;
+  is_active: boolean;
   created_at: string;
 };
 

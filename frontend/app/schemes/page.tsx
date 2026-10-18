@@ -24,17 +24,17 @@ export default function SchemesPage() {
   if (!user) return <Screen><Loading /></Screen>;
   return (
     <Screen title={t("schemes.title")} back={user.role === "farmer" ? "/farmer" : "/"}>
-      <p className="mb-5 text-lg text-muted">{t("schemes.intro")}</p>
+      <p className="mb-5 text-base text-muted">{t("schemes.intro")}</p>
       <FormError message={error} />
       {schemes === null ? (!error && <Loading />) : schemes.length === 0 ? (
-        <p className="text-lg text-muted">{t("schemes.none")}</p>
+        <p className="text-base text-muted">{t("schemes.none")}</p>
       ) : (
         <ul className="flex flex-col gap-3">
           {schemes.map((s) => (
             <li key={s.id}>
-              <Link href={`/schemes/${s.id}`} className="block rounded-2xl border-2 border-line p-4">
-                <span className="block text-lg font-extrabold text-ink">{s.name}</span>
-                <span className="block text-lg">{s.summary}</span>
+              <Link href={`/schemes/${s.id}`} className="block glass rounded-2xl border border-white/15 p-4">
+                <span className="block text-base font-bold text-ink">{s.name}</span>
+                <span className="block text-base">{s.summary}</span>
                 <span className="mt-1 block text-base font-semibold text-ink underline">{t("schemes.view")}</span>
               </Link>
             </li>

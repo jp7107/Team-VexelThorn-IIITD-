@@ -59,10 +59,16 @@ def test_parser_handles_agmarknet_spellings_and_drops_bad_rows():
     assert len(rows) == 3 and all(r["is_demo"] is False and r["unit"] == "Rs/quintal" for r in rows)
 
 
-def test_without_key_serves_labelled_demo_and_never_calls_api(client, monkeypatch):
+def test_without_key_demo_rows_only_when_admin_allows_and_never_calls_api(client, monkeypatch):
+    from app.core.db import SessionLocal
+    from app.core.platform import PlatformConfig, save_config
     calls = []
     fake_api(monkeypatch, calls=calls)
     add_demo()
+    out = client.get("/market/prices?commodity=tomato").json()
+    assert out["meta"]["source_status"] == "none" and out["rows"] == []  # demo rows hidden by default
+    with SessionLocal() as db:
+        save_config(db, PlatformConfig(show_demo_prices=True), None)
     out = client.get("/market/prices?commodity=tomato").json()
     assert calls == []
     assert out["meta"]["source_status"] == "demo" and out["meta"]["live_configured"] is False

@@ -190,8 +190,36 @@ export function LogoutIcon(p: P) {
 /** Wordmark tile: a leaf on the brand green. */
 export function LogoMark({ className = "" }: { className?: string }) {
   return (
-    <span className={`grid shrink-0 place-items-center rounded-2xl bg-brand text-white ring-1 ring-lime/40 ${className}`}>
+    <span className={`grid shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-lime to-[#86c95b] text-ink-strong ${className}`}>
       <SproutIcon className="size-3/5" />
     </span>
+  );
+}
+
+export function ReceiptIcon(p: P) {
+  return (
+    <Svg {...p}>
+      <path d="M6 3h12v18l-2-1.5-2 1.5-2-1.5-2 1.5-2-1.5L6 21V3Z" />
+      <path d="M9 8h6M9 11.5h6M9 15h3.5" />
+    </Svg>
+  );
+}
+
+export function UserIcon(p: P) {
+  return (
+    <Svg {...p}>
+      <circle cx="12" cy="8.5" r="3.5" />
+      <path d="M5 20c.8-3.5 3.6-5.5 7-5.5s6.2 2 7 5.5" />
+    </Svg>
+  );
+}
+
+export function MenuIcon(p: P) {
+  return (
+    <Svg {...p}>
+      <circle cx="6" cy="12" r="1.2" fill="currentColor" />
+      <circle cx="12" cy="12" r="1.2" fill="currentColor" />
+      <circle cx="18" cy="12" r="1.2" fill="currentColor" />
+    </Svg>
   );
 }

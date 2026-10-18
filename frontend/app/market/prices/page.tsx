@@ -5,25 +5,29 @@ import { useFormat } from "@/components/market";
 import { FormError, Loading, Screen, inputClass } from "@/components/ui";
 import { api, type Prices } from "@/lib/api";
 import { errorKey } from "@/lib/forms";
+import { cropLabel, useCrops } from "@/lib/catalogue";
 import { useI18n } from "@/lib/i18n";
 import { STATES } from "@/lib/places";
 import { useSession } from "@/lib/session";
 
-// The commodity names AGMARKNET uses, mapped to our crop codes for display.
-const MVP: Record<string, string> = { Tomato: "tomato", Potato: "potato", Maize: "maize" };
 
 export default function PricesPage() {
   const { t, lang } = useI18n();
   const f = useFormat();
   const { user } = useSession(["farmer", "customer", "admin"]);
-  const [commodity, setCommodity] = useState("Tomato");
+  const catalogue = useCrops();
+  // The catalogue's AGMARKNET commodity names, mapped to crop codes for display (admin-maintained).
+  const MVP: Record<string, string> = Object.fromEntries((catalogue ?? [])
+    .filter((c) => c.mandi_commodity).map((c) => [c.mandi_commodity!, c.code]));
+  const [picked, setCommodity] = useState("");
+  const commodity = picked || Object.keys(MVP)[0] || "";
   const [other, setOther] = useState("");
   const [state, setState] = useState("");
   const [data, setData] = useState<Prices | null>(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!user) return;
+    if (!user || !commodity) return;
     const params = new URLSearchParams({ commodity });
     if (state) params.set("state", state);
     let cancelled = false;
@@ -55,8 +59,8 @@ export default function PricesPage() {
       <div className="mb-3 flex flex-wrap gap-2" role="group" aria-label={t("sell.crop")}>
         {Object.entries(MVP).map(([name, code]) => (
           <button key={name} type="button" aria-pressed={commodity === name} onClick={() => setCommodity(name)}
-            className={`min-h-11 rounded-full border-2 px-4 text-lg font-semibold ${commodity === name ? "border-lime bg-brand text-white" : "border-line bg-white/10"}`}>
-            {t(`crops.${code}`)}
+            className={`min-h-11 rounded-full border px-4 text-base font-semibold ${commodity === name ? "border-white bg-white text-ink-strong" : "border-line bg-white/10"}`}>
+            {cropLabel(catalogue, code, lang)}
           </button>
         ))}
       </div>
@@ -64,7 +68,7 @@ export default function PricesPage() {
         <label htmlFor="other" className="sr-only">{t("prices.otherCommodity")}</label>
         <input id="other" value={other} onChange={(e) => setOther(e.target.value)} placeholder={t("prices.otherCommodity")}
           maxLength={60} className={`${inputClass} flex-1`} />
-        <button type="submit" className="min-h-12 rounded-xl border-2 border-ink px-4 text-lg font-extrabold text-ink">{t("prices.go")}</button>
+        <button type="submit" className="min-h-12 rounded-xl border border-white/30 px-4 text-base font-bold text-ink">{t("prices.go")}</button>
       </form>
       <label htmlFor="pstate" className="sr-only">{t("prices.state")}</label>
       <select id="pstate" value={state} onChange={(e) => setState(e.target.value)} className={`${inputClass} mb-4`}>
@@ -76,25 +80,25 @@ export default function PricesPage() {
       {!data ? (!error && <Loading />) : (
         <>
           {status !== "none" && (
-            <p role="status" className={`mb-4 rounded-xl border-l-8 px-4 py-3 text-lg font-semibold ${banner}`}>
+            <p role="status" className={`mb-4 rounded-xl border-l-8 px-4 py-3 text-base font-semibold ${banner}`}>
               {t(`prices.${status}`, { when: when(data.meta.last_fetch_at) })}
             </p>
           )}
           {status === "none" ? (
-            <p className="text-lg text-muted">{t("prices.none", { commodity: MVP[commodity] ? t(`crops.${MVP[commodity]}`) : commodity })}</p>
+            <p className="text-base text-muted">{t("prices.none", { commodity: MVP[commodity] ? cropLabel(catalogue, MVP[commodity], lang) : commodity })}</p>
           ) : (
             <ul className="flex flex-col gap-3">
               {data.rows.map((r) => (
-                <li key={r.id} className="rounded-2xl border-2 border-line p-4">
+                <li key={r.id} className="glass rounded-2xl border border-white/15 p-4">
                   <div className="flex items-start justify-between gap-2">
-                    <p className="text-lg font-extrabold text-ink">
+                    <p className="text-base font-bold text-ink">
                       {r.market}, {r.district}
                       <span className="block text-base font-normal text-muted">{f.state(r.state)}{r.variety ? ` · ${r.variety}` : ""}</span>
                     </p>
                     {r.is_demo && <span className="rounded-full bg-haldi px-2 text-base font-bold text-ink-strong">{t("prices.demoBadge")}</span>}
                   </div>
-                  <p className="mt-2 text-2xl font-extrabold">
-                    ₹{num.format(Number(r.modal_price))} <span className="text-lg font-semibold">{t("prices.perQuintal")}</span>
+                  <p className="mt-2 text-2xl font-bold">
+                    ₹{num.format(Number(r.modal_price))} <span className="text-base font-semibold">{t("prices.perQuintal")}</span>
                   </p>
                   <p className="text-base text-muted">
                     {t("prices.modal")} · {t("prices.range", { min: num.format(Number(r.min_price)), max: num.format(Number(r.max_price)) })}

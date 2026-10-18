@@ -28,6 +28,13 @@ class Settings(BaseSettings):
     LLM_TIMEOUT_S: float = 25
     LLM_FORCE_FAIL: bool = False  # demo/test switch for the fallback path (plan §12 Path F)
     DATAGOV_API_KEY: str = ""
+    # Razorpay test-mode keys (free account, no real money). Online payment is offered only when both are set.
+    RAZORPAY_KEY_ID: str = ""
+    RAZORPAY_KEY_SECRET: str = ""
+    # Optional first admin, created by `python -m app.seed` (there is no admin self-registration).
+    ADMIN_PHONE: str = ""
+    ADMIN_PASSWORD: str = ""
+    ADMIN_NAME: str = "Admin"
 
     SEED_DEMO_PASSWORD: str = ""
 
