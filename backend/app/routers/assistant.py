@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field, StringConstraints, model_validator
 from sqlalchemy.orm import Session
 
 from app.assistant import chat
+from app.core import ratelimit
 from app.core.db import get_db
 from app.core.errors import AppError
 from app.core.security import current_user
@@ -49,7 +50,8 @@ class ChatOut(BaseModel):
     llm_status: Literal["ok", "fallback"]
 
 
-@router.post("/chat", response_model=ChatOut)
+@router.post("/chat", response_model=ChatOut,
+             dependencies=[Depends(ratelimit.per_user("chat", (10, 60), (100, 86400)))])
 def assistant_chat(body: ChatIn, request: Request, user: User = Depends(current_user), db: Session = Depends(get_db)):
     analysis = None
     if body.analysis_id:

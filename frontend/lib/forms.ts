@@ -6,6 +6,7 @@ export const PHONE_RE = /^[6-9]\d{9}$/;
 export function errorKey(e: unknown, overrides: Partial<Record<string, string>> = {}): string {
   if (!(e instanceof ApiError)) return "errors.generic";
   if (e.code === "TIMEOUT") return "chat.timeout";
+  if (e.code === "RATE_LIMITED") return "errors.rateLimited";
   if (e.status === 0) return "errors.network";
   return overrides[e.code] ?? "errors.generic";
 }

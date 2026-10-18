@@ -99,7 +99,8 @@
     "phoneTaken": "This number already has an account. Log in instead.",
     "wrongLogin": "Wrong mobile number or password",
     "network": "Can't reach the server. Check your internet and try again.",
-    "generic": "That didn't work. Try again."
+    "generic": "That didn't work. Try again.",
+    "rateLimited": "Too many tries in a short time. Wait a minute and try again."
   },
   "common": {
     "loading": "Loading…",

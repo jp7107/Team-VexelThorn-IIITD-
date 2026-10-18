@@ -16,6 +16,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.assistant import report as report_builder
+from app.core import ratelimit
 from app.core.db import get_db
 from app.core.errors import AppError
 from app.core.security import require_role
@@ -88,7 +89,8 @@ def to_out(a: Analysis) -> AnalysisOut:
     )
 
 
-@router.post("/analyses", status_code=201, response_model=AnalysisOut)
+@router.post("/analyses", status_code=201, response_model=AnalysisOut,
+             dependencies=[Depends(ratelimit.per_user("analyses", (20, 3600)))])
 def create_analysis(
     image: UploadFile = File(...),
     crop_code: str = Form(..., min_length=1, max_length=30),
@@ -175,7 +177,8 @@ def _existing_report(db: Session, analysis_id: UUID, language: str) -> Report | 
     return db.scalar(select(Report).where(Report.analysis_id == analysis_id, Report.language == language))
 
 
-@router.post("/analyses/{analysis_id}/report", status_code=201, response_model=ReportOut)
+@router.post("/analyses/{analysis_id}/report", status_code=201, response_model=ReportOut,
+             dependencies=[Depends(ratelimit.per_user("reports", (30, 3600)))])
 def create_report(analysis_id: UUID, body: ReportIn, response: Response, user: User = Depends(farmer),
                   db: Session = Depends(get_db)):
     """Idempotent per (analysis, language): an existing report is returned with 200 (plan §8.4)."""

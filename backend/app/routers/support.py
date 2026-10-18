@@ -9,6 +9,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.core import ratelimit
 from app.core.db import get_db
 from app.core.errors import AppError
 from app.core.security import current_user, require_role
@@ -40,7 +41,8 @@ class AdminTicketOut(TicketOut):
     user_phone: str
 
 
-@router.post("/support/tickets", status_code=201, response_model=TicketOut)
+@router.post("/support/tickets", status_code=201, response_model=TicketOut,
+             dependencies=[Depends(ratelimit.per_user("tickets", (5, 3600)))])
 def create_ticket(body: TicketIn, user: User = Depends(current_user), db: Session = Depends(get_db)):
     ticket = SupportTicket(**body.model_dump(), user_id=user.id)
     db.add(ticket)

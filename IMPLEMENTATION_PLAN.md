@@ -1100,7 +1100,7 @@ Status values: `Not Started` · `In Progress` · `Blocked` · `Done`. **Everythi
 | BE-07 | 6 retrieval tools + executor + role filter + audit | P0 | M1 | M2 | BE-01 | 2.0 | H7.5–9.5 | Done | BE-T5 (scoping), BE-T6 (injection args) | Cut to 4 tools (drop `search_schemes`, `get_my_crops`) |
 | BE-09 | Reminders, crop updates, support tickets API + public content reads (`/schemes`, `/updates`, `/kb`) | P1 | M1 | M3, M4 | BE-02 | 1.0 | H13–14 | In Progress | CRUD tests, owner checks | Crop updates without photo |
 | BE-06 | Wire real `predict` + model load at startup + timeout | P0 | M1 | M2 | ML-03 | 1.0 | H9.5–10.5 | Done | ML-T1/T2 on deployed backend; latency logged | F-ML-3 |
-| BE-08 | Rate limits (login, analyses, chat), size limits, security headers, CORS lock | P0 | M1 | — | BE-02 | 1.0 | H14–15 | Not Started | BE-T7 (429s) | Login + chat limits only |
+| BE-08 | Rate limits (login, analyses, chat), size limits, security headers, CORS lock | P0 | M1 | — | BE-02 | 1.0 | H14–15 | Done | BE-T7 (429s) | Login + chat limits only |
 | BE-10 | Backend tests: auth, role isolation, IDOR, tools scoping, contracts | P0 | M1 | All | BE-* | 2.0 | H15–17 | Not Started | `pytest -q` green in CI | Keep P0 tests only (§20.1) |
 | ML-01 | Datasets: licence, download, filter MVP classes, dedupe, split, manifest | P0 | M2 | M4 (licence read) | S-01 | 2.5 | H1–3.5 | Done | `manifest.csv`, `labels.json`, `DATA_SOURCES.md` committed; no group across splits | F-ML-2 at H4 |
 | ML-02 | Baseline B0 (frozen MNv2 + logreg), B1 queued | P0 | M2 | — | ML-01 | 1.0 attn | H3.5–4, H5.5–6 | Done | B0 val metrics in `metrics.json` | — |
