@@ -1,0 +1,59 @@
+# PlantVillage v1 training configuration.
+# Only values in this file drive the run; no hyperparameter is hard-coded in train.py.
+
+run:
+  name: plantvillage_v1
+  seed: 42
+  device: cpu                 # measured environment has no CUDA
+
+dataset:
+  slug: mohitsingh1804/plantvillage
+  url: https://www.kaggle.com/datasets/mohitsingh1804/plantvillage
+  download_url: https://www.kaggle.com/api/v1/datasets/download/mohitsingh1804/plantvillage
+  raw_dir: ml/data/raw/plantvillage
+  # source may be the downloaded .zip or an extracted tree; .zip is preferred on Windows
+  source: ml/data/raw/plantvillage.zip
+  manifest_dir: ml/data/processed
+  # LICENSE is recorded from dataset metadata at prepare time; do not hand-edit
+  # here -- the manifest is the source of truth.
+
+preprocess:
+  image_size: 192             # chosen from the measured CPU budget, see docs/ML_STATUS.md
+  resize_mode: short_side_crop
+  interpolation: bilinear
+  mean: [0.485, 0.456, 0.406]
+  std: [0.229, 0.224, 0.225]
+  min_side_px: 64
+  max_bytes: 8388608
+
+split:
+  train: 0.70
+  val: 0.15
+  test: 0.15
+  near_dup_hamming: 5         # plan 8.3 -- drop near-duplicates across split boundary
+
+screening:
+  # Stage 1: frozen-backbone feature extraction + linear probe.
+  features_batch_size: 64
+  probe_max_iter: 2000
+  probe_C: 1.0
+
+train:
+  candidates: [mobilenet_v2, efficientnet_b0, resnet18]
+  batch_size: 32
+  num_workers: 2
+  epochs: 4
+  lr_head: 0.001
+  lr_backbone: 0.0001
+  weight_decay: 0.0001
+  unfreeze_blocks: 2          # last N blocks of the selected backbone
+  early_stop_patience: 2
+  label_smoothing: 0.05
+
+export:
+  opset: 17
+  target_size_mb: 30
+  latency_target_p95_s: 2.0
+  parity_images: 20
+  parity_atol: 1e-3           # max abs logit difference
+  parity_rtol: 1e-3

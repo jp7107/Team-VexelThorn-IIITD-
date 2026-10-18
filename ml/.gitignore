@@ -1,0 +1,36 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# ---- Virtualenv (thousands of files, never commit) ----
+.venv/
+venv/
+env/
+
+# ---- Raw data: 857 MB zip + extracted dataset, regenerate with data/prepare.py ----
+data/raw/
+
+# ---- Cached backbone features: ~115 MB, regenerate by re-running train.py ----
+checkpoints/**/features-*/
+
+# ---- Packaged artifacts: built by export_onnx.py / package_artifact.py ----
+artifacts/
+*.onnx
+*.zip
+
+# ---- Secrets ----
+.env
+.env.*
+*.pem
+
+# ---- OS / editor ----
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
+.idea/
