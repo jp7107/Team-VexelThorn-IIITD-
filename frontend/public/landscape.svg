@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
+  <!-- Hand-drawn farm valley for the app background: misty hills, field strips and tree clusters. -->
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#9fb98a"/>
+      <stop offset="0.45" stop-color="#5f8a4c"/>
+      <stop offset="1" stop-color="#2c5a2a"/>
+    </linearGradient>
+    <linearGradient id="far" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4f7d45"/>
+      <stop offset="1" stop-color="#3a6a35"/>
+    </linearGradient>
+    <linearGradient id="mid" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4c8a35"/>
+      <stop offset="1" stop-color="#2f6a26"/>
+    </linearGradient>
+    <linearGradient id="near" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3e7f2c"/>
+      <stop offset="1" stop-color="#1d4a1b"/>
+    </linearGradient>
+    <linearGradient id="field" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8fcf4e"/>
+      <stop offset="1" stop-color="#5aa53a"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="0.78" cy="0.12" r="0.45">
+      <stop offset="0" stop-color="#f6f1c4" stop-opacity="0.75"/>
+      <stop offset="1" stop-color="#f6f1c4" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="rows" width="18" height="18" patternUnits="userSpaceOnUse" patternTransform="rotate(-18)">
+      <rect width="18" height="18" fill="url(#field)"/>
+      <rect width="18" height="5" fill="#a9dd63" opacity="0.55"/>
+    </pattern>
+    <pattern id="rows2" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(12)">
+      <rect width="14" height="14" fill="#6aa83c"/>
+      <rect width="14" height="4" fill="#86c04c" opacity="0.6"/>
+    </pattern>
+    <filter id="blur"><feGaussianBlur stdDeviation="6"/></filter>
+    <g id="tree">
+      <rect x="-3" y="0" width="6" height="18" fill="#2a3b1c"/>
+      <circle cx="0" cy="-6" r="16" fill="#24561f"/>
+      <circle cx="-9" cy="2" r="11" fill="#2d6a26"/>
+      <circle cx="9" cy="0" r="12" fill="#1f4d1b"/>
+    </g>
+  </defs>
+
+  <rect width="1600" height="1000" fill="url(#sky)"/>
+  <rect width="1600" height="1000" fill="url(#sun)"/>
+
+  <path d="M0 330 C180 250 330 300 470 260 S760 180 930 250 S1260 210 1400 260 1600 240 1600 240 V1000 H0Z"
+        fill="url(#far)" opacity="0.85" filter="url(#blur)"/>
+  <path d="M0 420 C200 360 380 400 560 350 S900 300 1080 360 S1420 330 1600 380 V1000 H0Z" fill="url(#mid)"/>
+
+  <path d="M640 520 L1180 470 L1330 610 L760 690Z" fill="url(#rows)"/>
+  <path d="M640 520 L1180 470 L1330 610 L760 690Z" fill="none" stroke="#d8f59a" stroke-opacity="0.55" stroke-width="3"/>
+  <path d="M120 560 L520 520 L600 640 L170 700Z" fill="url(#rows2)" opacity="0.9"/>
+  <path d="M1250 430 L1560 410 L1600 520 L1330 540Z" fill="url(#rows2)" opacity="0.85"/>
+
+  <path d="M0 640 C220 580 420 650 640 620 S1040 700 1240 650 S1500 620 1600 660 V1000 H0Z" fill="url(#near)"/>
+  <path d="M0 800 C260 740 520 820 800 780 S1300 840 1600 790 V1000 H0Z" fill="#16391a"/>
+
+  <g opacity="0.95">
+    <use href="#tree" transform="translate(560 600) scale(1.2)"/>
+    <use href="#tree" transform="translate(600 610)"/>
+    <use href="#tree" transform="translate(1360 600) scale(1.4)"/>
+    <use href="#tree" transform="translate(1400 612) scale(1.1)"/>
+    <use href="#tree" transform="translate(1440 604) scale(1.3)"/>
+    <use href="#tree" transform="translate(90 690) scale(1.6)"/>
+    <use href="#tree" transform="translate(140 700) scale(1.2)"/>
+    <use href="#tree" transform="translate(980 700) scale(1.5)"/>
+    <use href="#tree" transform="translate(1030 712) scale(1.1)"/>
+    <use href="#tree" transform="translate(300 790) scale(2)"/>
+    <use href="#tree" transform="translate(1240 800) scale(2.2)"/>
+  </g>
+
+  <rect y="280" width="1600" height="120" fill="#e9f3d9" opacity="0.12" filter="url(#blur)"/>
+</svg>

@@ -190,24 +190,8 @@ export function LogoutIcon(p: P) {
 /** Wordmark tile: a leaf on the brand green. */
 export function LogoMark({ className = "" }: { className?: string }) {
   return (
-    <span className={`grid shrink-0 place-items-center rounded-2xl bg-brand text-white ${className}`}>
+    <span className={`grid shrink-0 place-items-center rounded-2xl bg-brand text-white ring-1 ring-lime/40 ${className}`}>
       <SproutIcon className="size-3/5" />
     </span>
-  );
-}
-
-/** Hills, two trees and a sun for the foot of the sidebar. Decorative only. */
-export function FarmScene({ className = "" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 240 110" aria-hidden="true" className={className}>
-      <circle cx="196" cy="34" r="14" fill="#f8d65b" opacity="0.9" />
-      <path d="M0 78c40-22 80-26 120-14s80 8 120-8v54H0Z" fill="#b9dcbf" />
-      <path d="M0 92c50-16 100-14 150-4s70 2 90-6v28H0Z" fill="#8cc596" />
-      <path d="M0 102c60-8 140-8 240 0v8H0Z" fill="#5fa86c" />
-      <path d="M44 84V66M70 88V62" stroke="#6b4f2a" strokeWidth="3" strokeLinecap="round" />
-      <circle cx="44" cy="60" r="10" fill="#3f8f4f" />
-      <circle cx="70" cy="54" r="13" fill="#2f7a40" />
-      <path d="M120 96h40M128 90h28M136 84h16" stroke="#e9f4ea" strokeWidth="2" strokeLinecap="round" opacity="0.7" />
-    </svg>
   );
 }

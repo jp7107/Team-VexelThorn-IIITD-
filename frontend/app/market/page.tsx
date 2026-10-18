@@ -52,7 +52,7 @@ export default function MarketPage() {
       <div className="mb-3 flex flex-wrap gap-2" role="group" aria-label={t("sell.crop")}>
         {CROPS.map((c) => (
           <button key={c || "all"} type="button" aria-pressed={crop === c} onClick={() => setCrop(c)}
-            className={`min-h-11 rounded-full border-2 px-4 text-lg font-semibold ${crop === c ? "border-ink bg-ink text-white" : "border-line bg-white"}`}>
+            className={`min-h-11 rounded-full border-2 px-4 text-lg font-semibold ${crop === c ? "border-lime bg-brand text-white" : "border-line bg-white/10"}`}>
             {c ? t(`crops.${c}`) : t("market.allCrops")}
           </button>
         ))}

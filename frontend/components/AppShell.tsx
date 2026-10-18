@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Suspense, useEffect, useState, type ReactNode } from "react";
 import {
-  BasketIcon, ChatIcon, DropIcon, FarmScene, HelpIcon, HomeIcon, InboxIcon, LeafScanIcon, LogoMark, LogoutIcon,
+  BasketIcon, ChatIcon, DropIcon, HelpIcon, HomeIcon, InboxIcon, LeafScanIcon, LogoMark, LogoutIcon,
   NewsIcon, PinIcon, PriceIcon, SchemeIcon, ShieldIcon, StoreIcon,
 } from "@/components/icons";
 import { LanguageSwitch } from "@/components/ui";
@@ -90,7 +90,7 @@ export function AppShell({ children, wide }: { children: ReactNode; wide?: boole
 
   return (
     <div className="flex min-h-full flex-1">
-      <aside className="glass sticky top-0 hidden h-dvh w-64 shrink-0 flex-col border-r border-white/80 lg:flex">
+      <aside className="glass sticky top-0 hidden h-dvh w-64 shrink-0 flex-col border-r border-white/15 lg:flex">
         <Link href={user ? items[0].href : "/"} className="flex items-center gap-3 px-5 pb-4 pt-5">
           <LogoMark className="size-11" />
           <span>
@@ -98,7 +98,7 @@ export function AppShell({ children, wide }: { children: ReactNode; wide?: boole
             <span className="block text-sm text-muted">{t("app.motto")}</span>
           </span>
         </Link>
-        <nav aria-label={t("nav.label")} className="flex-1 overflow-y-auto px-3">
+        <nav aria-label={t("nav.label")} className="flex-1 overflow-y-auto px-3 [scrollbar-width:thin]">
           <ActiveAware render={(pathname) => <ul className="flex flex-col gap-1">
             {items.map(({ href, key, Icon }) => {
               const active = isActive(pathname, href, items);
@@ -106,7 +106,7 @@ export function AppShell({ children, wide }: { children: ReactNode; wide?: boole
                 <li key={href}>
                   <Link href={href} aria-current={active ? "page" : undefined}
                     className={`flex min-h-11 items-center gap-3 rounded-xl px-3 font-semibold ${
-                      active ? "bg-brand text-white shadow-sm" : "text-text hover:bg-white/70"}`}>
+                      active ? "bg-gradient-to-r from-brand to-brand/40 text-white shadow-sm ring-1 ring-lime/40" : "text-text hover:bg-white/10"}`}>
                     <Icon className="size-5 shrink-0" />
                     {t(`nav.${key}`)}
                   </Link>
@@ -116,18 +116,18 @@ export function AppShell({ children, wide }: { children: ReactNode; wide?: boole
           </ul>} />
         </nav>
         <div className="flex flex-col gap-3 px-4 pb-2 pt-3">
-          <div className="self-start rounded-full bg-ink"><LanguageSwitch /></div>
+          <div className="self-start rounded-full bg-white/10"><LanguageSwitch /></div>
           {user ? (
-            <div className="flex items-center gap-3 rounded-xl bg-white/70 p-2">
+            <div className="flex items-center gap-3 rounded-xl bg-white/10 p-2">
               <span className="grid size-10 shrink-0 place-items-center rounded-full bg-haldi-soft font-extrabold text-ink">
                 {initials}
               </span>
               <span className="min-w-0 flex-1">
                 <span className="block truncate font-semibold">{user.name}</span>
-                <span className="block text-sm text-brand">{t(`nav.role.${user.role}`)}</span>
+                <span className="block text-sm text-lime">{t(`nav.role.${user.role}`)}</span>
               </span>
               <button type="button" onClick={logout} aria-label={t("auth.logout")} title={t("auth.logout")}
-                className="grid size-10 place-items-center rounded-lg text-muted hover:bg-white hover:text-ink">
+                className="grid size-10 place-items-center rounded-lg text-muted hover:bg-white/10 hover:text-ink">
                 <LogoutIcon className="size-5" />
               </button>
             </div>
@@ -137,16 +137,24 @@ export function AppShell({ children, wide }: { children: ReactNode; wide?: boole
             </Link>
           )}
         </div>
-        <FarmScene className="w-full" />
+        {user && user.role !== "admin" && (
+          <Link href="/assistant" className="glass mx-4 mb-4 flex items-center gap-3 rounded-2xl border border-white/15 p-3 hover:ring-1 hover:ring-lime/40">
+            <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-lime/20 text-lime"><ChatIcon className="size-6" /></span>
+            <span className="min-w-0">
+              <span className="block font-extrabold">{t("nav.assistant")}</span>
+              <span className="block text-sm leading-snug text-muted">{t("nav.assistantPitch")}</span>
+            </span>
+          </Link>
+        )}
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-20 flex items-center justify-between gap-3 border-b border-white/80 bg-white/85 px-4 py-2 backdrop-blur-xl lg:hidden">
+        <header className="sticky top-0 z-20 flex items-center justify-between gap-3 border-b border-white/15 bg-[#0f2915]/80 px-4 py-2 backdrop-blur-xl lg:hidden">
           <Link href={user ? items[0].href : "/"} className="flex items-center gap-2">
             <LogoMark className="size-9" />
             <span className="text-lg font-extrabold text-ink">{t("app.name")}</span>
           </Link>
-          <div className="rounded-full bg-ink"><LanguageSwitch /></div>
+          <div className="rounded-full bg-white/10"><LanguageSwitch /></div>
         </header>
 
         {user && (
@@ -156,12 +164,12 @@ export function AppShell({ children, wide }: { children: ReactNode; wide?: boole
               <p className="text-muted">{t(`nav.tagline.${user.role}`)}</p>
             </div>
             <div className="flex items-center gap-3">
-              <span className="glass flex min-h-11 items-center gap-2 rounded-full border border-white/80 px-4 font-semibold">
-                <PinIcon className="size-5 text-brand" /> {user.district}, {user.state}
+              <span className="glass flex min-h-11 items-center gap-2 rounded-full border border-white/15 px-4 font-semibold">
+                <PinIcon className="size-5 text-lime" /> {user.district}, {user.state}
               </span>
               {user.role === "farmer" && (
                 <Link href="/farmer/diagnose"
-                  className="flex min-h-11 items-center gap-2 rounded-full bg-brand px-5 font-extrabold text-white shadow-sm hover:bg-brand-strong">
+                  className="flex min-h-11 items-center gap-2 rounded-full bg-lime px-5 font-extrabold text-ink-strong shadow-[0_0_24px_rgb(196_239_94/0.45)] hover:brightness-105">
                   <LeafScanIcon className="size-5" /> {t("nav.analyze")}
                 </Link>
               )}
@@ -170,12 +178,12 @@ export function AppShell({ children, wide }: { children: ReactNode; wide?: boole
         )}
 
         <main className={`mx-auto w-full flex-1 px-4 pb-28 pt-5 lg:px-8 lg:pb-12 ${wide ? "max-w-6xl" : "max-w-3xl"}`}>
-          {wide ? children : <div className="lg:glass lg:rounded-3xl lg:border lg:border-white/80 lg:p-8">{children}</div>}
+          {wide ? children : <div className="glass rounded-3xl border border-white/15 p-4 lg:p-8">{children}</div>}
         </main>
 
         {user && (
           <nav aria-label={t("nav.label")}
-            className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-white/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-6px_24px_rgb(23_81_44/0.08)] backdrop-blur-xl lg:hidden">
+            className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-[#0f2915]/90 pb-[env(safe-area-inset-bottom)] shadow-[0_-6px_24px_rgb(23_81_44/0.08)] backdrop-blur-xl lg:hidden">
             <ActiveAware render={(pathname) => <ul className="mx-auto grid max-w-md grid-cols-5">
               {tabs.map(({ href, key, Icon }) => {
                 const active = isActive(pathname, href, items);
@@ -183,7 +191,7 @@ export function AppShell({ children, wide }: { children: ReactNode; wide?: boole
                   <li key={href}>
                     <Link href={href} aria-current={active ? "page" : undefined}
                       className={`flex min-h-16 flex-col items-center justify-center gap-0.5 text-xs font-semibold leading-tight ${
-                        active ? "text-brand" : "text-muted"}`}>
+                        active ? "text-lime" : "text-muted"}`}>
                       <span className={`grid h-8 w-12 place-items-center rounded-full ${active ? "bg-brand-soft" : ""}`}>
                         <Icon className="size-6" />
                       </span>

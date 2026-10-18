@@ -19,7 +19,7 @@ export function LanguageSwitch() {
           aria-pressed={lang === l}
           onClick={() => setLang(l)}
           className={`min-h-11 rounded-full px-4 text-base font-semibold ${
-            lang === l ? "bg-white text-ink" : "text-white"
+            lang === l ? "bg-lime text-ink-strong" : "text-white"
           }`}
         >
           {t(`language.${l}`)}
@@ -33,7 +33,7 @@ export function LanguageSwitch() {
 export function TopBar({ right }: { right?: ReactNode }) {
   const { t } = useI18n();
   return (
-    <header className="bg-ink text-white">
+    <header className="glass border-b border-white/10 text-white">
       <div className="mx-auto flex max-w-md items-center justify-between gap-3 px-4 py-3">
         <Link href="/" className="flex items-center gap-2 text-xl font-extrabold tracking-tight">
           <LogoMark className="size-9 bg-white/15" />
@@ -81,7 +81,7 @@ export function Button({ variant = "primary", className = "", ...props }: Button
   const look =
     variant === "primary"
       ? "bg-brand text-white shadow-sm hover:bg-brand-strong"
-      : "border-2 border-ink text-ink bg-white hover:bg-surface";
+      : "border-2 border-ink text-ink bg-white/10 hover:bg-surface";
   return (
     <button
       className={`min-h-14 w-full rounded-xl px-5 text-lg font-extrabold disabled:opacity-60 ${look} ${className}`}
@@ -94,7 +94,7 @@ export function ButtonLink({ variant = "primary", className = "", ...props }: Co
   variant?: "primary" | "secondary";
 }) {
   const look =
-    variant === "primary" ? "bg-brand text-white shadow-sm hover:bg-brand-strong" : "border-2 border-ink text-ink bg-white";
+    variant === "primary" ? "bg-brand text-white shadow-sm hover:bg-brand-strong" : "border-2 border-ink text-ink bg-white/10";
   return (
     <Link
       className={`flex min-h-14 w-full items-center justify-center rounded-xl px-5 text-lg font-extrabold ${look} ${className}`}
@@ -131,7 +131,7 @@ export function Field({ id, label, hint, error, children }: {
 }
 
 export const inputClass =
-  "block min-h-14 w-full rounded-xl border-2 border-line bg-white px-4 text-lg text-text " +
+  "block min-h-14 w-full rounded-xl border-2 border-line bg-white/10 px-4 text-lg text-text " +
   "aria-[invalid=true]:border-danger focus:border-ink";
 
 /** Big tap target used for every either/or choice (role, crop, stage). */
@@ -148,7 +148,7 @@ export function ChoiceTile({ selected, onSelect, icon, label, hint }: {
       aria-pressed={selected}
       onClick={onSelect}
       className={`flex min-h-16 w-full items-center gap-3 rounded-xl border-2 px-4 py-3 text-left ${
-        selected ? "border-ink bg-surface" : "border-line bg-white"
+        selected ? "border-ink bg-surface" : "border-line bg-white/10"
       }`}
     >
       {icon && <span className={`shrink-0 ${selected ? "text-ink" : "text-muted"}`}>{icon}</span>}

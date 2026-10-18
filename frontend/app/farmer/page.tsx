@@ -22,15 +22,15 @@ import { useSession } from "@/lib/session";
 const COMMODITY: Record<string, string> = { tomato: "Tomato", potato: "Potato", maize: "Maize" };
 
 const FEATURES = [
-  { href: "/farmer/diagnose", key: "checkCrop", Icon: LeafScanIcon, tint: "bg-emerald-100 text-emerald-800" },
-  { href: "/assistant", key: "askAssistant", Icon: ChatIcon, tint: "bg-violet-100 text-violet-800" },
-  { href: "/market/prices", key: "prices", Icon: PriceIcon, tint: "bg-amber-100 text-amber-800" },
-  { href: "/farmer/listings", key: "sell", Icon: StoreIcon, tint: "bg-orange-100 text-orange-800" },
-  { href: "/enquiries", key: "enquiries", Icon: InboxIcon, tint: "bg-sky-100 text-sky-800" },
-  { href: "/farmer/water", key: "water", Icon: DropIcon, tint: "bg-cyan-100 text-cyan-800" },
-  { href: "/schemes", key: "schemes", Icon: SchemeIcon, tint: "bg-lime-100 text-lime-800" },
-  { href: "/updates", key: "updates", Icon: NewsIcon, tint: "bg-rose-100 text-rose-800" },
-  { href: "/help", key: "help", Icon: HelpIcon, tint: "bg-teal-100 text-teal-800" },
+  { href: "/farmer/diagnose", key: "checkCrop", Icon: LeafScanIcon, tint: "bg-emerald-400/15 text-emerald-200" },
+  { href: "/assistant", key: "askAssistant", Icon: ChatIcon, tint: "bg-violet-400/15 text-violet-200" },
+  { href: "/market/prices", key: "prices", Icon: PriceIcon, tint: "bg-amber-400/15 text-amber-200" },
+  { href: "/farmer/listings", key: "sell", Icon: StoreIcon, tint: "bg-orange-400/15 text-orange-200" },
+  { href: "/enquiries", key: "enquiries", Icon: InboxIcon, tint: "bg-sky-400/15 text-sky-200" },
+  { href: "/farmer/water", key: "water", Icon: DropIcon, tint: "bg-cyan-400/15 text-cyan-200" },
+  { href: "/schemes", key: "schemes", Icon: SchemeIcon, tint: "bg-lime-400/15 text-lime-200" },
+  { href: "/updates", key: "updates", Icon: NewsIcon, tint: "bg-rose-400/15 text-rose-200" },
+  { href: "/help", key: "help", Icon: HelpIcon, tint: "bg-teal-400/15 text-teal-200" },
 ];
 
 type Dashboard = {
@@ -75,7 +75,7 @@ function Panel({ title, action, children, className = "" }: {
   className?: string;
 }) {
   return (
-    <section className={`glass rounded-3xl border border-white/80 p-5 ${className}`}>
+    <section className={`glass rounded-3xl border border-white/15 p-5 ${className}`}>
       <div className="mb-3 flex items-center justify-between gap-3">
         <h2 className="text-lg font-extrabold text-ink">{title}</h2>
         {action}
@@ -94,7 +94,7 @@ function Stat({ href, Icon, tint, label, value, hint }: {
   hint: string;
 }) {
   return (
-    <Link href={href} className="glass flex items-center gap-4 rounded-2xl border border-white/80 p-4 hover:border-brand">
+    <Link href={href} className="glass flex items-center gap-4 rounded-2xl border border-white/15 p-4 hover:border-brand">
       <span className={`grid size-12 shrink-0 place-items-center rounded-2xl ${tint}`}><Icon className="size-6" /></span>
       <span className="min-w-0">
         <span className="block text-sm font-semibold text-muted">{label}</span>
@@ -141,7 +141,7 @@ export default function FarmerHome() {
     ? (lang === "hi" ? last.prediction.name_hi : last.prediction.name)
     : t(`home.checkStatus.${last.status}`));
   const viewAll = (href: string) => (
-    <Link href={href} className="text-sm font-semibold text-brand underline">{t("home.viewAll")}</Link>
+    <Link href={href} className="text-sm font-semibold text-lime underline">{t("home.viewAll")}</Link>
   );
 
   return (
@@ -150,11 +150,11 @@ export default function FarmerHome() {
 
       {/* Phone home: greeting, one big action, then the feature grid. */}
       <section className="mb-6 lg:hidden">
-        <div className="glass mb-5 rounded-3xl border border-white/80 p-5">
+        <div className="glass mb-5 rounded-3xl border border-white/15 p-5">
           <h1 className="text-2xl font-extrabold leading-tight text-ink">{t("home.greeting", { name: user.name })} 👋</h1>
           <p className="mb-4 text-muted">{t("nav.tagline.farmer")}</p>
           <Link href="/farmer/diagnose"
-            className="flex min-h-14 items-center justify-center gap-2 rounded-2xl bg-brand text-lg font-extrabold text-white shadow-sm">
+            className="flex min-h-14 items-center justify-center gap-2 rounded-2xl bg-lime text-lg font-extrabold text-ink-strong shadow-[0_0_24px_rgb(196_239_94/0.4)]">
             <LeafScanIcon className="size-6" /> {t("nav.analyze")}
           </Link>
         </div>
@@ -163,7 +163,7 @@ export default function FarmerHome() {
           {FEATURES.map(({ href, key, Icon, tint }) => (
             <li key={href}>
               <Link href={href}
-                className="glass flex h-full min-h-28 flex-col items-center justify-center gap-2 rounded-2xl border border-white/80 p-2 text-center active:scale-95">
+                className="glass flex h-full min-h-28 flex-col items-center justify-center gap-2 rounded-2xl border border-white/15 p-2 text-center active:scale-95">
                 <span className={`grid size-12 place-items-center rounded-2xl ${tint}`}><Icon className="size-7" /></span>
                 <span className="text-sm font-semibold leading-tight">{t(`home.${key}`)}</span>
               </Link>
@@ -178,13 +178,13 @@ export default function FarmerHome() {
         <>
           <div className="mb-5 hidden grid-cols-4 gap-4 lg:grid">
             <Stat href={last ? `/farmer/analyses/${last.id}` : "/farmer/diagnose"} Icon={LeafScanIcon}
-              tint="bg-emerald-100 text-emerald-800" label={t("home.statChecks")} value={data.analyses.length}
+              tint="bg-emerald-400/15 text-emerald-200" label={t("home.statChecks")} value={data.analyses.length}
               hint={last ? t("home.lastCheck", { date: dateFmt.format(new Date(last.created_at)) }) : t("home.noCheckShort")} />
-            <Stat href="/farmer/listings" Icon={StoreIcon} tint="bg-orange-100 text-orange-800" label={t("home.statListings")}
+            <Stat href="/farmer/listings" Icon={StoreIcon} tint="bg-orange-400/15 text-orange-200" label={t("home.statListings")}
               value={data.listings.filter((l) => l.status === "open").length} hint={t("home.statListingsHint")} />
-            <Stat href="/enquiries" Icon={InboxIcon} tint="bg-sky-100 text-sky-800" label={t("home.statEnquiries")}
+            <Stat href="/enquiries" Icon={InboxIcon} tint="bg-sky-400/15 text-sky-200" label={t("home.statEnquiries")}
               value={data.enquiries.filter((e) => e.status === "pending").length} hint={t("home.statEnquiriesHint")} />
-            <Stat href="#reminders" Icon={SproutIcon} tint="bg-amber-100 text-amber-800" label={t("home.statReminders")}
+            <Stat href="#reminders" Icon={SproutIcon} tint="bg-amber-400/15 text-amber-200" label={t("home.statReminders")}
               value={data.reminders.length} hint={t("home.statRemindersHint")} />
           </div>
 
@@ -214,7 +214,7 @@ export default function FarmerHome() {
                       {t("home.viewResult")}
                     </Link>
                     <Link href="/farmer/diagnose"
-                      className="flex min-h-11 items-center justify-center rounded-xl border-2 border-ink bg-white px-4 font-extrabold text-ink">
+                      className="flex min-h-11 items-center justify-center rounded-xl border-2 border-ink bg-white/10 px-4 font-extrabold text-ink">
                       {t("home.scanAnother")}
                     </Link>
                   </div>
@@ -227,8 +227,8 @@ export default function FarmerHome() {
             <Panel title={t("home.todayFarm")}>
               <div id="reminders" className="flex flex-col gap-3">
                 {data.water?.estimate.totals && (
-                  <Link href="/farmer/water" className="flex items-center gap-3 rounded-2xl bg-cyan-50 p-3 hover:bg-cyan-100">
-                    <DropIcon className="size-8 shrink-0 text-cyan-700" />
+                  <Link href="/farmer/water" className="flex items-center gap-3 rounded-2xl bg-cyan-400/15 p-3 hover:bg-cyan-400/25">
+                    <DropIcon className="size-8 shrink-0 text-cyan-200" />
                     <span>
                       <span className="block text-sm text-muted">{t("home.waterWeek", { crop: cropName(data.water.crop.crop_code) })}</span>
                       <span className="block font-extrabold">
@@ -296,8 +296,8 @@ export default function FarmerHome() {
                   const I = Icon as typeof SproutIcon;
                   return (
                     <li key={href as string}>
-                      <Link href={href as string} className="flex min-h-11 items-center gap-3 rounded-xl bg-white/70 px-3 font-semibold hover:bg-brand-soft">
-                        <I className="size-5 text-brand" /> {t(`home.${key}`)}
+                      <Link href={href as string} className="flex min-h-11 items-center gap-3 rounded-xl bg-white/10 px-3 font-semibold hover:bg-brand-soft">
+                        <I className="size-5 text-lime" /> {t(`home.${key}`)}
                       </Link>
                     </li>
                   );
@@ -306,7 +306,7 @@ export default function FarmerHome() {
             </Panel>
 
             <Panel title={t("home.myCrops")} action={
-              <Link href="/onboarding" className="text-sm font-semibold text-brand underline">{t("home.addCrop")}</Link>
+              <Link href="/onboarding" className="text-sm font-semibold text-lime underline">{t("home.addCrop")}</Link>
             } className="lg:col-span-2">
               {data.crops.length ? (
                 <ul className="grid gap-2 sm:grid-cols-2">
@@ -315,7 +315,7 @@ export default function FarmerHome() {
                     return (
                       <li key={c.id}>
                         <Link href={`/farmer/crops/${c.id}`}
-                          className="flex items-center gap-3 rounded-2xl bg-white/70 px-4 py-3 hover:bg-brand-soft">
+                          className="flex items-center gap-3 rounded-2xl bg-white/10 px-4 py-3 hover:bg-brand-soft">
                           <Icon className="size-10 shrink-0 text-field" />
                           <span>
                             <span className="block text-lg font-extrabold">{cropName(c.crop_code)}</span>
@@ -338,16 +338,16 @@ export default function FarmerHome() {
               <ul className="flex flex-col gap-2">
                 {data.schemes.slice(0, 2).map((s) => (
                   <li key={s.id}>
-                    <Link href={`/schemes/${s.id}`} className="flex items-start gap-3 rounded-xl bg-white/70 p-3 hover:bg-brand-soft">
-                      <SchemeIcon className="mt-0.5 size-5 shrink-0 text-brand" />
+                    <Link href={`/schemes/${s.id}`} className="flex items-start gap-3 rounded-xl bg-white/10 p-3 hover:bg-brand-soft">
+                      <SchemeIcon className="mt-0.5 size-5 shrink-0 text-lime" />
                       <span className="font-semibold leading-snug">{s.name}</span>
                     </Link>
                   </li>
                 ))}
                 {data.updates.slice(0, 2).map((u) => (
                   <li key={u.id}>
-                    <Link href="/updates" className="flex items-start gap-3 rounded-xl bg-white/70 p-3 hover:bg-brand-soft">
-                      <NewsIcon className="mt-0.5 size-5 shrink-0 text-rose-700" />
+                    <Link href="/updates" className="flex items-start gap-3 rounded-xl bg-white/10 p-3 hover:bg-brand-soft">
+                      <NewsIcon className="mt-0.5 size-5 shrink-0 text-rose-200" />
                       <span className="font-semibold leading-snug">{u.title}</span>
                     </Link>
                   </li>
