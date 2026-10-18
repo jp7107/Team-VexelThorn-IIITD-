@@ -7,6 +7,7 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
+from app.core import ratelimit
 from app.core.db import get_db
 from app.core.errors import AppError
 from app.core.security import clear_session, current_user, hash_password, set_session, verify_password
@@ -56,7 +57,8 @@ class UserOut(BaseModel):
     lon: float | None
 
 
-@router.post("/register", status_code=201, response_model=UserOut)
+@router.post("/register", status_code=201, response_model=UserOut,
+             dependencies=[Depends(ratelimit.per_ip("register", 10, 600))])
 def register(body: RegisterIn, response: Response, db: Session = Depends(get_db)):
     if db.scalar(select(User.id).where(User.phone == body.phone)):
         raise AppError(409, "This phone number is already registered")
@@ -71,8 +73,10 @@ def register(body: RegisterIn, response: Response, db: Session = Depends(get_db)
     return user
 
 
-@router.post("/login", response_model=UserOut)
+@router.post("/login", response_model=UserOut, dependencies=[Depends(ratelimit.per_ip("login", 20, 600))])
 def login(body: LoginIn, response: Response, db: Session = Depends(get_db)):
+    # Per account as well as per IP: a spoofed X-Forwarded-For can't buy more guesses at one phone number.
+    ratelimit.hit(f"login:phone:{body.phone}", 5, 60)
     user = db.scalar(select(User).where(User.phone == body.phone))
     if not verify_password(user.password_hash if user else None, body.password):
         raise AppError(401, "Wrong phone number or password")

@@ -24,6 +24,7 @@ from fastapi.testclient import TestClient  # noqa: E402
 from PIL import Image  # noqa: E402
 from sqlalchemy import text  # noqa: E402
 
+from app.core import ratelimit  # noqa: E402
 from app.core.config import get_settings  # noqa: E402
 from app.core.db import engine  # noqa: E402
 from app.main import app  # noqa: E402
@@ -47,6 +48,7 @@ def clean_tables():
     tables = ", ".join(t.name for t in Base.metadata.sorted_tables)
     with engine.begin() as conn:
         conn.execute(text(f"TRUNCATE {tables} CASCADE"))
+    ratelimit.reset()
     yield
 
 

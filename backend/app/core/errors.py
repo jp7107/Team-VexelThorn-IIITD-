@@ -28,17 +28,19 @@ _STATUS_CODES = {
 
 
 class AppError(Exception):
-    def __init__(self, status: int, message: str, code: str | None = None, details: dict | None = None):
+    def __init__(self, status: int, message: str, code: str | None = None, details: dict | None = None,
+                 headers: dict[str, str] | None = None):
         self.status = status
         self.code = code or _STATUS_CODES.get(status, "ERROR")
         self.message = message
         self.details = details or {}
+        self.headers = headers or {}
 
 
-def _envelope(request: Request, status: int, code: str, message: str, details=None) -> JSONResponse:
+def _envelope(request: Request, status: int, code: str, message: str, details=None, headers=None) -> JSONResponse:
     body = {"error": {"code": code, "message": message, "details": details or {},
                       "request_id": getattr(request.state, "request_id", None)}}
-    return JSONResponse(body, status_code=status)
+    return JSONResponse(body, status_code=status, headers=headers)
 
 
 def install(app: FastAPI) -> None:
@@ -56,7 +58,7 @@ def install(app: FastAPI) -> None:
 
     @app.exception_handler(AppError)
     async def app_error(request: Request, exc: AppError):
-        return _envelope(request, exc.status, exc.code, exc.message, exc.details)
+        return _envelope(request, exc.status, exc.code, exc.message, exc.details, exc.headers)
 
     @app.exception_handler(StarletteHTTPException)
     async def http_error(request: Request, exc: StarletteHTTPException):

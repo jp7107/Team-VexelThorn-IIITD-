@@ -14,8 +14,9 @@ from sqlalchemy.orm import Session
 from app.core.config import get_settings
 from app.core.db import SessionLocal
 from app.core.security import hash_password
+from app.kb_articles import KB_ARTICLES, PRODUCTIVITY_ARTICLES
 from app.ml.inference import labels
-from app.models import DiseaseClass, Listing, MarketPrice, Scheme, User
+from app.models import DiseaseClass, KbArticle, Listing, MarketPrice, Scheme, User
 
 DEMO_USERS = [
     {"phone": "9000000001", "name": "Demo Admin", "role": "admin", "customer_type": None},
@@ -40,6 +41,7 @@ def seed(db: Session, password: str) -> None:
     _seed_demo_listings(db)
     _seed_demo_prices(db)
     _seed_schemes(db)
+    _seed_kb(db)
     db.commit()
 
 
@@ -127,10 +129,20 @@ def _seed_schemes(db: Session) -> None:
             db.add(Scheme(**scheme, states=[], last_verified_at=date(2026, 10, 17), published=True))
 
 
+
+def _seed_kb(db: Session) -> None:
+    articles = [(a, "disease") for a in KB_ARTICLES] + [(a, "productivity") for a in PRODUCTIVITY_ARTICLES]
+    for article, topic in articles:
+        if not db.scalar(select(KbArticle.id).where(KbArticle.title == article["title"],
+                                                    KbArticle.source_url == article["source_url"])):
+            db.add(KbArticle(**article, topic=topic, language="en", verified_by="KisanSetu team",
+                             verified_at=date(2026, 10, 18)))
+
+
 if __name__ == "__main__":
     password = get_settings().SEED_DEMO_PASSWORD
     if len(password) < 8:
         sys.exit("Set SEED_DEMO_PASSWORD (min 8 characters) before seeding.")
     with SessionLocal() as session:
         seed(session, password)
-    print(f"Seeded {len(labels())} disease classes, {len(DEMO_USERS)} demo users, demo listings and prices, verified schemes.")
+    print(f"Seeded {len(labels())} disease classes, {len(DEMO_USERS)} demo users, demo listings and prices, verified schemes, {len(KB_ARTICLES) + len(PRODUCTIVITY_ARTICLES)} sourced KB articles.")

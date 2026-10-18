@@ -1098,9 +1098,9 @@ Status values: `Not Started` · `In Progress` · `Blocked` · `Done`. **Everythi
 | BE-03 | Seed script (users, classes, demo data) | P0 | M1 | M4 | BE-01 | 0.5 | H5–5.5 | Done | `python -m app.seed` idempotent | — |
 | DEP-01 | Backend + Neon deploy (Dockerfile, env, migrations on release) | P0 | M1 | — | BE-02 | 1.0 | H5.5–6.5 | Not Started | `/readyz` 200 in prod over HTTPS | Alternate host (CP2) |
 | BE-07 | 6 retrieval tools + executor + role filter + audit | P0 | M1 | M2 | BE-01 | 2.0 | H7.5–9.5 | Done | BE-T5 (scoping), BE-T6 (injection args) | Cut to 4 tools (drop `search_schemes`, `get_my_crops`) |
-| BE-09 | Reminders, crop updates, support tickets API + public content reads (`/schemes`, `/updates`, `/kb`) | P1 | M1 | M3, M4 | BE-02 | 1.0 | H13–14 | Not Started | CRUD tests, owner checks | Crop updates without photo |
+| BE-09 | Reminders, crop updates, support tickets API + public content reads (`/schemes`, `/updates`, `/kb`) | P1 | M1 | M3, M4 | BE-02 | 1.0 | H13–14 | Done | CRUD tests, owner checks | Crop updates without photo |
 | BE-06 | Wire real `predict` + model load at startup + timeout | P0 | M1 | M2 | ML-03 | 1.0 | H9.5–10.5 | Done | ML-T1/T2 on deployed backend; latency logged | F-ML-3 |
-| BE-08 | Rate limits (login, analyses, chat), size limits, security headers, CORS lock | P0 | M1 | — | BE-02 | 1.0 | H14–15 | Not Started | BE-T7 (429s) | Login + chat limits only |
+| BE-08 | Rate limits (login, analyses, chat), size limits, security headers, CORS lock | P0 | M1 | — | BE-02 | 1.0 | H14–15 | Done | BE-T7 (429s) | Login + chat limits only |
 | BE-10 | Backend tests: auth, role isolation, IDOR, tools scoping, contracts | P0 | M1 | All | BE-* | 2.0 | H15–17 | Not Started | `pytest -q` green in CI | Keep P0 tests only (§20.1) |
 | ML-01 | Datasets: licence, download, filter MVP classes, dedupe, split, manifest | P0 | M2 | M4 (licence read) | S-01 | 2.5 | H1–3.5 | Done | `manifest.csv`, `labels.json`, `DATA_SOURCES.md` committed; no group across splits | F-ML-2 at H4 |
 | ML-02 | Baseline B0 (frozen MNv2 + logreg), B1 queued | P0 | M2 | — | ML-01 | 1.0 attn | H3.5–4, H5.5–6 | Done | B0 val metrics in `metrics.json` | — |
@@ -1110,27 +1110,27 @@ Status values: `Not Started` · `In Progress` · `Blocked` · `Done`. **Everythi
 | LLM-02 | Report generation (Paths A/B/C/G) + class-integrity check + persistence | P0 | M2 | M1, M4 | LLM-01, BE-06, CNT-01 | 2.0 | H8.5–10.5 | Done | LLM-T1, T4, T7 pass | Template-only reports (Path F) |
 | LLM-03 | Chat with tools, routing D/E/H, Hindi, limits | P0 | M2 | M1 | BE-07, LLM-01 | 2.5 | H10.5–13 | Done | LLM-T2, T3, T5, T6 pass | Deterministic retrieval-then-generate (no function calling) |
 | ML-05 | Stage 2 fine-tune top 2, calibration, thresholds, single test eval, CPU bench | P1 | M2 | — | ML-04 | 1.25 attn | H12–12.25 launch, H14.5–15.5 finish | Not Started | Eligibility gate evaluated and recorded | F-ML-4 |
-| AG-01 | Irrigation estimator (`/irrigation/estimate`) using M2's cited Kc table + Open-Meteo + manual fallback | P1 | M1 | M2 (method, Kc table, review) | BE-01 | 1.0 | H10.5–11.5 | Not Started | Unit test with fixed weather JSON; `weather_status=unavailable` path | Text-only guidance from KB |
+| AG-01 | Irrigation estimator (`/irrigation/estimate`) using M2's cited Kc table + Open-Meteo + manual fallback | P1 | M1 | M2 (method, Kc table, review) | BE-01 | 1.0 | H10.5–11.5 | Done | Unit test with fixed weather JSON; `weather_status=unavailable` path | Text-only guidance from KB |
 | ML-06 | Swap final model, model card, benchmark report (all 18 statuses) | P0 | M2 | M1 | ML-05 | 1.0 | H15.5–16.5 | Not Started | `/readyz` shows new version; report committed | Keep current model |
 | FE-01 | Next.js shell, Tailwind, i18n en/hi, layout, API client, `/api` rewrite, PWA manifest | P0 | M3 | — | S-01 | 2.5 | H1–3.5 | Done | `npm run build` ok; language toggle works | Plain JSON dictionaries |
 | FE-02 | Login/register (role, customer type), onboarding, role routing | P0 | M3 | M1 | BE-02 (fixtures until H5) | 2.0 | H3.5–5.5 | Done | FE-T1 | — |
 | DEP-02 | Vercel deploy + `BACKEND_URL` rewrite | P0 | M3 | M1 | FE-01, DEP-01 | 0.5 | H6–6.5 | Not Started | Prod login via proxy works | Same-origin fallback: serve via backend CORS + bearer |
-| FE-03 | Farmer dashboard | P0 | M3 | — | FE-02 | 1.0 | H5.5–6.5 | In Progress | Shows reminders/crops/last analysis/prices card | Without prices card |
+| FE-03 | Farmer dashboard | P0 | M3 | — | FE-02 | 1.0 | H5.5–6.5 | Done | Shows reminders/crops/last analysis/prices card | Without prices card |
 | FE-04 | Diagnose flow: crop pick, capture, client resize, all result states, photo tips | P0 | M3 | M2 | BE-05 | 2.5 | H6.5–9 | Done | FE-T2/T3 | — |
 | FE-05 | Report view + "Ask about this" | P0 | M3 | M2 | LLM-02 (fixtures until H10.5) | 1.5 | H9–10.5 | Done | Evidence and `llm_general` labels visible | — |
 | FE-06 | Chat UI: evidence chips, follow-ups, Hindi, thinking/timeout states | P0 | M3 | M2 | LLM-03 (fixtures until H13) | 2.5 | H10.5–13 | Done | FE-T4 | Plain text answers without chips |
-| FE-07 | Reminders + crop updates UI | P1 | M3 | M1 | BE-09 | 1.0 | H16–17 | Not Started | Due reminder visible on dashboard | Reminders only |
-| FE-08 | Irrigation card | P1 | M3 | M1 | AG-01 | 1.0 | H13–14 | Not Started | Shows estimate label + sources | Text only |
+| FE-07 | Reminders + crop updates UI | P1 | M3 | M1 | BE-09 | 1.0 | H16–17 | Done | Due reminder visible on dashboard | Reminders only |
+| FE-08 | Irrigation card | P1 | M3 | M1 | AG-01 | 1.0 | H13–14 | Done | Shows estimate label + sources | Text only |
 | FE-09 | Schemes + updates read pages | P1 | M3 | M4 | CNT-02, BE-09 (fixtures until H14) | 0.5 | H14–14.5 | Done | Official link + verified date visible | Updates list only |
 | MKT-01 | Price source verification, API key, snapshot, demo labelling plan | P0 | M4 | — | S-01 | 1.0 | H1–2 | In Progress | `docs/DATA_SOURCES.md` prices section | Demo rows labelled |
 | CNT-02 | 5 schemes from official pages (seed JSON) | P0 | M4 | — | S-04 | 1.0 | H2–3 | In Progress | Each row has `official_url`, `last_verified_at` | 3 schemes |
-| CNT-01 | KB articles: 1 per MVP disease class + 1 productivity per crop, each sourced | P0 | M4 | M2 | ML-01 (`labels.json`) | 2.5 | H3–5.5 | Not Started | Every row has `source_url`; second member spot-checks 5 | Healthy classes share one article |
+| CNT-01 | KB articles: 1 per MVP disease class + 1 productivity per crop, each sourced | P0 | M4 | M2 | ML-01 (`labels.json`) | 2.5 | H3–5.5 | Done | Every row has `source_url`; second member spot-checks 5 | Healthy classes share one article |
 | MKT-02 | Listings API + create/browse/filter/detail UI | P0 | M4 | M3 | BE-02 | 3.0 | H5.5–8.5 | Done | MKT-T1/T2 | No edit, only close |
 | MKT-03 | Enquiries: create, accept/decline/withdraw, contact reveal | P0 | M4 | M1 | MKT-02 | 2.0 | H8.5–10, H11.5–12 | Done | MKT-T3/T4 (phone hidden before accept) | No withdraw |
 | MKT-04 | Price fetch + cache + page | P0 | M4 | — | MKT-01 | 2.0 | H12–14 | Done | MKT-T5 (source/date/demo badge) | Snapshot only |
 | MKT-05 | Ratings API + UI + averages | P1 | M4 | — | MKT-03 | 1.0 | H14–15 | Done | MKT-T6 (once per enquiry, 409) | API + avg display only |
 | ADM-01 | Admin console (schemes, updates, KB, listings hide, users, tickets) | P0 | M4 | M1 | BE-02 | 1.5 | H15–16.5 | Done | ADM-T1 (non-admin 403) | Schemes + updates + hide only |
-| FE-10 | Help page: videos, support form, helplines (verified) | P1 | M4 | M3 | BE-09 | 0.5 | H16.5–17 | Not Started | Form creates ticket | Links only |
+| FE-10 | Help page: videos, support form, helplines (verified) | P1 | M4 | M3 | BE-09 | 0.5 | H16.5–17 | Done | Form creates ticket | Links only |
 | QA-02 | Playwright farmer journey + manual phone pass | P0 | M3 | — | CP7 | 1.5 | H17–18.5 | Not Started | §20.4 flows 1–4 | Manual scripted check |
 | QA-03 | Marketplace/admin E2E checklist | P0 | M4 | — | CP7 | 1.0 | H17–18 | Not Started | §20.4 flows 5–10 | — |
 | QA-04 | ML tests (blurry, unsupported, OOD samples, latency) | P0 | M2 | — | ML-06 | 1.0 | H16.5–17.5 | Not Started | ML-T* pass | — |

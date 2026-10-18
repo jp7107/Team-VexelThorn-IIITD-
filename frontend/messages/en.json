@@ -87,7 +87,18 @@
     "enquiries": "Enquiries",
     "prices": "Mandi prices",
     "schemes": "Government schemes",
-    "updates": "Farming updates"
+    "updates": "Farming updates",
+    "water": "Water needed",
+    "help": "Help",
+    "lastCheck": "Last leaf check, {date}",
+    "priceAt": "{crop} at {market}",
+    "checkStatus": {
+      "uncertain": "Not sure: check again",
+      "unsupported": "Couldn't identify",
+      "rejected_quality": "Photo was unclear",
+      "error": "Check failed",
+      "ok": "Checked"
+    }
   },
   "errors": {
     "required": "Fill this in",
@@ -97,7 +108,8 @@
     "phoneTaken": "This number already has an account. Log in instead.",
     "wrongLogin": "Wrong mobile number or password",
     "network": "Can't reach the server. Check your internet and try again.",
-    "generic": "That didn't work. Try again."
+    "generic": "That didn't work. Try again.",
+    "rateLimited": "Too many tries in a short time. Wait a minute and try again."
   },
   "common": {
     "loading": "Loading…",
@@ -374,6 +386,88 @@
       "farmer": "Farmer",
       "customer": "Buyer",
       "admin": "Admin"
-    }
+    },
+    "support": "Support",
+    "close": "Close",
+    "reopen": "Reopen",
+    "callBack": "Call {phone}"
+  },
+  "water": {
+    "title": "Water needed this week",
+    "pickCrop": "Which crop?",
+    "noCrops": "Add a crop first to get a water estimate.",
+    "unsupported": "Water estimates are available for tomato, potato and maize.",
+    "needLocation": "We need your location for the weather forecast.",
+    "useLocation": "Use my location",
+    "locating": "Finding your location…",
+    "denied": "Location wasn't shared. Allow location for this site in your browser settings, then try again.",
+    "headline": "About {mm} mm of water needed",
+    "litres": "That's about {litres} litres for your {acres} acres over 7 days.",
+    "noneNeeded": "Expected rain should cover your crop's need this week.",
+    "rain": "Rain forecast: {mm} mm",
+    "need": "Crop need: {mm} mm",
+    "daily": "Day by day",
+    "dayRow": "{need} mm needed, {rain} mm rain",
+    "estimateNote": "Estimate from the weather forecast and FAO crop factors. No field sensors are used. Check your soil before watering.",
+    "stageKc": "Stage: {stage} · crop factor {kc}",
+    "weatherDown": "The weather forecast is unavailable right now. Try again later.",
+    "sources": "Method and sources",
+    "link": "Water needed"
+  },
+  "help": {
+    "title": "Help",
+    "guides": "How to use KisanSetu",
+    "g_check": "Check a sick leaf",
+    "g_check_1": "Tap “Check my crop” and choose the crop.",
+    "g_check_2": "Photograph one leaf on a plain background, in daylight.",
+    "g_check_3": "Tap “Check this leaf” and read the result and report.",
+    "g_check_4": "Tap “Ask about this” to ask the assistant a question.",
+    "g_sell": "Sell your produce",
+    "g_sell_1": "Tap “Sell my crop”, then “List produce”.",
+    "g_sell_2": "Enter the crop, quantity and price, then tap “List it”.",
+    "g_sell_3": "Buyers' enquiries appear under “Enquiries”.",
+    "g_sell_4": "Tap “Accept” to share your number with that buyer only.",
+    "g_price": "See mandi prices",
+    "g_price_1": "Tap “Mandi prices” and choose a crop.",
+    "g_price_2": "Pick your state to see nearby mandis.",
+    "g_price_3": "Check the price date and source. A “DEMO” label means it is not a real price.",
+    "kcc": "Kisan Call Centre",
+    "kccNumber": "1800-180-1551",
+    "kccShort": "or 1551",
+    "kccDetails": "Toll-free. 6 AM to 10 PM, all seven days. Answers in 22 local languages.",
+    "kccCall": "Call 1800-180-1551",
+    "kccSource": "Source: Department of Agriculture KCC portal (checked 17 Oct 2026)",
+    "contact": "Message KisanSetu support",
+    "subject": "Subject",
+    "message": "Your message",
+    "send": "Send message",
+    "sent": "Message sent. We'll get back to you.",
+    "loginToSend": "Log in to send us a message.",
+    "myTickets": "Your messages",
+    "open": "Open",
+    "closed": "Closed",
+    "link": "Help"
+  },
+  "crop": {
+    "notFound": "This crop was not found.",
+    "howIsIt": "How does the crop look today?",
+    "cond": {
+      "good": "Looks good",
+      "concern": "Something looks off",
+      "bad": "Looks bad"
+    },
+    "noteLabel": "What did you see? (optional)",
+    "noteHint": "For example: yellow leaves, spots, wilting.",
+    "save": "Save update",
+    "saved": "Update saved.",
+    "checkPhoto": "Check with a photo",
+    "history": "Past updates",
+    "noHistory": "No updates yet. Tap one above to start.",
+    "reminders": "Reminders for this crop",
+    "noReminders": "No reminders for this crop.",
+    "remindCheck": "Check again in 3 days",
+    "remindWater": "Water check in 7 days",
+    "remindCheckTitle": "Check crop condition",
+    "remindWaterTitle": "Check irrigation need"
   }
 }

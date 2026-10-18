@@ -113,3 +113,21 @@ def test_crop_and_reminder_flow(farmer_client):
 
     assert farmer_client.delete(f"/me/crops/{crop_id}").status_code == 204
     assert farmer_client.get("/me/crops").json() == []
+
+
+def test_crop_condition_updates_are_owner_only(farmer_client):
+    crop_id = farmer_client.post("/me/crops", json={"crop_code": "tomato", "area_acres": "1", "sowing_date": "2026-09-01",
+                                                    "stage": "mid"}).json()["id"]
+    assert farmer_client.get(f"/me/crops/{crop_id}").json()["crop_code"] == "tomato"
+    r = farmer_client.post(f"/me/crops/{crop_id}/updates", json={"condition": "concern", "note": "  Yellow spots  "})
+    assert r.status_code == 201 and r.json()["note"] == "Yellow spots"
+    farmer_client.post(f"/me/crops/{crop_id}/updates", json={"condition": "good"})
+    assert [u["condition"] for u in farmer_client.get(f"/me/crops/{crop_id}/updates").json()] == ["good", "concern"]
+    assert farmer_client.post(f"/me/crops/{crop_id}/updates", json={"condition": "dead"}).status_code == 422
+    assert farmer_client.post(f"/me/crops/{crop_id}/updates", json={"condition": "bad", "note": "x" * 501}).status_code == 422
+
+    other = make_client()
+    register(other)
+    assert other.get(f"/me/crops/{crop_id}").status_code == 404
+    assert other.get(f"/me/crops/{crop_id}/updates").status_code == 404
+    assert other.post(f"/me/crops/{crop_id}/updates", json={"condition": "good"}).status_code == 404

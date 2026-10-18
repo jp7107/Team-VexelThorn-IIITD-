@@ -15,6 +15,7 @@ from sqlalchemy import case, func, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
+from app.core import ratelimit
 from app.core.db import get_db
 from app.core.errors import AppError
 from app.core.security import current_user, require_role
@@ -225,7 +226,8 @@ def _enquiry_out(e: Enquiry, listing: Listing, buyer: User, owner: User, viewer:
     )
 
 
-@router.post("/listings/{listing_id}/enquiries", status_code=201, response_model=EnquiryOut)
+@router.post("/listings/{listing_id}/enquiries", status_code=201, response_model=EnquiryOut,
+             dependencies=[Depends(ratelimit.per_user("enquiries", (30, 3600)))])
 def create_enquiry(listing_id: UUID, body: EnquiryIn, user: User = Depends(customer), db: Session = Depends(get_db)):
     listing = _visible_listing(db, listing_id, user)
     if listing.status != "open":

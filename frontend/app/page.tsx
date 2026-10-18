@@ -46,6 +46,7 @@ export default function Landing() {
           <ButtonLink href="/login" variant="secondary">{t("landing.login")}</ButtonLink>
         </div>
         <p className="mt-6 text-base text-muted">{t("app.installHint")}</p>
+        <Link href="/help" className="mt-4 inline-flex min-h-11 items-center text-lg font-semibold text-ink underline">{t("home.help")}</Link>
       </main>
     </>
   );
