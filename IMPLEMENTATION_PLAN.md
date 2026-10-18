@@ -1115,7 +1115,7 @@ Status values: `Not Started` · `In Progress` · `Blocked` · `Done`. **Everythi
 | FE-01 | Next.js shell, Tailwind, i18n en/hi, layout, API client, `/api` rewrite, PWA manifest | P0 | M3 | — | S-01 | 2.5 | H1–3.5 | Done | `npm run build` ok; language toggle works | Plain JSON dictionaries |
 | FE-02 | Login/register (role, customer type), onboarding, role routing | P0 | M3 | M1 | BE-02 (fixtures until H5) | 2.0 | H3.5–5.5 | Done | FE-T1 | — |
 | DEP-02 | Vercel deploy + `BACKEND_URL` rewrite | P0 | M3 | M1 | FE-01, DEP-01 | 0.5 | H6–6.5 | Not Started | Prod login via proxy works | Same-origin fallback: serve via backend CORS + bearer |
-| FE-03 | Farmer dashboard | P0 | M3 | — | FE-02 | 1.0 | H5.5–6.5 | In Progress | Shows reminders/crops/last analysis/prices card | Without prices card |
+| FE-03 | Farmer dashboard | P0 | M3 | — | FE-02 | 1.0 | H5.5–6.5 | Done | Shows reminders/crops/last analysis/prices card | Without prices card |
 | FE-04 | Diagnose flow: crop pick, capture, client resize, all result states, photo tips | P0 | M3 | M2 | BE-05 | 2.5 | H6.5–9 | Done | FE-T2/T3 | — |
 | FE-05 | Report view + "Ask about this" | P0 | M3 | M2 | LLM-02 (fixtures until H10.5) | 1.5 | H9–10.5 | Done | Evidence and `llm_general` labels visible | — |
 | FE-06 | Chat UI: evidence chips, follow-ups, Hindi, thinking/timeout states | P0 | M3 | M2 | LLM-03 (fixtures until H13) | 2.5 | H10.5–13 | Done | FE-T4 | Plain text answers without chips |

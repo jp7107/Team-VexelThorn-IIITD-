@@ -89,7 +89,16 @@
     "schemes": "सरकारी योजनाएँ",
     "updates": "खेती की खबरें",
     "water": "पानी की ज़रूरत",
-    "help": "मदद"
+    "help": "मदद",
+    "lastCheck": "पिछली पत्ती जाँच, {date}",
+    "priceAt": "{market} में {crop}",
+    "checkStatus": {
+      "uncertain": "पक्का नहीं: फिर जाँचें",
+      "unsupported": "पहचान नहीं हो पाई",
+      "rejected_quality": "फोटो साफ़ नहीं थी",
+      "error": "जाँच नहीं हो पाई",
+      "ok": "जाँच हो गई"
+    }
   },
   "errors": {
     "required": "यह भरें",

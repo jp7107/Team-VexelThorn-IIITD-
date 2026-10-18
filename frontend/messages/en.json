@@ -89,7 +89,16 @@
     "schemes": "Government schemes",
     "updates": "Farming updates",
     "water": "Water needed",
-    "help": "Help"
+    "help": "Help",
+    "lastCheck": "Last leaf check, {date}",
+    "priceAt": "{crop} at {market}",
+    "checkStatus": {
+      "uncertain": "Not sure: check again",
+      "unsupported": "Couldn't identify",
+      "rejected_quality": "Photo was unclear",
+      "error": "Check failed",
+      "ok": "Checked"
+    }
   },
   "errors": {
     "required": "Fill this in",
