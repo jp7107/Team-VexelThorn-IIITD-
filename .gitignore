@@ -16,3 +16,8 @@ node_modules/
 # ML data and run artifacts (only the final ONNX + manifests get committed)
 ml/data/
 ml/checkpoints/
+
+# Local tool state and session notes: never committed
+.enola/
+.claude/
+HANDOFF.md
