@@ -76,7 +76,7 @@ export function Screen({ title, children, back, wide, plain }: {
   return (
     <>
       <TopBar />
-      <main className="mx-auto w-full max-w-md flex-1 px-4 pb-12 pt-6"><div className="glass rounded-3xl border border-white/15 p-5">{body}</div></main>
+      <main className="animate-enter mx-auto w-full max-w-md flex-1 px-4 pb-12 pt-6"><div className="glass rounded-3xl border border-white/15 p-5">{body}</div></main>
     </>
   );
 }

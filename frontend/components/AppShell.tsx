@@ -171,7 +171,7 @@ export function AppShell({ children, wide, title, back }: {
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-20 flex min-h-14 items-center gap-2 border-b border-white/10 bg-[#0e3328]/70 px-3 py-2 backdrop-blur-2xl lg:hidden">
+        <header className="sticky top-0 z-20 flex min-h-16 items-center gap-2 border-b border-white/10 bg-[#0e3328]/70 px-4 py-2 backdrop-blur-2xl lg:hidden">
           {back ? (
             <Link href={back} aria-label={t("common.back")} title={t("common.back")}
               className="grid size-10 shrink-0 place-items-center rounded-full bg-white/10 text-white active:bg-white/20">
@@ -214,7 +214,7 @@ export function AppShell({ children, wide, title, back }: {
           </p>
         )}
 
-        <main className={`mx-auto w-full flex-1 px-4 pb-28 pt-4 lg:px-8 lg:pb-12 lg:pt-5 ${wide ? "max-w-6xl" : "max-w-3xl"}`}>
+        <main className={`animate-enter mx-auto w-full flex-1 px-4 pb-28 pt-4 lg:px-8 lg:pb-12 lg:pt-5 ${wide ? "max-w-6xl" : "max-w-3xl"}`}>
           {wide ? children : <div className="lg:glass lg:rounded-3xl lg:border lg:border-white/15 lg:p-8">{children}</div>}
         </main>
 
@@ -227,9 +227,9 @@ export function AppShell({ children, wide, title, back }: {
                 return (
                   <li key={href}>
                     <Link href={href} aria-current={active ? "page" : undefined}
-                      className={`flex min-h-14 flex-col items-center justify-center gap-0.5 text-[0.7rem] font-semibold leading-tight ${
+                      className={`tap-scale flex min-h-14 flex-col items-center justify-center gap-0.5 text-[0.7rem] font-semibold leading-tight ${
                         active ? "text-white" : "text-muted"}`}>
-                      <span className={`grid h-7 w-11 place-items-center rounded-full ${active ? "bg-white text-ink-strong" : ""}`}>
+                      <span className={`grid h-7 w-12 place-items-center rounded-full transition-colors duration-200 ${active ? "bg-white text-ink-strong" : ""}`}>
                         <Icon className="size-5" />
                       </span>
                       <span className="max-w-full truncate px-1">{t(`nav.short.${key}`)}</span>
@@ -265,7 +265,7 @@ export function AppShell({ children, wide, title, back }: {
                 {items.map(({ href, key, Icon }) => (
                   <li key={href}>
                     <Link href={href} onClick={() => setMore(false)}
-                      className="flex min-h-20 flex-col items-center justify-center gap-1.5 rounded-2xl bg-white/10 p-2 text-center text-xs font-semibold leading-tight">
+                      className="tap-scale flex min-h-20 flex-col items-center justify-center gap-1.5 rounded-2xl bg-white/10 p-2 text-center text-xs font-semibold leading-tight">
                       <span className="grid size-9 place-items-center rounded-xl bg-white/90 text-ink-strong"><Icon className="size-5" /></span>
                       {t(`nav.${key}`)}
                     </Link>

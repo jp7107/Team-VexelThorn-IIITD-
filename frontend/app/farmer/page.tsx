@@ -156,20 +156,20 @@ export default function FarmerHome() {
 
       {/* Phone home: greeting, one big action, then the feature grid. */}
       <section className="mb-6 lg:hidden">
-        <div className="glass mb-5 rounded-3xl border border-white/15 p-5">
+        <div className="glass mb-5 rounded-3xl border border-white/15 p-6">
           <h1 className="text-xl font-semibold leading-tight text-ink">{t("home.greeting", { name: user.name })}</h1>
           <p className="mb-4 text-sm text-muted">{t("nav.tagline.farmer")}</p>
           <Link href="/farmer/diagnose"
-            className="flex min-h-12 items-center justify-center gap-2 rounded-xl bg-lime font-bold text-ink-strong shadow-[0_0_24px_rgb(196_239_94/0.4)]">
+            className="tap-scale flex min-h-12 items-center justify-center gap-2 rounded-xl bg-lime font-bold text-ink-strong shadow-[0_0_24px_rgb(196_239_94/0.4)]">
             <LeafScanIcon className="size-5" /> {t("nav.analyze")}
           </Link>
         </div>
         <h2 className="mb-3 text-base font-semibold text-ink">{t("home.features")}</h2>
-        <ul className="grid grid-cols-3 gap-3">
+        <ul className="grid grid-cols-3 gap-3.5">
           {FEATURES.map(({ href, key, Icon, tint }) => (
             <li key={href}>
               <Link href={href}
-                className="glass flex h-full min-h-24 flex-col items-center justify-center gap-2 rounded-2xl border border-white/15 p-2 text-center active:scale-95">
+                className="tap-scale glass flex h-full min-h-24 flex-col items-center justify-center gap-2 rounded-2xl border border-white/15 p-3 text-center active:scale-95">
                 <span className={`grid size-10 place-items-center rounded-xl ${tint}`}><Icon className="size-6" /></span>
                 <span className="text-[0.8rem] font-semibold leading-tight">{t(`home.${key}`)}</span>
               </Link>
