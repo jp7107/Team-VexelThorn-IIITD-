@@ -14,7 +14,7 @@ function ActionTile({ href, icon, label, hint, action }: {
   action: string;
 }) {
   return (
-    <Link href={href} className="glass flex flex-col rounded-2xl border border-white/15 p-4 transition hover:border-white/40">
+    <Link href={href} className="tap-scale glass flex flex-col rounded-2xl border border-white/15 p-4 transition hover:border-white/40">
       <span className="mb-4 flex items-start justify-between gap-3">
         <span className="grid size-10 place-items-center rounded-xl bg-white/90 text-ink-strong">{icon}</span>
         <span className="rounded-full border border-white/20 bg-white/10 px-3 py-1 text-sm font-semibold text-lime">{action}</span>
@@ -31,12 +31,12 @@ export default function Landing() {
   return (
     <>
       <TopBar />
-      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col justify-end px-4 pb-10 pt-10 lg:pt-24">
+      <main className="animate-enter mx-auto flex w-full max-w-5xl flex-1 flex-col justify-end px-5 pb-12 pt-12 lg:pt-24">
         <section className="mb-8 max-w-2xl">
           <p className="mb-3 inline-flex rounded-full border border-white/20 bg-white/10 px-3 py-1 text-sm text-muted backdrop-blur">
             {t("app.motto")}
           </p>
-          <h1 className="text-[2.1rem] font-semibold leading-[1.05] text-ink lg:text-6xl">{t("app.tagline")}</h1>
+          <h1 className="text-[2.25rem] font-semibold leading-[1.08] text-ink lg:text-6xl">{t("app.tagline")}</h1>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
             <ButtonLink href="/register" className="sm:w-auto sm:px-8">{t("landing.createAccount")}</ButtonLink>
             <ButtonLink href="/login" variant="secondary" className="sm:w-auto sm:px-8">{t("landing.login")}</ButtonLink>

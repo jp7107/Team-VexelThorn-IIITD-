@@ -25,6 +25,8 @@
 
 html {
   color-scheme: dark; /* native selects, date pickers and scrollbars match */
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
 }
 
 h1, h2, h3 {
@@ -63,6 +65,24 @@ body {
   backdrop-filter: blur(22px) saturate(115%);
   -webkit-backdrop-filter: blur(22px) saturate(115%);
   box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.22), 0 10px 30px rgb(0 0 0 / 0.18);
+}
+
+/* Tap-scale: subtle press feedback on touch targets */
+@utility tap-scale {
+  transition: transform 0.12s ease;
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+/* Fade-slide entrance for main page content */
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@utility animate-enter {
+  animation: fade-in-up 0.35s ease-out both;
 }
 
 ::placeholder {
