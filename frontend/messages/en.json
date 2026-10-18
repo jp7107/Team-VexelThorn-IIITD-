@@ -188,7 +188,8 @@
     "checkAnother": "Check another leaf",
     "backHome": "Back to home",
     "notFound": "We couldn't find this check.",
-    "askAbout": "Ask about this"
+    "askAbout": "Ask about this",
+    "pageTitle": "Leaf check result"
   },
   "report": {
     "title": "Your report",

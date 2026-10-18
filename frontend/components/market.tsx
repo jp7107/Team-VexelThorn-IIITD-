@@ -42,14 +42,14 @@ export function ListingCard({ l }: { l: Listing }) {
   const { t } = useI18n();
   const f = useFormat();
   return (
-    <Link href={`/market/${l.id}`} className="flex gap-4 rounded-2xl border-2 border-line bg-white/10 p-4">
+    <Link href={`/market/${l.id}`} className="flex gap-4 glass rounded-2xl border border-white/15 bg-white/10 p-4">
       <CropIcon code={l.crop_code} className="size-12 shrink-0 text-field" />
       <span className="min-w-0 flex-1">
         <span className="flex flex-wrap items-center gap-2">
-          <span className="text-lg font-extrabold text-ink">{l.title}</span>
+          <span className="text-base font-bold text-ink">{l.title}</span>
           {isBulk(l) && <span className="rounded-full bg-haldi px-2 text-base font-bold text-ink-strong">{t("market.bulk")}</span>}
         </span>
-        <span className="block text-lg">{f.qty(l.quantity, l.unit)} · {f.price(l.price_per_unit, l.unit)}</span>
+        <span className="block text-base">{f.qty(l.quantity, l.unit)} · {f.price(l.price_per_unit, l.unit)}</span>
         <span className="block text-base text-muted">
           {t("market.location", { district: l.district, state: f.state(l.state) })} · {t("market.by", { name: l.farmer.first_name })}
           {" · "}

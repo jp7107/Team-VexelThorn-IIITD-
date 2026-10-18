@@ -19,7 +19,7 @@ function Verdict({ tone, title, children }: { tone: "alert" | "good" | "neutral"
   return (
     <section className={`mb-5 rounded-2xl border-l-8 p-5 ${look}`} aria-live="polite">
       <h1 className="text-2xl font-bold leading-tight text-ink lg:text-3xl">{title}</h1>
-      {children && <div className="mt-3 text-lg">{children}</div>}
+      {children && <div className="mt-3 text-base">{children}</div>}
     </section>
   );
 }
@@ -52,7 +52,7 @@ export function AnalysisResult({ analysis }: { analysis: Analysis }) {
       verdict = (
         <Verdict tone="neutral" title={t("result.uncertainTitle")}>
           <p className="mb-3">{t("result.uncertainBody")}</p>
-          <h2 className="font-extrabold">{t("result.possible")}</h2>
+          <h2 className="font-bold">{t("result.possible")}</h2>
           <ul className="list-disc pl-5">
             {analysis.top_k.map((k) => (
               <li key={k.class_code}>{name(k) || k.class_code}</li>
@@ -88,14 +88,14 @@ export function AnalysisResult({ analysis }: { analysis: Analysis }) {
   return (
     <>
       {provenance === "mock" && (
-        <p className="mb-6 rounded-xl bg-brand px-4 py-3 font-semibold text-white">{t("result.mockBanner")}</p>
+        <p className="mb-6 rounded-xl bg-white/15 px-4 py-3 font-semibold text-white">{t("result.mockBanner")}</p>
       )}
       {verdict}
-      {showRecheck && <p className="mb-4 text-lg">{t("result.recheckAdded")}</p>}
+      {showRecheck && <p className="mb-4 text-base">{t("result.recheckAdded")}</p>}
       {(analysis.status === "ok" || analysis.status === "uncertain") && (
         <>
           <ReportView analysisId={analysis.id} />
-          <p className="mb-4 rounded-xl border-2 border-line px-4 py-3 text-base">{t("result.disclaimer")}</p>
+          <p className="mb-4 glass rounded-xl border border-white/15 px-4 py-3 text-base">{t("result.disclaimer")}</p>
         </>
       )}
       {provenance !== "mock" && (

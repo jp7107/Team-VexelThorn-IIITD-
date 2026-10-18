@@ -8,8 +8,8 @@ function Section({ title, items }: { title: string; items: string[] }) {
   if (!items.length) return null;
   return (
     <section className="mb-4">
-      <h3 className="mb-1 text-lg font-extrabold text-ink">{title}</h3>
-      <ul className="list-disc space-y-1 pl-5 text-lg">
+      <h3 className="mb-1 text-base font-bold text-ink">{title}</h3>
+      <ul className="list-disc space-y-1 pl-5 text-base">
         {items.map((item) => <li key={item}>{item}</li>)}
       </ul>
     </section>
@@ -36,7 +36,7 @@ export function ReportView({ analysisId }: { analysisId: string }) {
   const current = report?.language === lang ? report : null;
   if (failed) {
     return (
-      <p className="mb-5 rounded-xl bg-danger-soft px-4 py-3 text-lg font-semibold text-danger">
+      <p className="mb-5 rounded-xl bg-danger-soft px-4 py-3 text-base font-semibold text-danger">
         {t("report.failed")}{" "}
         <button type="button" onClick={() => setAttempt((n) => n + 1)} className="min-h-11 underline">
           {t("report.retry")}
@@ -45,26 +45,26 @@ export function ReportView({ analysisId }: { analysisId: string }) {
     );
   }
   if (!current) {
-    return <p className="mb-5 text-lg text-muted" role="status">{t("report.loading")}</p>;
+    return <p className="mb-5 text-base text-muted" role="status">{t("report.loading")}</p>;
   }
 
   const c = current.content;
   return (
-    <article className="mb-6 rounded-2xl border-2 border-line p-4" aria-labelledby="report-title">
-      <h2 id="report-title" className="mb-2 text-2xl font-extrabold text-ink">{t("report.title")}</h2>
-      <p className="mb-4 text-lg">{c.summary}</p>
+    <article className="mb-6 glass rounded-2xl border border-white/15 p-4" aria-labelledby="report-title">
+      <h2 id="report-title" className="mb-2 text-2xl font-bold text-ink">{t("report.title")}</h2>
+      <p className="mb-4 text-base">{c.summary}</p>
       <Section title={t("report.symptoms")} items={c.symptoms_to_check} />
       <section className="mb-4">
-        <h3 className="mb-1 text-lg font-extrabold text-ink">{t("report.meaning")}</h3>
-        <p className="text-lg">{c.what_this_means}</p>
+        <h3 className="mb-1 text-base font-bold text-ink">{t("report.meaning")}</h3>
+        <p className="text-base">{c.what_this_means}</p>
       </section>
       {c.recommended_actions.length > 0 && (
         <section className="mb-4">
-          <h3 className="mb-2 text-lg font-extrabold text-ink">{t("report.actions")}</h3>
+          <h3 className="mb-2 text-base font-bold text-ink">{t("report.actions")}</h3>
           <ul className="space-y-2">
             {c.recommended_actions.map((a) => (
               <li key={a.text} className="rounded-xl bg-surface px-3 py-2">
-                <span className="block text-lg">{a.text}</span>
+                <span className="block text-base">{a.text}</span>
                 <span className={`text-base font-semibold ${a.evidence_ref ? "text-field" : "text-muted"}`}>
                   {a.evidence_ref ? t("report.verified") : t("report.general")}
                 </span>
@@ -77,8 +77,8 @@ export function ReportView({ analysisId }: { analysisId: string }) {
       <Section title={t("report.safety")} items={c.safety_notes} />
       {c.sources.length > 0 && (
         <section className="mb-4">
-          <h3 className="mb-1 text-lg font-extrabold text-ink">{t("report.sources")}</h3>
-          <ul className="space-y-1 text-lg">
+          <h3 className="mb-1 text-base font-bold text-ink">{t("report.sources")}</h3>
+          <ul className="space-y-1 text-base">
             {c.sources.map((s) => (
               <li key={s.url}>
                 <a href={s.url} target="_blank" rel="noopener noreferrer" className="font-semibold text-ink underline">

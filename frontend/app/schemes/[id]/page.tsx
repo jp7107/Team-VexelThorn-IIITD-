@@ -27,23 +27,23 @@ function SchemeView() {
 
   return (
     <Screen title={scheme.name} back="/schemes">
-      <p className="mb-5 text-lg">{scheme.summary}</p>
+      <p className="mb-5 text-base">{scheme.summary}</p>
       <p className="mb-4 text-base text-muted">
         {scheme.states.length ? t("schemes.statesList", { states: scheme.states.join(", ") }) : t("schemes.allIndia")}
       </p>
       <section className="mb-4 rounded-2xl bg-surface p-4">
-        <h2 className="mb-1 text-xl font-extrabold text-ink">{t("schemes.eligibility")}</h2>
-        <p className="whitespace-pre-line text-lg">{scheme.eligibility_text}</p>
+        <h2 className="mb-1 text-base font-semibold text-ink">{t("schemes.eligibility")}</h2>
+        <p className="whitespace-pre-line text-base">{scheme.eligibility_text}</p>
       </section>
       {scheme.benefit_text && (
         <section className="mb-4 rounded-2xl bg-field-soft p-4">
-          <h2 className="mb-1 text-xl font-extrabold text-field">{t("schemes.benefit")}</h2>
-          <p className="whitespace-pre-line text-lg">{scheme.benefit_text}</p>
+          <h2 className="mb-1 text-base font-semibold text-field">{t("schemes.benefit")}</h2>
+          <p className="whitespace-pre-line text-base">{scheme.benefit_text}</p>
         </section>
       )}
-      <p className="mb-4 rounded-xl border-l-8 border-haldi bg-haldi-soft px-4 py-3 text-lg font-semibold">{t("schemes.checkThere")}</p>
+      <p className="mb-4 rounded-xl border-l-8 border-haldi bg-haldi-soft px-4 py-3 text-base font-semibold">{t("schemes.checkThere")}</p>
       <a href={scheme.official_url} target="_blank" rel="noopener noreferrer"
-        className="mb-4 flex min-h-12 w-full items-center justify-center rounded-xl bg-haldi px-5 text-lg font-extrabold text-ink-strong">
+        className="mb-4 flex min-h-12 w-full items-center justify-center rounded-xl bg-haldi px-5 text-base font-bold text-ink-strong">
         {t("schemes.official")}
       </a>
       <p className="text-base text-muted">{t("schemes.verified", { date: day.format(new Date(scheme.last_verified_at)) })}</p>

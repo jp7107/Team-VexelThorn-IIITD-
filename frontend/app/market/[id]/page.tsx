@@ -40,13 +40,13 @@ function EnquiryForm({ listing }: { listing: Listing }) {
   if (sent) {
     return (
       <div className="rounded-2xl bg-field-soft p-4">
-        <p className="mb-3 text-lg font-semibold text-field" role="status">{t("market.sent")}</p>
+        <p className="mb-3 text-base font-semibold text-field" role="status">{t("market.sent")}</p>
         <ButtonLink href="/enquiries" variant="secondary">{t("market.viewEnquiries")}</ButtonLink>
       </div>
     );
   }
   return (
-    <form onSubmit={submit} noValidate className="rounded-2xl border-2 border-line p-4">
+    <form onSubmit={submit} noValidate className="glass rounded-2xl border border-white/15 p-4">
       <FormError message={error} />
       <Field id="qty" label={t("market.enquiryQty", { unit: t(`units.${listing.unit}`) })}
         hint={listing.min_order_qty ? t("market.minOrder", { qty: f.qty(listing.min_order_qty, listing.unit), unit: "" }).trim() : undefined}
@@ -72,13 +72,13 @@ function Reviews({ farmerId }: { farmerId: string }) {
   if (!data) return null;
   return (
     <section className="mb-5" aria-labelledby="reviews-title">
-      <h2 id="reviews-title" className="mb-2 text-xl font-extrabold text-ink">{t("rate.reviews")}</h2>
-      {data.recent.length === 0 ? <p className="text-lg text-muted">{t("rate.noReviews")}</p> : (
+      <h2 id="reviews-title" className="mb-2 text-base font-semibold text-ink">{t("rate.reviews")}</h2>
+      {data.recent.length === 0 ? <p className="text-base text-muted">{t("rate.noReviews")}</p> : (
         <ul className="flex flex-col gap-2">
           {data.recent.map((r) => (
             <li key={r.created_at} className="rounded-xl bg-surface px-3 py-2">
-              <p className="text-lg"><Stars n={r.stars} /> <span className="font-semibold">{r.buyer_first_name}</span></p>
-              {r.comment && <p className="text-lg">{r.comment}</p>}
+              <p className="text-base"><Stars n={r.stars} /> <span className="font-semibold">{r.buyer_first_name}</span></p>
+              {r.comment && <p className="text-base">{r.comment}</p>}
             </li>
           ))}
         </ul>
@@ -111,15 +111,15 @@ function ListingView() {
         <CropIcon code={listing.crop_code} className="size-14 shrink-0 text-field" />
         <div>
           <h1 className="text-2xl font-bold leading-tight text-ink lg:text-3xl">{listing.title}</h1>
-          <p className="mt-1 flex flex-wrap items-center gap-2 text-lg text-muted">
+          <p className="mt-1 flex flex-wrap items-center gap-2 text-base text-muted">
             {f.crop(listing.crop_code)}
             {isBulk(listing) && <span className="rounded-full bg-haldi px-2 text-base font-bold text-ink-strong">{t("market.bulk")}</span>}
             {listing.status !== "open" && <StatusPill status={listing.status} />}
           </p>
         </div>
       </div>
-      <dl className="mb-5 grid grid-cols-1 gap-2 rounded-2xl bg-surface p-4 text-lg">
-        <div><dt className="sr-only">{t("sell.quantity")}</dt><dd className="font-extrabold">{f.qty(listing.quantity, listing.unit)}</dd></div>
+      <dl className="mb-5 grid grid-cols-1 gap-2 rounded-2xl bg-surface p-4 text-base">
+        <div><dt className="sr-only">{t("sell.quantity")}</dt><dd className="font-bold">{f.qty(listing.quantity, listing.unit)}</dd></div>
         <div><dt className="sr-only">{t("market.price")}</dt><dd>{f.price(listing.price_per_unit, listing.unit)}</dd></div>
         {listing.min_order_qty && <div><dd>{t("market.minOrder", { qty: f.qty(listing.min_order_qty, listing.unit), unit: "" }).trim()}</dd></div>}
         <div><dd>{t("market.location", { district: listing.district, state: f.state(listing.state) })}</dd></div>
@@ -132,12 +132,12 @@ function ListingView() {
           </dd>
         </div>
       </dl>
-      {listing.description && <p className="mb-5 whitespace-pre-line text-lg">{listing.description}</p>}
+      {listing.description && <p className="mb-5 whitespace-pre-line text-base">{listing.description}</p>}
       <Reviews farmerId={listing.farmer.id} />
 
       {listing.is_mine ? (
         <>
-          <p className="mb-3 text-lg font-semibold">{t("market.yours")}</p>
+          <p className="mb-3 text-base font-semibold">{t("market.yours")}</p>
           <ButtonLink href="/farmer/listings" variant="secondary">{t("market.manage")}</ButtonLink>
         </>
       ) : user.role === "customer" && listing.status === "open" ? (

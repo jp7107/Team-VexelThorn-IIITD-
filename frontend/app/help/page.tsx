@@ -52,7 +52,7 @@ function SupportForm() {
     <>
       <form onSubmit={submit} noValidate className="mb-4">
         <FormError message={error} />
-        {sent && <p role="status" className="mb-4 rounded-xl bg-field-soft px-4 py-3 text-lg font-semibold text-field">{t("help.sent")}</p>}
+        {sent && <p role="status" className="mb-4 rounded-xl bg-field-soft px-4 py-3 text-base font-semibold text-field">{t("help.sent")}</p>}
         <Field id="subject" label={t("help.subject")}>
           <input id="subject" maxLength={120} className={inputClass} value={subject} onChange={(e) => { setSubject(e.target.value); setSent(false); }} />
         </Field>
@@ -63,10 +63,10 @@ function SupportForm() {
       </form>
       {tickets.length > 0 && (
         <>
-          <h3 className="mb-2 text-lg font-extrabold text-ink">{t("help.myTickets")}</h3>
+          <h3 className="mb-2 text-base font-bold text-ink">{t("help.myTickets")}</h3>
           <ul className="flex flex-col gap-2">
             {tickets.map((tk) => (
-              <li key={tk.id} className="flex items-start justify-between gap-2 rounded-xl bg-surface px-4 py-3 text-lg">
+              <li key={tk.id} className="flex items-start justify-between gap-2 rounded-xl bg-surface px-4 py-3 text-base">
                 <span>{tk.subject}</span>
                 <span className={`shrink-0 rounded-full px-3 text-base font-semibold ${tk.status === "open" ? "bg-haldi-soft text-ink" : "bg-white/10 text-muted"}`}>
                   {t(`help.${tk.status}`)}
@@ -91,12 +91,12 @@ export default function HelpPage() {
   return (
     <Screen title={t("help.title")} back={user?.role === "farmer" ? "/farmer" : "/"}>
       <section className="mb-6 rounded-2xl border-l-8 border-field bg-field-soft p-4" aria-labelledby="kcc">
-        <h2 id="kcc" className="text-xl font-extrabold text-field">{t("help.kcc")}</h2>
-        <p className="mt-1 text-3xl font-extrabold text-ink">
-          {t("help.kccNumber")} <span className="text-lg font-semibold">{t("help.kccShort")}</span>
+        <h2 id="kcc" className="text-base font-semibold text-field">{t("help.kcc")}</h2>
+        <p className="mt-1 text-3xl font-bold text-ink">
+          {t("help.kccNumber")} <span className="text-base font-semibold">{t("help.kccShort")}</span>
         </p>
-        <p className="mt-1 text-lg">{t("help.kccDetails")}</p>
-        <a href="tel:18001801551" className="mt-3 flex min-h-12 items-center justify-center rounded-xl bg-brand text-lg font-extrabold text-white">
+        <p className="mt-1 text-base">{t("help.kccDetails")}</p>
+        <a href="tel:18001801551" className="mt-3 flex min-h-12 items-center justify-center rounded-xl bg-lime text-base font-bold text-ink-strong">
           {t("help.kccCall")}
         </a>
         <a href={KCC_SOURCE} target="_blank" rel="noopener noreferrer" className="mt-2 block text-base text-muted underline">
@@ -104,22 +104,22 @@ export default function HelpPage() {
         </a>
       </section>
 
-      <h2 className="mb-3 text-xl font-extrabold text-ink">{t("help.guides")}</h2>
+      <h2 className="mb-3 text-base font-semibold text-ink">{t("help.guides")}</h2>
       <div className="mb-6 flex flex-col gap-3">
         {GUIDES.map((g) => (
-          <section key={g.title} className="rounded-2xl border-2 border-line p-4">
-            <h3 className="mb-2 text-lg font-extrabold text-ink">{t(g.title)}</h3>
-            <ol className="list-decimal space-y-1 pl-6 text-lg">
+          <section key={g.title} className="glass rounded-2xl border border-white/15 p-4">
+            <h3 className="mb-2 text-base font-bold text-ink">{t(g.title)}</h3>
+            <ol className="list-decimal space-y-1 pl-6 text-base">
               {g.steps.map((s) => <li key={s}>{t(s)}</li>)}
             </ol>
           </section>
         ))}
       </div>
 
-      <h2 className="mb-3 text-xl font-extrabold text-ink">{t("help.contact")}</h2>
+      <h2 className="mb-3 text-base font-semibold text-ink">{t("help.contact")}</h2>
       {user === undefined ? null : user ? <SupportForm /> : (
         <>
-          <p className="mb-3 text-lg text-muted">{t("help.loginToSend")}</p>
+          <p className="mb-3 text-base text-muted">{t("help.loginToSend")}</p>
           <ButtonLink href="/login" variant="secondary">{t("landing.login")}</ButtonLink>
         </>
       )}

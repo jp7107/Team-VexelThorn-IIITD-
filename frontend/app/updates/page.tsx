@@ -23,14 +23,14 @@ export default function UpdatesPage() {
     <Screen title={t("updates.title")} back={user.role === "farmer" ? "/farmer" : "/"}>
       <FormError message={error} />
       {updates === null ? (!error && <Loading />) : updates.length === 0 ? (
-        <p className="text-lg text-muted">{t("updates.none")}</p>
+        <p className="text-base text-muted">{t("updates.none")}</p>
       ) : (
         <ul className="flex flex-col gap-3">
           {updates.map((u) => (
-            <li key={u.id} className="rounded-2xl border-2 border-line p-4">
+            <li key={u.id} className="glass rounded-2xl border border-white/15 p-4">
               <p className="text-base text-muted">{day.format(new Date(u.published_at))}</p>
-              <h2 className="text-lg font-extrabold text-ink">{u.title}</h2>
-              <p className="whitespace-pre-line text-lg">{u.body}</p>
+              <h2 className="text-base font-bold text-ink">{u.title}</h2>
+              <p className="whitespace-pre-line text-base">{u.body}</p>
               {u.source_url && (
                 <a href={u.source_url} target="_blank" rel="noopener noreferrer" className="mt-1 inline-block min-h-11 content-center font-semibold text-ink underline">
                   {t("updates.source")}

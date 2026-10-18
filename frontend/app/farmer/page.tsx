@@ -22,15 +22,15 @@ import { useSession } from "@/lib/session";
 const COMMODITY: Record<string, string> = { tomato: "Tomato", potato: "Potato", maize: "Maize" };
 
 const FEATURES = [
-  { href: "/farmer/diagnose", key: "checkCrop", Icon: LeafScanIcon, tint: "bg-emerald-400/15 text-emerald-200" },
-  { href: "/assistant", key: "askAssistant", Icon: ChatIcon, tint: "bg-violet-400/15 text-violet-200" },
-  { href: "/market/prices", key: "prices", Icon: PriceIcon, tint: "bg-amber-400/15 text-amber-200" },
-  { href: "/farmer/listings", key: "sell", Icon: StoreIcon, tint: "bg-orange-400/15 text-orange-200" },
-  { href: "/enquiries", key: "enquiries", Icon: InboxIcon, tint: "bg-sky-400/15 text-sky-200" },
-  { href: "/farmer/water", key: "water", Icon: DropIcon, tint: "bg-cyan-400/15 text-cyan-200" },
-  { href: "/schemes", key: "schemes", Icon: SchemeIcon, tint: "bg-lime-400/15 text-lime-200" },
-  { href: "/updates", key: "updates", Icon: NewsIcon, tint: "bg-rose-400/15 text-rose-200" },
-  { href: "/help", key: "help", Icon: HelpIcon, tint: "bg-teal-400/15 text-teal-200" },
+  { href: "/farmer/diagnose", key: "checkCrop", Icon: LeafScanIcon, tint: "bg-white/15 text-white" },
+  { href: "/assistant", key: "askAssistant", Icon: ChatIcon, tint: "bg-white/15 text-white" },
+  { href: "/market/prices", key: "prices", Icon: PriceIcon, tint: "bg-white/15 text-white" },
+  { href: "/farmer/listings", key: "sell", Icon: StoreIcon, tint: "bg-white/15 text-white" },
+  { href: "/enquiries", key: "enquiries", Icon: InboxIcon, tint: "bg-white/15 text-white" },
+  { href: "/farmer/water", key: "water", Icon: DropIcon, tint: "bg-white/15 text-white" },
+  { href: "/schemes", key: "schemes", Icon: SchemeIcon, tint: "bg-white/15 text-white" },
+  { href: "/updates", key: "updates", Icon: NewsIcon, tint: "bg-white/15 text-white" },
+  { href: "/help", key: "help", Icon: HelpIcon, tint: "bg-white/15 text-white" },
 ];
 
 type Dashboard = {
@@ -75,7 +75,7 @@ function Panel({ title, action, children, className = "" }: {
   className?: string;
 }) {
   return (
-    <section className={`glass rounded-3xl border border-white/15 p-5 ${className}`}>
+    <section className={`glass rounded-3xl border border-white/15 p-4 lg:p-5 ${className}`}>
       <div className="mb-3 flex items-center justify-between gap-3">
         <h2 className="text-base font-semibold text-ink">{title}</h2>
         {action}
@@ -178,60 +178,60 @@ export default function FarmerHome() {
         <>
           <div className="mb-5 hidden grid-cols-4 gap-4 lg:grid">
             <Stat href={last ? `/farmer/analyses/${last.id}` : "/farmer/diagnose"} Icon={LeafScanIcon}
-              tint="bg-emerald-400/15 text-emerald-200" label={t("home.statChecks")} value={data.analyses.length}
+              tint="bg-white/15 text-white" label={t("home.statChecks")} value={data.analyses.length}
               hint={last ? t("home.lastCheck", { date: dateFmt.format(new Date(last.created_at)) }) : t("home.noCheckShort")} />
-            <Stat href="/farmer/listings" Icon={StoreIcon} tint="bg-orange-400/15 text-orange-200" label={t("home.statListings")}
+            <Stat href="/farmer/listings" Icon={StoreIcon} tint="bg-white/15 text-white" label={t("home.statListings")}
               value={data.listings.filter((l) => l.status === "open").length} hint={t("home.statListingsHint")} />
-            <Stat href="/enquiries" Icon={InboxIcon} tint="bg-sky-400/15 text-sky-200" label={t("home.statEnquiries")}
+            <Stat href="/enquiries" Icon={InboxIcon} tint="bg-white/15 text-white" label={t("home.statEnquiries")}
               value={data.enquiries.filter((e) => e.status === "pending").length} hint={t("home.statEnquiriesHint")} />
-            <Stat href="#reminders" Icon={SproutIcon} tint="bg-amber-400/15 text-amber-200" label={t("home.statReminders")}
+            <Stat href="#reminders" Icon={SproutIcon} tint="bg-white/15 text-white" label={t("home.statReminders")}
               value={data.reminders.length} hint={t("home.statRemindersHint")} />
           </div>
 
           <div className="grid gap-5 lg:grid-cols-3">
             <Panel title={t("home.glance")} className="lg:col-span-2">
               {last ? (
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                  <span className={`grid size-24 shrink-0 place-items-center rounded-3xl ${
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-3 sm:flex-nowrap">
+                  <span className={`grid size-14 shrink-0 place-items-center rounded-2xl sm:size-20 ${
                     last.status === "ok" && last.prediction?.is_healthy ? "bg-field-soft text-field"
                       : last.status === "ok" ? "bg-danger-soft text-danger" : "bg-haldi-soft text-ink"}`}>
-                    <LeafScanIcon className="size-12" />
+                    <LeafScanIcon className="size-7 sm:size-10" />
                   </span>
                   <div className="min-w-0 flex-1">
                     <p className="text-sm text-muted">
                       {cropName(last.crop_code_claimed)}, {dateFmt.format(new Date(last.created_at))}
                     </p>
-                    <p className="font-display text-2xl font-semibold leading-tight">{lastTitle}</p>
+                    <p className="font-display text-xl font-semibold leading-tight sm:text-2xl">{lastTitle}</p>
                     {last.status === "ok" && last.confidence !== null && (
                       // A score, never certainty: capped at 99% like the assistant (plan §10).
-                      <p className="text-muted">{t("result.confidence", { pct: Math.min(99, Math.round(last.confidence * 100)) })}</p>
+                      <p className="text-sm text-muted">{t("result.confidence", { pct: Math.min(99, Math.round(last.confidence * 100)) })}</p>
                     )}
-                    <p className="mt-1 text-sm text-muted">{t("home.aiNote")}</p>
+                    <p className="mt-1 hidden text-sm text-muted sm:block">{t("home.aiNote")}</p>
                   </div>
-                  <div className="flex flex-col gap-2 sm:w-44">
+                  <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-44 sm:flex-col">
                     <Link href={`/farmer/analyses/${last.id}`}
-                      className="flex min-h-11 items-center justify-center rounded-xl bg-brand px-4 font-extrabold text-white">
+                      className="flex min-h-10 items-center justify-center rounded-xl bg-white px-3 text-sm font-bold text-ink-strong">
                       {t("home.viewResult")}
                     </Link>
                     <Link href="/farmer/diagnose"
-                      className="flex min-h-11 items-center justify-center rounded-xl border-2 border-ink bg-white/10 px-4 font-extrabold text-ink">
+                      className="flex min-h-10 items-center justify-center rounded-xl border border-white/30 bg-white/10 px-3 text-sm font-bold text-ink">
                       {t("home.scanAnother")}
                     </Link>
                   </div>
                 </div>
               ) : (
-                <p className="text-lg text-muted">{t("home.noCheckYet")}</p>
+                <p className="text-muted">{t("home.noCheckYet")}</p>
               )}
             </Panel>
 
             <Panel title={t("home.todayFarm")}>
               <div id="reminders" className="flex flex-col gap-3">
                 {data.water?.estimate.totals && (
-                  <Link href="/farmer/water" className="flex items-center gap-3 rounded-2xl bg-cyan-400/15 p-3 hover:bg-cyan-400/25">
-                    <DropIcon className="size-8 shrink-0 text-cyan-200" />
+                  <Link href="/farmer/water" className="flex items-center gap-3 rounded-2xl bg-white/10 p-3 hover:bg-white/15">
+                    <DropIcon className="size-8 shrink-0 text-white" />
                     <span>
                       <span className="block text-sm text-muted">{t("home.waterWeek", { crop: cropName(data.water.crop.crop_code) })}</span>
-                      <span className="block font-extrabold">
+                      <span className="block font-bold">
                         {t("home.waterNet", { mm: data.water.estimate.totals.net_mm,
                           litres: num.format(data.water.estimate.totals.litres_for_field) })}
                       </span>
@@ -246,7 +246,7 @@ export default function FarmerHome() {
                       <li key={r.id} className="flex items-center justify-between gap-3 rounded-2xl bg-haldi-soft px-3 py-2">
                         <span className="font-semibold">{r.title}</span>
                         <button type="button" onClick={() => markDone(r.id)}
-                          className="min-h-11 shrink-0 rounded-lg border-2 border-ink px-3 font-extrabold text-ink">
+                          className="min-h-11 shrink-0 rounded-lg border border-white/30 px-3 font-bold text-ink">
                           {t("home.markDone")}
                         </button>
                       </li>
@@ -275,7 +275,7 @@ export default function FarmerHome() {
                             <Icon className="size-6 text-field" /> {cropName(code)}
                           </span>
                         </td>
-                        <td className="py-2 font-extrabold">
+                        <td className="py-2 font-bold">
                           {row ? `₹${num.format(Number(row.modal_price))}` : t("home.noPrice")}
                           {row?.is_demo && (
                             <span className="ml-2 rounded-full bg-haldi px-2 text-sm font-bold text-ink-strong">{t("prices.demoBadge")}</span>
@@ -296,7 +296,7 @@ export default function FarmerHome() {
                   const I = Icon as typeof SproutIcon;
                   return (
                     <li key={href as string}>
-                      <Link href={href as string} className="flex min-h-11 items-center gap-3 rounded-xl bg-white/10 px-3 font-semibold hover:bg-brand-soft">
+                      <Link href={href as string} className="flex min-h-11 items-center gap-3 rounded-xl bg-white/10 px-3 font-semibold hover:bg-white/15">
                         <I className="size-5 text-lime" /> {t(`home.${key}`)}
                       </Link>
                     </li>
@@ -315,10 +315,10 @@ export default function FarmerHome() {
                     return (
                       <li key={c.id}>
                         <Link href={`/farmer/crops/${c.id}`}
-                          className="flex items-center gap-3 rounded-2xl bg-white/10 px-4 py-3 hover:bg-brand-soft">
+                          className="flex items-center gap-3 rounded-2xl bg-white/10 px-4 py-3 hover:bg-white/15">
                           <Icon className="size-10 shrink-0 text-field" />
                           <span>
-                            <span className="block text-lg font-extrabold">{cropName(c.crop_code)}</span>
+                            <span className="block text-base font-bold">{cropName(c.crop_code)}</span>
                             <span className="block text-sm text-muted">
                               {t(`stages.${c.stage}`)}, {t("home.sownOn", { date: dateFmt.format(new Date(c.sowing_date)) })},{" "}
                               {t("home.acres", { area: Number(c.area_acres) })}
@@ -330,7 +330,7 @@ export default function FarmerHome() {
                   })}
                 </ul>
               ) : (
-                <p className="text-lg text-muted">{t("home.noCrops")}</p>
+                <p className="text-base text-muted">{t("home.noCrops")}</p>
               )}
             </Panel>
 
@@ -338,7 +338,7 @@ export default function FarmerHome() {
               <ul className="flex flex-col gap-2">
                 {data.schemes.slice(0, 2).map((s) => (
                   <li key={s.id}>
-                    <Link href={`/schemes/${s.id}`} className="flex items-start gap-3 rounded-xl bg-white/10 p-3 hover:bg-brand-soft">
+                    <Link href={`/schemes/${s.id}`} className="flex items-start gap-3 rounded-xl bg-white/10 p-3 hover:bg-white/15">
                       <SchemeIcon className="mt-0.5 size-5 shrink-0 text-lime" />
                       <span className="font-semibold leading-snug">{s.name}</span>
                     </Link>
@@ -346,8 +346,8 @@ export default function FarmerHome() {
                 ))}
                 {data.updates.slice(0, 2).map((u) => (
                   <li key={u.id}>
-                    <Link href="/updates" className="flex items-start gap-3 rounded-xl bg-white/10 p-3 hover:bg-brand-soft">
-                      <NewsIcon className="mt-0.5 size-5 shrink-0 text-rose-200" />
+                    <Link href="/updates" className="flex items-start gap-3 rounded-xl bg-white/10 p-3 hover:bg-white/15">
+                      <NewsIcon className="mt-0.5 size-5 shrink-0 text-white" />
                       <span className="font-semibold leading-snug">{u.title}</span>
                     </Link>
                   </li>
@@ -358,7 +358,7 @@ export default function FarmerHome() {
         </>
       )}
 
-      <button type="button" onClick={logout} className="mt-8 min-h-12 text-lg font-semibold text-ink underline lg:hidden">
+      <button type="button" onClick={logout} className="mt-8 min-h-12 text-base font-semibold text-ink underline lg:hidden">
         {t("auth.logout")}
       </button>
     </Screen>

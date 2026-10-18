@@ -90,13 +90,13 @@ export default function WaterPage() {
     <Screen title={t("water.title")} back="/farmer">
       {crops.length === 0 ? (
         <>
-          <p className="mb-4 text-lg text-muted">{t("water.noCrops")}</p>
+          <p className="mb-4 text-base text-muted">{t("water.noCrops")}</p>
           <ButtonLink href="/onboarding">{t("home.addCrop")}</ButtonLink>
         </>
       ) : (
         <>
           <fieldset className="mb-5">
-            <legend className="mb-2 text-lg font-semibold">{t("water.pickCrop")}</legend>
+            <legend className="mb-2 text-base font-semibold">{t("water.pickCrop")}</legend>
             <div className="flex flex-col gap-2">
               {crops.map((c) => {
                 const Icon = CROP_ICONS[c.crop_code];
@@ -111,18 +111,18 @@ export default function WaterPage() {
           </fieldset>
 
           <FormError message={shownError} />
-          {busy && <p role="status" className="mb-4 text-lg text-muted">{t(locating ? "water.locating" : "common.loading")}</p>}
+          {busy && <p role="status" className="mb-4 text-base text-muted">{t(locating ? "water.locating" : "common.loading")}</p>}
 
-          {need === "unsupported" && <p className="text-lg text-muted">{t("water.unsupported")}</p>}
+          {need === "unsupported" && <p className="text-base text-muted">{t("water.unsupported")}</p>}
           {need === "location" && !busy && (
             <div className="rounded-2xl bg-surface p-4">
-              <p className="mb-3 text-lg">{t("water.needLocation")}</p>
+              <p className="mb-3 text-base">{t("water.needLocation")}</p>
               <Button type="button" onClick={shareLocation}>{t("water.useLocation")}</Button>
             </div>
           )}
 
           {estimate && estimate.weather_status === "unavailable" && (
-            <p className="rounded-xl bg-danger-soft px-4 py-3 text-lg font-semibold text-danger">{t("water.weatherDown")}</p>
+            <p className="rounded-xl bg-danger-soft px-4 py-3 text-base font-semibold text-danger">{t("water.weatherDown")}</p>
           )}
           {estimate?.totals && (
             <>
@@ -130,17 +130,17 @@ export default function WaterPage() {
                 {estimate.totals.net_mm > 0 ? (
                   <>
                     <p className="text-2xl font-bold leading-tight text-ink lg:text-3xl">{t("water.headline", { mm: num.format(estimate.totals.net_mm) })}</p>
-                    <p className="mt-2 text-lg">{t("water.litres", { litres: num.format(estimate.totals.litres_for_field), acres: num.format(estimate.area_acres) })}</p>
+                    <p className="mt-2 text-base">{t("water.litres", { litres: num.format(estimate.totals.litres_for_field), acres: num.format(estimate.area_acres) })}</p>
                   </>
                 ) : (
-                  <p className="text-2xl font-extrabold text-field">{t("water.noneNeeded")}</p>
+                  <p className="text-2xl font-bold text-field">{t("water.noneNeeded")}</p>
                 )}
                 <p className="mt-2 text-base text-muted">
                   {t("water.need", { mm: num.format(estimate.totals.crop_need_mm) })} · {t("water.rain", { mm: num.format(estimate.totals.rain_mm) })}
                 </p>
               </section>
 
-              <h2 className="mb-2 text-xl font-extrabold text-ink">{t("water.daily")}</h2>
+              <h2 className="mb-2 text-base font-semibold text-ink">{t("water.daily")}</h2>
               <ul className="mb-5 flex flex-col gap-2">
                 {estimate.days.map((d) => (
                   <li key={d.date} className="grid grid-cols-[4.5rem_1fr] items-center gap-3">
@@ -157,7 +157,7 @@ export default function WaterPage() {
 
           {estimate && (
             <>
-              <p className="mb-3 rounded-xl border-2 border-line px-4 py-3 text-base">{t("water.estimateNote")}</p>
+              <p className="mb-3 glass rounded-xl border border-white/15 px-4 py-3 text-base">{t("water.estimateNote")}</p>
               <p className="mb-2 text-base text-muted">{t("water.stageKc", { stage: t(`stages.${estimate.stage}`), kc: estimate.kc })}</p>
               <details className="text-base">
                 <summary className="min-h-11 cursor-pointer content-center font-semibold text-ink">{t("water.sources")}</summary>

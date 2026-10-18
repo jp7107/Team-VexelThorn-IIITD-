@@ -61,11 +61,11 @@ export default function OnboardingPage() {
 
   return (
     <Screen title={t("onboarding.title")}>
-      <p className="mb-6 text-lg text-muted">{t("onboarding.intro")}</p>
+      <p className="mb-6 text-base text-muted">{t("onboarding.intro")}</p>
       <form onSubmit={submit} noValidate>
         <FormError message={formError} />
         <fieldset className="mb-6" aria-describedby={errors.crop ? "crop-error" : undefined}>
-          <legend className="mb-2 text-lg font-semibold">{t("onboarding.crop")}</legend>
+          <legend className="mb-2 text-base font-semibold">{t("onboarding.crop")}</legend>
           <div className="grid grid-cols-2 gap-3">
             {KNOWN_CROPS.map((c) => {
               const Icon = CROP_ICONS[c];
@@ -88,7 +88,7 @@ export default function OnboardingPage() {
         )}
 
         <fieldset className="mb-6" aria-describedby={errors.stage ? "stage-error" : undefined}>
-          <legend className="mb-2 text-lg font-semibold">{t("onboarding.stage")}</legend>
+          <legend className="mb-2 text-base font-semibold">{t("onboarding.stage")}</legend>
           <div className="grid grid-cols-2 gap-3">
             {STAGES.map((s) => (
               <ChoiceTile key={s} selected={stage === s} onSelect={() => setStage(s)} label={t(`stages.${s}`)} />
@@ -108,7 +108,7 @@ export default function OnboardingPage() {
 
         <Button type="submit" disabled={busy}>{busy ? t("common.loading") : t("onboarding.save")}</Button>
       </form>
-      <Link href="/farmer" className="mt-4 flex min-h-12 items-center justify-center text-lg font-semibold text-ink underline">
+      <Link href="/farmer" className="mt-4 flex min-h-12 items-center justify-center text-base font-semibold text-ink underline">
         {t("onboarding.skip")}
       </Link>
     </Screen>

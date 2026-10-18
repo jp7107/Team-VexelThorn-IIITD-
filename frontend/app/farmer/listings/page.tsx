@@ -53,10 +53,10 @@ function NewListing({ onDone }: { onDone: () => void }) {
   }
 
   return (
-    <form onSubmit={submit} noValidate className="mb-6 rounded-2xl border-2 border-ink p-4">
+    <form onSubmit={submit} noValidate className="mb-6 rounded-2xl border border-white/30 p-4">
       <FormError message={formError} />
       <fieldset className="mb-5">
-        <legend className="mb-2 text-lg font-semibold">{t("sell.crop")}</legend>
+        <legend className="mb-2 text-base font-semibold">{t("sell.crop")}</legend>
         <div className="grid grid-cols-2 gap-3">
           {CROPS.map((c) => {
             const Icon = CROP_ICONS[c];
@@ -138,13 +138,13 @@ export default function MyListingsPage() {
         <Button type="button" onClick={() => setAdding(true)} className="mb-6">{t("sell.new")}</Button>
       )}
       {listings === null ? <Loading /> : listings.length === 0 ? (
-        <p className="text-lg text-muted">{t("sell.none")}</p>
+        <p className="text-base text-muted">{t("sell.none")}</p>
       ) : (
         <ul className="flex flex-col gap-3">
           {listings.map((l) => (
-            <li key={l.id} className="rounded-2xl border-2 border-line p-4">
-              <Link href={`/market/${l.id}`} className="block text-lg font-extrabold text-ink underline">{l.title}</Link>
-              <p className="text-lg">{f.qty(l.quantity, l.unit)} · {f.price(l.price_per_unit, l.unit)}</p>
+            <li key={l.id} className="glass rounded-2xl border border-white/15 p-4">
+              <Link href={`/market/${l.id}`} className="block text-base font-bold text-ink underline">{l.title}</Link>
+              <p className="text-base">{f.qty(l.quantity, l.unit)} · {f.price(l.price_per_unit, l.unit)}</p>
               <p className="mt-2 flex flex-wrap items-center gap-2">
                 <StatusPill status={l.status} />
                 {(l.pending_enquiries ?? 0) > 0 && (
@@ -157,7 +157,7 @@ export default function MyListingsPage() {
                 <p className="mt-2 text-base text-muted">{t("sell.hiddenNote")}</p>
               ) : (
                 <button type="button" onClick={() => setStatus(l, l.status === "open" ? "closed" : "open")}
-                  className="mt-3 min-h-11 rounded-xl border-2 border-ink px-4 font-extrabold text-ink">
+                  className="mt-3 min-h-11 rounded-xl border border-white/30 px-4 font-bold text-ink">
                   {l.status === "open" ? t("sell.close") : t("sell.reopen")}
                 </button>
               )}

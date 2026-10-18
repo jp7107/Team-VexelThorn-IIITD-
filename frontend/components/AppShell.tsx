@@ -70,7 +70,20 @@ function ActiveAware({ render }: { render: (pathname: string) => ReactNode }) {
   return <Suspense fallback={render("")}><WithPath render={render} /></Suspense>;
 }
 
-export function AppShell({ children, wide }: { children: ReactNode; wide?: boolean }) {
+function ChevronLeft({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={className} fill="none" stroke="currentColor" strokeWidth={2.2}
+      strokeLinecap="round" strokeLinejoin="round"><path d="m15 5-7 7 7 7" /></svg>
+  );
+}
+
+/** On phones the page title and back arrow live in the sticky header, like a native app. */
+export function AppShell({ children, wide, title, back }: {
+  children: ReactNode;
+  wide?: boolean;
+  title?: string;
+  back?: string;
+}) {
   const { t } = useI18n();
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
@@ -106,7 +119,7 @@ export function AppShell({ children, wide }: { children: ReactNode; wide?: boole
                 <li key={href}>
                   <Link href={href} aria-current={active ? "page" : undefined}
                     className={`relative flex min-h-10 items-center gap-3 rounded-lg px-3 text-[0.95rem] ${
-                      active ? "bg-white/10 font-semibold text-white before:absolute before:inset-y-2 before:-left-3 before:w-1 before:rounded-r-full before:bg-lime"
+                      active ? "bg-white/15 font-semibold text-white before:absolute before:inset-y-2 before:-left-3 before:w-1 before:rounded-r-full before:bg-lime"
                         : "text-muted hover:bg-white/5 hover:text-text"}`}>
                     <Icon className="size-5 shrink-0" />
                     {t(`nav.${key}`)}
@@ -120,12 +133,12 @@ export function AppShell({ children, wide }: { children: ReactNode; wide?: boole
           <div className="self-start rounded-full bg-white/10"><LanguageSwitch /></div>
           {user ? (
             <div className="flex items-center gap-3 rounded-xl bg-white/10 p-2">
-              <span className="grid size-10 shrink-0 place-items-center rounded-full bg-haldi-soft font-extrabold text-ink">
+              <span className="grid size-10 shrink-0 place-items-center rounded-full bg-white/90 font-bold text-ink-strong">
                 {initials}
               </span>
               <span className="min-w-0 flex-1">
                 <span className="block truncate font-semibold">{user.name}</span>
-                <span className="block text-sm text-lime">{t(`nav.role.${user.role}`)}</span>
+                <span className="block text-sm text-muted">{t(`nav.role.${user.role}`)}</span>
               </span>
               <button type="button" onClick={logout} aria-label={t("auth.logout")} title={t("auth.logout")}
                 className="grid size-10 place-items-center rounded-lg text-muted hover:bg-white/10 hover:text-ink">
@@ -133,16 +146,16 @@ export function AppShell({ children, wide }: { children: ReactNode; wide?: boole
               </button>
             </div>
           ) : (
-            <Link href="/login" className="flex min-h-11 items-center justify-center rounded-xl bg-brand font-extrabold text-white">
+            <Link href="/login" className="flex min-h-11 items-center justify-center rounded-xl bg-lime font-bold text-ink-strong">
               {t("auth.login")}
             </Link>
           )}
         </div>
         {user && user.role !== "admin" && (
           <Link href="/assistant" className="glass mx-4 mb-4 flex items-center gap-3 rounded-2xl border border-white/15 p-3 hover:ring-1 hover:ring-lime/40">
-            <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-lime/20 text-lime"><ChatIcon className="size-6" /></span>
+            <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-white/90 text-ink-strong"><ChatIcon className="size-5" /></span>
             <span className="min-w-0">
-              <span className="block font-extrabold">{t("nav.assistant")}</span>
+              <span className="block font-bold">{t("nav.assistant")}</span>
               <span className="block text-sm leading-snug text-muted">{t("nav.assistantPitch")}</span>
             </span>
           </Link>
@@ -150,12 +163,21 @@ export function AppShell({ children, wide }: { children: ReactNode; wide?: boole
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-20 flex items-center justify-between gap-3 border-b border-white/15 bg-[#0f2915]/80 px-4 py-2 backdrop-blur-xl lg:hidden">
-          <Link href={user ? items[0].href : "/"} className="flex items-center gap-2">
-            <LogoMark className="size-9" />
-            <span className="font-display text-lg font-semibold tracking-tight text-ink">{t("app.name")}</span>
-          </Link>
-          <div className="rounded-full bg-white/10"><LanguageSwitch /></div>
+        <header className="sticky top-0 z-20 flex min-h-14 items-center gap-2 border-b border-white/10 bg-[#0e3328]/70 px-3 py-2 backdrop-blur-2xl lg:hidden">
+          {back ? (
+            <Link href={back} aria-label={t("common.back")} title={t("common.back")}
+              className="grid size-10 shrink-0 place-items-center rounded-full bg-white/10 text-white active:bg-white/20">
+              <ChevronLeft className="size-5" />
+            </Link>
+          ) : (
+            <Link href={user ? items[0].href : "/"} aria-label={t("app.name")} className="shrink-0">
+              <LogoMark className="size-9" />
+            </Link>
+          )}
+          <span className="min-w-0 flex-1 truncate font-display text-base font-semibold tracking-tight text-ink">
+            {title ?? t("app.name")}
+          </span>
+          <div className="shrink-0 rounded-full bg-white/10"><LanguageSwitch compact /></div>
         </header>
 
         {user && (
@@ -170,7 +192,7 @@ export function AppShell({ children, wide }: { children: ReactNode; wide?: boole
               </span>
               {user.role === "farmer" && (
                 <Link href="/farmer/diagnose"
-                  className="flex min-h-11 items-center gap-2 rounded-full bg-lime px-5 font-extrabold text-ink-strong shadow-[0_0_24px_rgb(196_239_94/0.45)] hover:brightness-105">
+                  className="flex min-h-11 items-center gap-2 rounded-full bg-lime px-5 font-bold text-ink-strong shadow-[0_0_24px_rgb(196_239_94/0.45)] hover:brightness-105">
                   <LeafScanIcon className="size-5" /> {t("nav.analyze")}
                 </Link>
               )}
@@ -178,23 +200,23 @@ export function AppShell({ children, wide }: { children: ReactNode; wide?: boole
           </div>
         )}
 
-        <main className={`mx-auto w-full flex-1 px-4 pb-28 pt-5 lg:px-8 lg:pb-12 ${wide ? "max-w-6xl" : "max-w-3xl"}`}>
-          {wide ? children : <div className="glass rounded-3xl border border-white/15 p-4 lg:p-8">{children}</div>}
+        <main className={`mx-auto w-full flex-1 px-4 pb-28 pt-4 lg:px-8 lg:pb-12 lg:pt-5 ${wide ? "max-w-6xl" : "max-w-3xl"}`}>
+          {wide ? children : <div className="lg:glass lg:rounded-3xl lg:border lg:border-white/15 lg:p-8">{children}</div>}
         </main>
 
         {user && (
           <nav aria-label={t("nav.label")}
-            className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-[#0f2915]/90 pb-[env(safe-area-inset-bottom)] shadow-[0_-6px_24px_rgb(23_81_44/0.08)] backdrop-blur-xl lg:hidden">
+            className="fixed inset-x-0 bottom-0 z-20 border-t border-white/10 bg-[#0e3328]/80 pb-[env(safe-area-inset-bottom)] shadow-[0_-6px_24px_rgb(0_0_0/0.15)] backdrop-blur-2xl lg:hidden">
             <ActiveAware render={(pathname) => <ul className="mx-auto grid max-w-md grid-cols-5">
               {tabs.map(({ href, key, Icon }) => {
                 const active = isActive(pathname, href, items);
                 return (
                   <li key={href}>
                     <Link href={href} aria-current={active ? "page" : undefined}
-                      className={`flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-semibold leading-tight ${
-                        active ? "text-lime" : "text-muted"}`}>
-                      <span className={`grid h-8 w-12 place-items-center rounded-full ${active ? "bg-brand-soft" : ""}`}>
-                        <Icon className="size-6" />
+                      className={`flex min-h-14 flex-col items-center justify-center gap-0.5 text-[0.7rem] font-semibold leading-tight ${
+                        active ? "text-white" : "text-muted"}`}>
+                      <span className={`grid h-7 w-11 place-items-center rounded-full ${active ? "bg-white text-ink-strong" : ""}`}>
+                        <Icon className="size-5" />
                       </span>
                       <span className="max-w-full truncate px-1">{t(`nav.short.${key}`)}</span>
                     </Link>

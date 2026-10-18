@@ -6,7 +6,10 @@ import { AppShell } from "@/components/AppShell";
 import { LogoMark } from "@/components/icons";
 import { useI18n, type Lang } from "@/lib/i18n";
 
-export function LanguageSwitch() {
+// Short labels for the phone header, where space is tight.
+const SHORT: Record<Lang, string> = { hi: "हिं", en: "EN" };
+
+export function LanguageSwitch({ compact }: { compact?: boolean }) {
   const { lang, setLang, t } = useI18n();
   const options: Lang[] = ["hi", "en"];
   return (
@@ -18,11 +21,12 @@ export function LanguageSwitch() {
           lang={l}
           aria-pressed={lang === l}
           onClick={() => setLang(l)}
-          className={`min-h-9 rounded-full px-3 text-sm font-semibold ${
-            lang === l ? "bg-lime text-ink-strong" : "text-white"
+          aria-label={t(`language.${l}`)}
+          className={`rounded-full font-semibold ${compact ? "min-h-8 min-w-9 px-2 text-xs" : "min-h-9 px-3 text-sm"} ${
+            lang === l ? "bg-white text-ink-strong" : "text-white"
           }`}
         >
-          {t(`language.${l}`)}
+          {compact ? SHORT[l] : t(`language.${l}`)}
         </button>
       ))}
     </div>
@@ -34,8 +38,8 @@ export function TopBar({ right }: { right?: ReactNode }) {
   const { t } = useI18n();
   return (
     <header className="glass border-b border-white/10 text-white">
-      <div className="mx-auto flex max-w-md items-center justify-between gap-3 px-4 py-3">
-        <Link href="/" className="flex items-center gap-2 text-xl font-extrabold tracking-tight">
+      <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3">
+        <Link href="/" className="flex items-center gap-2 text-base font-semibold tracking-tight">
           <LogoMark className="size-9 bg-white/15" />
           {t("app.name")}
         </Link>
@@ -58,19 +62,21 @@ export function Screen({ title, children, back, wide, plain }: {
   const body = (
     <>
       {back && (
-        <Link href={back} className="mb-3 inline-flex min-h-11 items-center font-semibold text-ink underline">
+        <Link href={back} className={`mb-3 min-h-11 items-center font-semibold text-ink underline ${plain ? "inline-flex" : "hidden lg:inline-flex"}`}>
           {t("common.back")}
         </Link>
       )}
-      {title && <h1 className="mb-4 text-2xl font-bold leading-tight text-ink lg:text-3xl">{title}</h1>}
+      {title && (
+        <h1 className={`mb-4 text-2xl font-bold leading-tight text-ink lg:text-3xl ${plain ? "" : "hidden lg:block"}`}>{title}</h1>
+      )}
       {children}
     </>
   );
-  if (!plain) return <AppShell wide={wide}>{body}</AppShell>;
+  if (!plain) return <AppShell wide={wide} title={title} back={back}>{body}</AppShell>;
   return (
     <>
       <TopBar />
-      <main className="mx-auto w-full max-w-md flex-1 px-4 pb-12 pt-6">{body}</main>
+      <main className="mx-auto w-full max-w-md flex-1 px-4 pb-12 pt-6"><div className="glass rounded-3xl border border-white/15 p-5">{body}</div></main>
     </>
   );
 }
@@ -80,8 +86,8 @@ type ButtonProps = ComponentProps<"button"> & { variant?: "primary" | "secondary
 export function Button({ variant = "primary", className = "", ...props }: ButtonProps) {
   const look =
     variant === "primary"
-      ? "bg-brand text-white shadow-sm hover:bg-brand-strong"
-      : "border-2 border-ink text-ink bg-white/10 hover:bg-surface";
+      ? "bg-lime text-ink-strong shadow-sm hover:brightness-105"
+      : "border border-white/30 text-ink bg-white/10 hover:bg-surface";
   return (
     <button
       className={`min-h-12 w-full rounded-xl px-5 text-base font-bold disabled:opacity-60 ${look} ${className}`}
@@ -94,7 +100,7 @@ export function ButtonLink({ variant = "primary", className = "", ...props }: Co
   variant?: "primary" | "secondary";
 }) {
   const look =
-    variant === "primary" ? "bg-brand text-white shadow-sm hover:bg-brand-strong" : "border-2 border-ink text-ink bg-white/10";
+    variant === "primary" ? "bg-lime text-ink-strong shadow-sm hover:brightness-105" : "border border-white/30 text-ink bg-white/10";
   return (
     <Link
       className={`flex min-h-12 w-full items-center justify-center rounded-xl px-5 text-base font-bold ${look} ${className}`}
@@ -171,5 +177,5 @@ export function FormError({ message }: { message?: string }) {
 
 export function Loading() {
   const { t } = useI18n();
-  return <p className="py-10 text-center text-lg text-muted">{t("common.loading")}</p>;
+  return <p className="py-10 text-center text-base text-muted">{t("common.loading")}</p>;
 }

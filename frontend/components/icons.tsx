@@ -190,7 +190,7 @@ export function LogoutIcon(p: P) {
 /** Wordmark tile: a leaf on the brand green. */
 export function LogoMark({ className = "" }: { className?: string }) {
   return (
-    <span className={`grid shrink-0 place-items-center rounded-2xl bg-brand text-white ring-1 ring-lime/40 ${className}`}>
+    <span className={`grid shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-lime to-[#86c95b] text-ink-strong ${className}`}>
       <SproutIcon className="size-3/5" />
     </span>
   );
