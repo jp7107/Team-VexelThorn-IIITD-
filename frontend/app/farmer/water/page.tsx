@@ -129,7 +129,7 @@ export default function WaterPage() {
               <section className="mb-4 rounded-2xl border-l-8 border-ink bg-surface p-5" aria-live="polite">
                 {estimate.totals.net_mm > 0 ? (
                   <>
-                    <p className="text-3xl font-extrabold leading-tight text-ink">{t("water.headline", { mm: num.format(estimate.totals.net_mm) })}</p>
+                    <p className="text-2xl font-bold leading-tight text-ink lg:text-3xl">{t("water.headline", { mm: num.format(estimate.totals.net_mm) })}</p>
                     <p className="mt-2 text-lg">{t("water.litres", { litres: num.format(estimate.totals.litres_for_field), acres: num.format(estimate.area_acres) })}</p>
                   </>
                 ) : (

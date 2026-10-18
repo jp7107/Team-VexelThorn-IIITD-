@@ -64,7 +64,7 @@ export default function PricesPage() {
         <label htmlFor="other" className="sr-only">{t("prices.otherCommodity")}</label>
         <input id="other" value={other} onChange={(e) => setOther(e.target.value)} placeholder={t("prices.otherCommodity")}
           maxLength={60} className={`${inputClass} flex-1`} />
-        <button type="submit" className="min-h-14 rounded-xl border-2 border-ink px-4 text-lg font-extrabold text-ink">{t("prices.go")}</button>
+        <button type="submit" className="min-h-12 rounded-xl border-2 border-ink px-4 text-lg font-extrabold text-ink">{t("prices.go")}</button>
       </form>
       <label htmlFor="pstate" className="sr-only">{t("prices.state")}</label>
       <select id="pstate" value={state} onChange={(e) => setState(e.target.value)} className={`${inputClass} mb-4`}>

@@ -77,7 +77,7 @@ function Panel({ title, action, children, className = "" }: {
   return (
     <section className={`glass rounded-3xl border border-white/15 p-5 ${className}`}>
       <div className="mb-3 flex items-center justify-between gap-3">
-        <h2 className="text-lg font-extrabold text-ink">{title}</h2>
+        <h2 className="text-base font-semibold text-ink">{title}</h2>
         {action}
       </div>
       {children}
@@ -98,7 +98,7 @@ function Stat({ href, Icon, tint, label, value, hint }: {
       <span className={`grid size-12 shrink-0 place-items-center rounded-2xl ${tint}`}><Icon className="size-6" /></span>
       <span className="min-w-0">
         <span className="block text-sm font-semibold text-muted">{label}</span>
-        <span className="block text-3xl font-extrabold leading-tight text-ink">{value}</span>
+        <span className="font-num block text-3xl font-semibold leading-tight text-ink">{value}</span>
         <span className="block truncate text-sm text-muted">{hint}</span>
       </span>
     </Link>
@@ -151,21 +151,21 @@ export default function FarmerHome() {
       {/* Phone home: greeting, one big action, then the feature grid. */}
       <section className="mb-6 lg:hidden">
         <div className="glass mb-5 rounded-3xl border border-white/15 p-5">
-          <h1 className="text-2xl font-extrabold leading-tight text-ink">{t("home.greeting", { name: user.name })} 👋</h1>
-          <p className="mb-4 text-muted">{t("nav.tagline.farmer")}</p>
+          <h1 className="text-xl font-semibold leading-tight text-ink">{t("home.greeting", { name: user.name })}</h1>
+          <p className="mb-4 text-sm text-muted">{t("nav.tagline.farmer")}</p>
           <Link href="/farmer/diagnose"
-            className="flex min-h-14 items-center justify-center gap-2 rounded-2xl bg-lime text-lg font-extrabold text-ink-strong shadow-[0_0_24px_rgb(196_239_94/0.4)]">
-            <LeafScanIcon className="size-6" /> {t("nav.analyze")}
+            className="flex min-h-12 items-center justify-center gap-2 rounded-xl bg-lime font-bold text-ink-strong shadow-[0_0_24px_rgb(196_239_94/0.4)]">
+            <LeafScanIcon className="size-5" /> {t("nav.analyze")}
           </Link>
         </div>
-        <h2 className="mb-3 text-lg font-extrabold text-ink">{t("home.features")}</h2>
+        <h2 className="mb-3 text-base font-semibold text-ink">{t("home.features")}</h2>
         <ul className="grid grid-cols-3 gap-3">
           {FEATURES.map(({ href, key, Icon, tint }) => (
             <li key={href}>
               <Link href={href}
-                className="glass flex h-full min-h-28 flex-col items-center justify-center gap-2 rounded-2xl border border-white/15 p-2 text-center active:scale-95">
-                <span className={`grid size-12 place-items-center rounded-2xl ${tint}`}><Icon className="size-7" /></span>
-                <span className="text-sm font-semibold leading-tight">{t(`home.${key}`)}</span>
+                className="glass flex h-full min-h-24 flex-col items-center justify-center gap-2 rounded-2xl border border-white/15 p-2 text-center active:scale-95">
+                <span className={`grid size-10 place-items-center rounded-xl ${tint}`}><Icon className="size-6" /></span>
+                <span className="text-[0.8rem] font-semibold leading-tight">{t(`home.${key}`)}</span>
               </Link>
             </li>
           ))}
@@ -201,7 +201,7 @@ export default function FarmerHome() {
                     <p className="text-sm text-muted">
                       {cropName(last.crop_code_claimed)}, {dateFmt.format(new Date(last.created_at))}
                     </p>
-                    <p className="text-2xl font-extrabold leading-tight">{lastTitle}</p>
+                    <p className="font-display text-2xl font-semibold leading-tight">{lastTitle}</p>
                     {last.status === "ok" && last.confidence !== null && (
                       // A score, never certainty: capped at 99% like the assistant (plan §10).
                       <p className="text-muted">{t("result.confidence", { pct: Math.min(99, Math.round(last.confidence * 100)) })}</p>

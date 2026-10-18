@@ -18,7 +18,7 @@ function Verdict({ tone, title, children }: { tone: "alert" | "good" | "neutral"
   }[tone];
   return (
     <section className={`mb-5 rounded-2xl border-l-8 p-5 ${look}`} aria-live="polite">
-      <h1 className="text-3xl font-extrabold leading-tight text-ink">{title}</h1>
+      <h1 className="text-2xl font-bold leading-tight text-ink lg:text-3xl">{title}</h1>
       {children && <div className="mt-3 text-lg">{children}</div>}
     </section>
   );

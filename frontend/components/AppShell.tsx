@@ -94,7 +94,7 @@ export function AppShell({ children, wide }: { children: ReactNode; wide?: boole
         <Link href={user ? items[0].href : "/"} className="flex items-center gap-3 px-5 pb-4 pt-5">
           <LogoMark className="size-11" />
           <span>
-            <span className="block text-xl font-extrabold leading-tight text-ink">{t("app.name")}</span>
+            <span className="block font-display text-xl font-semibold leading-tight tracking-tight text-ink">{t("app.name")}</span>
             <span className="block text-sm text-muted">{t("app.motto")}</span>
           </span>
         </Link>
@@ -105,8 +105,9 @@ export function AppShell({ children, wide }: { children: ReactNode; wide?: boole
               return (
                 <li key={href}>
                   <Link href={href} aria-current={active ? "page" : undefined}
-                    className={`flex min-h-11 items-center gap-3 rounded-xl px-3 font-semibold ${
-                      active ? "bg-gradient-to-r from-brand to-brand/40 text-white shadow-sm ring-1 ring-lime/40" : "text-text hover:bg-white/10"}`}>
+                    className={`relative flex min-h-10 items-center gap-3 rounded-lg px-3 text-[0.95rem] ${
+                      active ? "bg-white/10 font-semibold text-white before:absolute before:inset-y-2 before:-left-3 before:w-1 before:rounded-r-full before:bg-lime"
+                        : "text-muted hover:bg-white/5 hover:text-text"}`}>
                     <Icon className="size-5 shrink-0" />
                     {t(`nav.${key}`)}
                   </Link>
@@ -152,7 +153,7 @@ export function AppShell({ children, wide }: { children: ReactNode; wide?: boole
         <header className="sticky top-0 z-20 flex items-center justify-between gap-3 border-b border-white/15 bg-[#0f2915]/80 px-4 py-2 backdrop-blur-xl lg:hidden">
           <Link href={user ? items[0].href : "/"} className="flex items-center gap-2">
             <LogoMark className="size-9" />
-            <span className="text-lg font-extrabold text-ink">{t("app.name")}</span>
+            <span className="font-display text-lg font-semibold tracking-tight text-ink">{t("app.name")}</span>
           </Link>
           <div className="rounded-full bg-white/10"><LanguageSwitch /></div>
         </header>
@@ -160,7 +161,7 @@ export function AppShell({ children, wide }: { children: ReactNode; wide?: boole
         {user && (
           <div className="hidden items-center justify-between gap-4 px-8 pt-6 lg:flex">
             <div>
-              <p className="text-2xl font-extrabold text-ink">{t("home.greeting", { name: user.name })} 👋</p>
+              <p className="font-display text-2xl font-semibold tracking-tight text-ink">{t("home.greeting", { name: user.name })}</p>
               <p className="text-muted">{t(`nav.tagline.${user.role}`)}</p>
             </div>
             <div className="flex items-center gap-3">
@@ -190,7 +191,7 @@ export function AppShell({ children, wide }: { children: ReactNode; wide?: boole
                 return (
                   <li key={href}>
                     <Link href={href} aria-current={active ? "page" : undefined}
-                      className={`flex min-h-16 flex-col items-center justify-center gap-0.5 text-xs font-semibold leading-tight ${
+                      className={`flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-semibold leading-tight ${
                         active ? "text-lime" : "text-muted"}`}>
                       <span className={`grid h-8 w-12 place-items-center rounded-full ${active ? "bg-brand-soft" : ""}`}>
                         <Icon className="size-6" />
